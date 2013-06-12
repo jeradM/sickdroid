@@ -1,12 +1,14 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 
@@ -24,19 +26,28 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class StartActivity extends SherlockActivity {
+public class SplashScreenActivity extends SherlockActivity {
 
-    private static final String TAG = "StartActivity";
+    private String host;
+    private String port;
+    private String webroot;
+    private String apiKey;
+    SharedPreferences prefs;
+
+    private static final String TAG = "SplashScreen";
     String apiurl = "http://192.168.1.151:8081/sickbeard/api/1871f40ea3a3f1b55182d6033ae7062a/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
         Drawable abBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background_light_green);
         getSupportActionBar().setBackgroundDrawable(abBackgroundDrawable);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().hide();
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_splash_screen);
 
 
         new BuildShowsListTask().execute(new Object());
@@ -60,7 +71,7 @@ public class StartActivity extends SherlockActivity {
 
         @Override
         protected Shows doInBackground(Object... objects) {
-            BannerCacheManager cacheManager = BannerCacheManager.getInstance(StartActivity.this);
+            BannerCacheManager cacheManager = BannerCacheManager.getInstance(SplashScreenActivity.this);
             cacheManager.clearCache();
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(apiurl, ApiCommands.SHOWS);
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
