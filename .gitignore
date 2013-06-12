@@ -1,0 +1,12 @@
+*.class
+*.iml
+*.apk
+*.ap_
+*.dex
+*.ipr
+*.iws
+local.properties
+
+bin/
+gen/
+.idea/
