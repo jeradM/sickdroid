@@ -86,5 +86,16 @@ public class SickbeardProfiles {
         return profiles;
     }
 
+    public SickbeardProfile findProfile(String name)
+    {
+        for (SickbeardProfile profile : profiles) {
+            if (name.equals(profile.getName())) {
+                return profile;
+            }
+        }
+
+        return null;
+    }
+
 
 }

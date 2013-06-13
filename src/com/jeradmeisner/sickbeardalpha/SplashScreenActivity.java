@@ -47,6 +47,8 @@ public class SplashScreenActivity extends SherlockActivity {
         getSupportActionBar().hide();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //prefs.edit().clear().commit();
+
 
         String currentProfile = prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE");
 
@@ -62,7 +64,9 @@ public class SplashScreenActivity extends SherlockActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PROFILES) {
-            setupPrefsAndFetchShows();
+            if (resultCode == RESULT_OK) {
+                setupPrefsAndFetchShows();
+            }
         }
     }
 
@@ -105,9 +109,15 @@ public class SplashScreenActivity extends SherlockActivity {
         @Override
         protected Shows doInBackground(Object... objects) {
             BannerCacheManager cacheManager = BannerCacheManager.getInstance(SplashScreenActivity.this);
-            cacheManager.clearCache();
+            //cacheManager.clearCache();
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(apiurl, ApiCommands.SHOWS);
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
 
             if (dataJson == null)
                 return null;

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -24,6 +25,7 @@ public class ProfilesActivity extends SherlockActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
+
 
         profileListView = (ListView)findViewById(R.id.profiles_list_view);
         profiles = SickbeardProfiles.getInstance();
@@ -52,8 +54,13 @@ public class ProfilesActivity extends SherlockActivity {
 
     public void addProfile()
     {
-        Intent i = new Intent(this, SplashScreenActivity.class);
-        startActivity(i);
+        //Intent addProfileIntent = new Intent(this, AddProfileActivity.class);
+
+        profiles.addProfile(this, "sickbeard", "192.168.1.150", "8081", "sickbeard", "1871f40ea3a3f1b55182d6033ae7062a", false);
+        profiles.findProfile("sickbeard").setProfile();
+        setResult(RESULT_OK, null);
+        finish();
+
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {
