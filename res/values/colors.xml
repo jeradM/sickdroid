@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="sickbeard_light_green">#FFC1D53A</color>
+    <color name="sickbeard_darker_green">#ffa3da32</color>
     <color name="bannerview_title_background">#88000000</color>
 
 </resources>

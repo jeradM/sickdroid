@@ -56,7 +56,7 @@ public class ProfilesActivity extends SherlockActivity {
     {
         //Intent addProfileIntent = new Intent(this, AddProfileActivity.class);
 
-        profiles.addProfile(this, "sickbeard", "192.168.1.150", "8081", "sickbeard", "1871f40ea3a3f1b55182d6033ae7062a", false);
+        profiles.addProfile(this, "sickbeard", "192.168.1.151", "8081", "sickbeard", "1871f40ea3a3f1b55182d6033ae7062a", false);
         profiles.findProfile("sickbeard").setProfile();
         setResult(RESULT_OK, null);
         finish();

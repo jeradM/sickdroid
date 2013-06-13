@@ -96,7 +96,7 @@ public class SplashScreenActivity extends SherlockActivity {
 
         String url = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
 
-        new BuildShowsListTask().execute(new Object());
+        new BuildShowsListTask().execute(url);
     }
 
     public void launchMainActivity(ArrayList<Show> shows)
@@ -106,14 +106,14 @@ public class SplashScreenActivity extends SherlockActivity {
         startActivity(i);
     }
 
-    private class BuildShowsListTask extends AsyncTask<Object, Void, Shows> {
+    private class BuildShowsListTask extends AsyncTask<String, Void, Shows> {
 
 
         @Override
-        protected Shows doInBackground(Object... objects) {
+        protected Shows doInBackground(String... urls) {
             BannerCacheManager cacheManager = BannerCacheManager.getInstance(SplashScreenActivity.this);
             cacheManager.clearCache();
-            JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(apiurl, ApiCommands.SHOWS);
+            JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS);
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
 
             try {
@@ -135,7 +135,7 @@ public class SplashScreenActivity extends SherlockActivity {
             try {
                 for (Show show : shows.getShowList()) {
                     if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
-                        URL url = new URL(apiurl + "?cmd=show.getbanner&tvdbid=" + show.getTvdbid());
+                        URL url = new URL(urls[0] + "?cmd=show.getbanner&tvdbid=" + show.getTvdbid());
                         HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
                         urlConn.setDoInput(true);
                         urlConn.connect();
