@@ -74,10 +74,10 @@ public class SickbeardProfiles {
         editor.commit();
     }
 
-    public void addProfile(String name, String host, String port,
+    public void addProfile(Context ctx, String name, String host, String port,
                            String webroot, String apikey, boolean https)
     {
-        SickbeardProfile profile = new SickbeardProfile(name, host, port, webroot, apikey, https);
+        SickbeardProfile profile = new SickbeardProfile(ctx, name, host, port, webroot, apikey, https);
         profiles.add(profile);
     }
 

@@ -1,24 +1,20 @@
 package com.jeradmeisner.sickbeardalpha;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/12/13
- * Time: 6:44 PM
- * To change this template use File | Settings | File Templates.
- */
-public class ProfilesActivity extends Activity {
+
+public class ProfilesActivity extends SherlockActivity {
 
     private ListView profileListView;
     private SickbeardProfiles profiles;
@@ -37,7 +33,27 @@ public class ProfilesActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.profiles_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add_profile:
+                addProfile();
+                return true;
+            default:
+                super.onOptionsItemSelected(item);
+        }
+
+        return false;
+    }
+
+    public void addProfile()
+    {
+        Intent i = new Intent(this, SplashScreenActivity.class);
+        startActivity(i);
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {

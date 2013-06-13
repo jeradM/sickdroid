@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -36,11 +35,16 @@ public class SplashScreenActivity extends SherlockActivity {
     SharedPreferences prefs;
 
     private static final String TAG = "SplashScreen";
+    private static final int REQUEST_CODE_PROFILES = 1;
+
     String apiurl = "http://192.168.1.151:8081/sickbeard/api/1871f40ea3a3f1b55182d6033ae7062a/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_splash_screen);
+        getSupportActionBar().hide();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -48,42 +52,44 @@ public class SplashScreenActivity extends SherlockActivity {
 
         if (currentProfile.equals("NONE")) {
             Intent i = new Intent(this, ProfilesActivity.class);
-            startActivity(i);
-            finish();
+            startActivityForResult(i, REQUEST_CODE_PROFILES);
         }
         else {
-            setContentView(R.layout.activity_splash_screen);
-            SharedPreferences preferences = getSharedPreferences(currentProfile, MODE_PRIVATE);
-            host = preferences.getString(SickbeardProfiles.PREFS_HOST, "localhost");
-            port = preferences.getString(SickbeardProfiles.PREFS_PORT, "8080");
-            webroot = preferences.getString(SickbeardProfiles.PREFS_WEBROOT, "");
-            apiKey = preferences.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
-            Boolean useHttps = preferences.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
-
-            if (useHttps)
-                protocol = "https";
-            else
-                protocol = "http";
-
-            if (!webroot.equals(""))
-                webroot += "/";
-
-            String url = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
-
-
-            //Drawable abBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background_light_green);
-            //getSupportActionBar().setBackgroundDrawable(abBackgroundDrawable);
-            //getSupportActionBar().setDisplayShowTitleEnabled(false);
-            getSupportActionBar().hide();
-
-            new BuildShowsListTask().execute(new Object());
+            setupPrefsAndFetchShows();
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PROFILES) {
+            setupPrefsAndFetchShows();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
+    }
+
+    public void setupPrefsAndFetchShows()
+    {
+        host = prefs.getString(SickbeardProfiles.PREFS_HOST, "localhost");
+        port = prefs.getString(SickbeardProfiles.PREFS_PORT, "8080");
+        webroot = prefs.getString(SickbeardProfiles.PREFS_WEBROOT, "");
+        apiKey = prefs.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
+        Boolean useHttps = prefs.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
+
+        if (useHttps)
+            protocol = "https";
+        else
+            protocol = "http";
+
+        if (!webroot.equals(""))
+            webroot += "/";
+
+        String url = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
+
+        new BuildShowsListTask().execute(new Object());
     }
 
     public void launchMainActivity(ArrayList<Show> shows)

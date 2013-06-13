@@ -14,7 +14,9 @@ public class SickbeardProfile {
     private String apikey;
     private boolean useHttps;
 
-    public SickbeardProfile(String name, String host, String port, String webroot, String apikey, boolean useHttps)
+    private Context ctx;
+
+    public SickbeardProfile(Context ctx, String name, String host, String port, String webroot, String apikey, boolean useHttps)
     {
         this.name = name;
         this.host = host;
@@ -22,6 +24,10 @@ public class SickbeardProfile {
         this.webroot = webroot;
         this.apikey = apikey;
         this.useHttps = useHttps;
+
+        this.ctx = ctx.getApplicationContext();
+
+        savePrefs();
     }
 
     public SickbeardProfile(String name, SharedPreferences prefs)
@@ -34,9 +40,9 @@ public class SickbeardProfile {
         useHttps = prefs.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
     }
 
-    public void setProfile(Context context)
+    public void setProfile()
     {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(SickbeardProfiles.PREFS_HOST, host);
         editor.putString(SickbeardProfiles.PREFS_PORT, port);
@@ -45,6 +51,23 @@ public class SickbeardProfile {
         editor.putBoolean(SickbeardProfiles.PREFS_USEHTTPS, useHttps);
         editor.putString(SickbeardProfiles.PREFS_CURRENT_PROFILE, name);
         editor.commit();
+    }
+
+    public void savePrefs()
+    {
+        SharedPreferences prefs =  ctx.getSharedPreferences(name, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(SickbeardProfiles.PREFS_HOST, host);
+        editor.putString(SickbeardProfiles.PREFS_PORT, port);
+        editor.putString(SickbeardProfiles.PREFS_WEBROOT, webroot);
+        editor.putString(SickbeardProfiles.PREFS_APIKEY, apikey);
+        editor.putBoolean(SickbeardProfiles.PREFS_USEHTTPS, useHttps);
+        editor.commit();
+    }
+
+    public void deletePrefs()
+    {
+        ctx.getSharedPreferences(name, Context.MODE_PRIVATE).edit().clear().commit();
     }
 
     public String getName()
