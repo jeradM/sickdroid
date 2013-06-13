@@ -32,6 +32,7 @@ public class SplashScreenActivity extends SherlockActivity {
     private String port;
     private String webroot;
     private String apiKey;
+    private String protocol;
     SharedPreferences prefs;
 
     private static final String TAG = "SplashScreen";
@@ -43,14 +44,40 @@ public class SplashScreenActivity extends SherlockActivity {
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        Drawable abBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background_light_green);
-        getSupportActionBar().setBackgroundDrawable(abBackgroundDrawable);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().hide();
-        setContentView(R.layout.activity_splash_screen);
+        String currentProfile = prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE");
+
+        if (currentProfile.equals("NONE")) {
+            Intent i = new Intent(this, ProfilesActivity.class);
+            startActivity(i);
+            finish();
+        }
+        else {
+            setContentView(R.layout.activity_splash_screen);
+            SharedPreferences preferences = getSharedPreferences(currentProfile, MODE_PRIVATE);
+            host = preferences.getString(SickbeardProfiles.PREFS_HOST, "localhost");
+            port = preferences.getString(SickbeardProfiles.PREFS_PORT, "8080");
+            webroot = preferences.getString(SickbeardProfiles.PREFS_WEBROOT, "");
+            apiKey = preferences.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
+            Boolean useHttps = preferences.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
+
+            if (useHttps)
+                protocol = "https";
+            else
+                protocol = "http";
+
+            if (!webroot.equals(""))
+                webroot += "/";
+
+            String url = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
 
 
-        new BuildShowsListTask().execute(new Object());
+            //Drawable abBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background_light_green);
+            //getSupportActionBar().setBackgroundDrawable(abBackgroundDrawable);
+            //getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().hide();
+
+            new BuildShowsListTask().execute(new Object());
+        }
     }
 
 

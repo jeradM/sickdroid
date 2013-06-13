@@ -27,7 +27,7 @@ public class SickbeardProfile {
     public SickbeardProfile(String name, SharedPreferences prefs)
     {
         this.name = name;
-        host = prefs.getString(SickbeardProfiles.PREFS_HOST, "127.0.0.1");
+        host = prefs.getString(SickbeardProfiles.PREFS_HOST, "localhost");
         port = prefs.getString(SickbeardProfiles.PREFS_PORT, "8080");
         webroot = prefs.getString(SickbeardProfiles.PREFS_WEBROOT, "");
         apikey = prefs.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
@@ -48,6 +48,11 @@ public class SickbeardProfile {
     }
 
     public String getName()
+    {
+        return name;
+    }
+
+    public String toString()
     {
         return name;
     }
