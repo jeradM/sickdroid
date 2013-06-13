@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -32,6 +33,11 @@ public class ProfilesActivity extends Activity {
         profiles = SickbeardProfiles.getInstance();
 
         new LoadProfilesTask().execute(null);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {
