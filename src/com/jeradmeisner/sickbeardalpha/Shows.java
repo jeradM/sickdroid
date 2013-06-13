@@ -18,7 +18,7 @@ public class Shows implements Serializable
     private List<Show> showList;
     private JSONObject showsJson;
 
-    public void Shows(List<Show> shows)
+    public Shows(List<Show> shows)
     {
         this.showList = shows;
     }
