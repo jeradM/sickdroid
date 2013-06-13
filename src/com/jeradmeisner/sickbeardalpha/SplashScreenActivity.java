@@ -14,6 +14,7 @@ import android.view.Display;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
+import com.jeradmeisner.sickbeardalpha.utils.ShowComparator;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 
@@ -24,6 +25,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SplashScreenActivity extends SherlockActivity {
 
@@ -167,8 +170,12 @@ public class SplashScreenActivity extends SherlockActivity {
             if (shows.getShowList() == null) {
                 Log.e(TAG, "Null show list");
             }
-            launchMainActivity((ArrayList<Show>)shows.getShowList());
-            super.onPostExecute(shows);
+            else {
+                ArrayList<Show> showList = (ArrayList<Show>)shows.getShowList();
+                Collections.sort(showList, new ShowComparator());
+                launchMainActivity(showList);
+                super.onPostExecute(shows);
+            }
         }
     }
 

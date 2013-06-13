@@ -56,6 +56,11 @@ public class Show implements Parcelable {
     }
 
 
+    public String toString()
+    {
+        return getTitle();
+    }
+
     public String getTvdbid() {
         return tvdbid;
     }
