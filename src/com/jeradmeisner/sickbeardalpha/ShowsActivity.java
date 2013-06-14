@@ -47,8 +47,6 @@ public class ShowsActivity extends SherlockFragmentActivity {
 
         bcm = BannerCacheManager.getInstance(this);
 
-        Drawable abBackgroundDrawable = getResources().getDrawable(R.drawable.actionbar_background_light_green);
-        getSupportActionBar().setBackgroundDrawable(abBackgroundDrawable);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 

@@ -17,5 +17,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="Widget.Sickdroid.Green.Actionbar" parent="Widget.Sherlock.Light.ActionBar" >
+        <item name="android:background">@drawable/actionbar_background_light_green</item>
+    </style>
+
 
 </resources>

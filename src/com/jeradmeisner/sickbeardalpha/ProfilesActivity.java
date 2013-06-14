@@ -1,7 +1,10 @@
 package com.jeradmeisner.sickbeardalpha;
 
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
@@ -24,8 +27,8 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
 
-
         profileListView = (ListView)findViewById(R.id.profiles_list_view);
+
         profiles = SickbeardProfiles.getInstance();
 
         new LoadProfilesTask().execute(null);
@@ -50,6 +53,19 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         return false;
     }
 
+    private void doneLoading()
+    {
+        profileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                SickbeardProfile prof =  profileList.get(i);
+                prof.setProfile();
+                setResult(RESULT_OK, null);
+                finish();
+            }
+        });
+    }
+
     public void addProfile()
     {
         SherlockDialogFragment addProfileDialog = new AddProfileFragment();
@@ -58,13 +74,17 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         profiles.findProfile("sickbeard").setProfile();
         setResult(RESULT_OK, null);
         finish();*/
-
     }
 
     public void onAddProfile(String[] info, boolean https)
     {
         profiles.addProfile(this, info[0], info[1], info[2], info[3], info[4], https);
         profileAdapter.notifyDataSetChanged();
+        SickbeardProfile prof = profiles.findProfile(info[0]);
+        prof.savePrefs();
+        prof.setProfile();
+        setResult(RESULT_OK, null);
+        finish();
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {
@@ -81,6 +101,7 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
             profileAdapter = new ArrayAdapter<SickbeardProfile>(ProfilesActivity.this, android.R.layout.simple_list_item_1, profileList);
             profileListView.setAdapter(profileAdapter);
             profileAdapter.notifyDataSetChanged();
+            doneLoading();
 
         }
     }
