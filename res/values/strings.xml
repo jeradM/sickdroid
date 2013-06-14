@@ -7,6 +7,7 @@
     <string name="add_profile_string">Add Profile</string>
     <string name="menu_add_profile">Add Profile</string>
 
+    <string name="add_name_hint">Profile Name</string>
     <string name="add_host_hint">Host Name or IP</string>
     <string name="add_port_hint">Port</string>
     <string name="add_webroot_hint">Webroot (optional)</string>

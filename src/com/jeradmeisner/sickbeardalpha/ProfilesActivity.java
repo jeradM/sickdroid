@@ -1,21 +1,19 @@
 package com.jeradmeisner.sickbeardalpha;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jeradmeisner.sickbeardalpha.fragments.AddProfileFragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class ProfilesActivity extends SherlockActivity {
+public class ProfilesActivity extends SherlockFragmentActivity implements AddProfileFragment.AddProfileDialogListener {
 
     private ListView profileListView;
     private SickbeardProfiles profiles;
@@ -54,12 +52,19 @@ public class ProfilesActivity extends SherlockActivity {
 
     public void addProfile()
     {
-
-        profiles.addProfile(this, "sickbeard", "192.168.1.151", "8081", "sickbeard", "1871f40ea3a3f1b55182d6033ae7062a", false);
+        SherlockDialogFragment addProfileDialog = new AddProfileFragment();
+        addProfileDialog.show(getSupportFragmentManager(), "addProfile");
+        /*profiles.addProfile(this, "sickbeard", "192.168.1.151", "8081", "sickbeard", "1871f40ea3a3f1b55182d6033ae7062a", false);
         profiles.findProfile("sickbeard").setProfile();
         setResult(RESULT_OK, null);
-        finish();
+        finish();*/
 
+    }
+
+    public void onAddProfile(String[] info, boolean https)
+    {
+        profiles.addProfile(this, info[0], info[1], info[2], info[3], info[4], https);
+        profileAdapter.notifyDataSetChanged();
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {
