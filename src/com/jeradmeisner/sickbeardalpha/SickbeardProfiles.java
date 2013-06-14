@@ -55,7 +55,7 @@ public class SickbeardProfiles {
 
             for (String name : profileArray) {
                 SharedPreferences pref = ctx.getSharedPreferences(name, Context.MODE_PRIVATE);
-                SickbeardProfile profile = new SickbeardProfile(name, pref);
+                SickbeardProfile profile = new SickbeardProfile(ctx, name, pref);
                 profiles.add(profile);
             }
         }
@@ -79,6 +79,7 @@ public class SickbeardProfiles {
     {
         SickbeardProfile profile = new SickbeardProfile(ctx, name, host, port, webroot, apikey, https);
         profiles.add(profile);
+        writeProfiles(ctx);
     }
 
     public List<SickbeardProfile> getProfiles()

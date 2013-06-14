@@ -30,7 +30,7 @@ public class SickbeardProfile {
         savePrefs();
     }
 
-    public SickbeardProfile(String name, SharedPreferences prefs)
+    public SickbeardProfile(Context ctx, String name, SharedPreferences prefs)
     {
         this.name = name;
         host = prefs.getString(SickbeardProfiles.PREFS_HOST, "localhost");
@@ -38,6 +38,8 @@ public class SickbeardProfile {
         webroot = prefs.getString(SickbeardProfiles.PREFS_WEBROOT, "");
         apikey = prefs.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
         useHttps = prefs.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
+
+        this.ctx = ctx;
     }
 
     public void setProfile()

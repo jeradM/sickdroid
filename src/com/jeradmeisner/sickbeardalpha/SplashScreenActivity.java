@@ -50,7 +50,7 @@ public class SplashScreenActivity extends SherlockActivity {
         getSupportActionBar().hide();
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit().clear().commit();
+        prefs.edit().remove(SickbeardProfiles.PREFS_CURRENT_PROFILE).commit();
 
 
         String currentProfile = prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE");
@@ -112,7 +112,7 @@ public class SplashScreenActivity extends SherlockActivity {
         @Override
         protected Shows doInBackground(String... urls) {
             BannerCacheManager cacheManager = BannerCacheManager.getInstance(SplashScreenActivity.this);
-            cacheManager.clearCache();
+            //cacheManager.clearCache();
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS);
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
 

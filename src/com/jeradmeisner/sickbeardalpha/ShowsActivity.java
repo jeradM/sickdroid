@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class ShowsActivity extends SherlockFragmentActivity {
 
-    private static final int NUM_PAGES = 2;
+    private static final int NUM_PAGES = 3;
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -77,6 +77,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
     {
         List<Fragment> frags = new ArrayList<Fragment>();
         frags.add(bannerListFragment);
+        frags.add(new BannerListFragment());
         frags.add(new BannerListFragment());
         return frags;
     }
@@ -158,9 +159,9 @@ public class ShowsActivity extends SherlockFragmentActivity {
                 view.setScaleY(scaleFactor);
 
                 // Fade the page relative to its size.
-                view.setAlpha(MIN_ALPHA +
-                        (scaleFactor - MIN_SCALE) /
-                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+//                view.setAlpha(MIN_ALPHA +
+//                        (scaleFactor - MIN_SCALE) /
+//                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
 
             } else { // (1,+Infinity]
                 // This page is way off-screen to the right.
