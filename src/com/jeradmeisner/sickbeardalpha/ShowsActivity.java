@@ -64,6 +64,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
         pagerAdapter = new ShowPagerAdapter(getSupportFragmentManager(), fragments);
         viewPager.setAdapter(pagerAdapter);
         indicator.setViewPager(viewPager);
+        indicator.setFooterColor(getResources().getColor(R.color.white));
 
     }
 

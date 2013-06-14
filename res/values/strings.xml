@@ -4,7 +4,14 @@
     <string name="app_name" >SickDroid</string>
     <string name="action_settings" >Settings</string>
     <string name="hello_world" >Hello world!</string>
-    <string name="add_profile_string">New Profile</string>
+    <string name="add_profile_string">Add Profile</string>
     <string name="menu_add_profile">Add Profile</string>
+
+    <string name="add_host_hint">Host Name or IP</string>
+    <string name="add_port_hint">Port</string>
+    <string name="add_webroot_hint">Webroot (optional)</string>
+    <string name="add_apikey_hint">Sickbeard API Key</string>
+    <string name="add_use_https">Use HTTPS</string>
+
 
 </resources>
