@@ -10,6 +10,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -107,13 +108,25 @@ public class ShowsActivity extends SherlockFragmentActivity {
         bannerListFragment = new BannerListFragment();
         bannerAdapter = new BannerAdapter(this, R.layout.banner_list_item, showList);
         bannerListFragment.setListAdapter(bannerAdapter);
+        /*bannerListFragment.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Show show = showList.get(i);
+            }
+        });*/
     }
 
     private void setUpHistoryFragment()
     {
-        historyListFragment = new HistoryListFragment();
+        historyListFragment = new HistoryListFragment(apiUrl);
         historyAdapter = new HistoryAdapter(this, R.layout.history_list_item, historyItems);
         historyListFragment.setListAdapter(historyAdapter);
+        /*historyListFragment.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                HistoryItem item = historyItems.get(i);
+            }
+        });*/
     }
 
     public List<Fragment> getFragments()

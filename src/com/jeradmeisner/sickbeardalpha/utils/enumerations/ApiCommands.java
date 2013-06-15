@@ -7,7 +7,8 @@ public enum ApiCommands {
     BANNER("show.getbanner&tvdbid=%s"),
     POSTER("show.getposter&tvdbid=%s"),
     HISTORY("history&limit=%s&type=%s"),
-    SEASONLIST("show.seasonlist&tvdbid=%s");
+    SEASONLIST("show.seasonlist&tvdbid=%s"),
+    EPISODE("episode&tvdbid=%s&season=%s&episode=%s");
 
     private String cmdString;
 
