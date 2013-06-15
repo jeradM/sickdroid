@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Sickdroid.LightGreen" parent="Theme.Sherlock.Light" >
+    <style name="Theme.Sickdroid.LightGreen" parent="Theme.Sherlock.Light.DarkActionBar" >
         <item name="android:actionBarStyle">@style/Widget.Sickdroid.Green.Actionbar</item>
     </style>
 </resources>

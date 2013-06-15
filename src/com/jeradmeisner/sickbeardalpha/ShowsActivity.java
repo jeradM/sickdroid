@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -66,6 +68,24 @@ public class ShowsActivity extends SherlockFragmentActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getSupportMenuInflater().inflate(R.menu.show_menu, menu);
+        return super.onCreateOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_profiles:
+                Intent i = new Intent(this, ProfilesActivity.class);
+                startActivity(i);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void setUpBannerFragment()
     {
         bannerListFragment = new BannerListFragment();
@@ -83,7 +103,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
     }
 
     public class ShowPagerAdapter extends FragmentPagerAdapter {
-        private final String[] TITLES = {"Shows", "History"};
+        private final String[] TITLES = {"Shows", "History", "Future"};
         List<Fragment> frags;
 
         public ShowPagerAdapter(FragmentManager fm, List<Fragment> frags)

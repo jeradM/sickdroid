@@ -157,9 +157,13 @@ public class BannerCacheManager {
     public void addBitmap(String id, Bitmap bitmap, BitmapType type)
     {
         id = clean(id);
-        synchronized (memoryCache) {
-            memoryCache.put(id + type.toString(), bitmap);
+
+        if (type == BitmapType.BANNER) {
+            synchronized (memoryCache) {
+                memoryCache.put(id + type.toString(), bitmap);
+            }
         }
+
         try {
             File tmpDir = new File(cacheDir, type.toString());
             FileOutputStream out = new FileOutputStream(new File(tmpDir, id));

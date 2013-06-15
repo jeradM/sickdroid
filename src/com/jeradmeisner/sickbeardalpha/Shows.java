@@ -70,6 +70,17 @@ public class Shows implements Serializable
         buildList();
     }
 
+    public Show findShow(String tvdbid)
+    {
+        for (Show show : showList) {
+            if (tvdbid.equals(show.getTvdbid())) {
+                return show;
+            }
+        }
+
+        return null;
+    }
+
     /**
      * Gets the list of shows
      *

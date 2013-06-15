@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +38,8 @@ public class SplashScreenActivity extends SherlockActivity {
     private String protocol;
     SharedPreferences prefs;
 
+    BannerCacheManager cacheManager;
+
     private static final String TAG = "SplashScreen";
     private static final int REQUEST_CODE_PROFILES = 1;
 
@@ -48,6 +51,8 @@ public class SplashScreenActivity extends SherlockActivity {
 
         setContentView(R.layout.activity_splash_screen);
         getSupportActionBar().hide();
+
+        cacheManager = BannerCacheManager.getInstance(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.edit().remove(SickbeardProfiles.PREFS_CURRENT_PROFILE).commit();
@@ -111,7 +116,7 @@ public class SplashScreenActivity extends SherlockActivity {
 
         @Override
         protected Shows doInBackground(String... urls) {
-            BannerCacheManager cacheManager = BannerCacheManager.getInstance(SplashScreenActivity.this);
+
             //cacheManager.clearCache();
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS);
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
@@ -131,11 +136,17 @@ public class SplashScreenActivity extends SherlockActivity {
             Point size = new Point();
             display.getSize(size);
             int maxWidth = size.x;
+            int maxHeight = (int)(size.y / 4);
 
-            try {
+            //try {
                 for (Show show : shows.getShowList()) {
-                    if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
-                        URL url = new URL(urls[0] + "?cmd=show.getbanner&tvdbid=" + show.getTvdbid());
+                    fetchBanner(show, urls[0], maxWidth);
+                    fetchPoster(show, urls[0], maxHeight);
+                }
+
+                   /* if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
+                        String command = String.format(ApiCommands.BANNER.toString(), show.getTvdbid());
+                        URL url = new URL(urls[0] + "?cmd=" + command);
                         HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
                         urlConn.setDoInput(true);
                         urlConn.connect();
@@ -160,7 +171,7 @@ public class SplashScreenActivity extends SherlockActivity {
             catch (IOException e) {
                 Log.e(TAG, "Error fetching banner");
 
-            }
+            }*/
 
             return shows;
         }
@@ -177,6 +188,67 @@ public class SplashScreenActivity extends SherlockActivity {
                 super.onPostExecute(shows);
             }
         }
+    }
+
+    private void fetchBanner(Show show, String urlstring, int maxWidth)
+    {
+        try {
+            if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
+                String command = String.format(ApiCommands.BANNER.toString(), show.getTvdbid());
+                URL url = new URL(urlstring + "?cmd=" + command);
+                InputStream is = getInputStream(url);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(is, null, options);
+                int width = options.outWidth;
+                final int widthRatio = Math.round((float) width / (float) maxWidth);
+                options.inSampleSize = widthRatio;
+                options.inJustDecodeBounds = false;
+                is = getInputStream(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+                cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.BANNER);
+                Log.i(TAG, "Downloaded banner for " + show.getTitle());
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Error fetching banner");
+
+        }
+    }
+
+    private void fetchPoster(Show show, String urlstring, int maxHeight)
+    {
+        try {
+            if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER)) {
+                String command = String.format(ApiCommands.POSTER.toString(), show.getTvdbid());
+                URL url = new URL(urlstring + "?cmd=" + command);
+                InputStream is = getInputStream(url);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeStream(is, null, options);
+                int height = options.outHeight;
+                final int heightRatio = Math.round((float) height / (float) maxHeight);
+                options.inSampleSize = heightRatio;
+                options.inJustDecodeBounds = false;
+                is = getInputStream(url);
+                Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+                cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.POSTER);
+                Log.i(TAG, "Downloaded banner for " + show.getTitle());
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Error fetching poster");
+
+        }
+    }
+
+    private InputStream getInputStream(URL url)  throws IOException
+    {
+        HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
+        urlConn.setDoInput(true);
+        urlConn.connect();
+        InputStream is = urlConn.getInputStream();
+        return is;
     }
 
 

@@ -47,10 +47,8 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
                 addProfile();
                 return true;
             default:
-                super.onOptionsItemSelected(item);
+                return super.onOptionsItemSelected(item);
         }
-
-        return false;
     }
 
     private void doneLoading()
