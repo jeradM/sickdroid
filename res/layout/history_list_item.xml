@@ -4,8 +4,7 @@
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="4dp"
-              android:background="@color/history_list_background">
+              android:paddingLeft="4dp">
 
     <ImageView
         android:id="@+id/poster_image"

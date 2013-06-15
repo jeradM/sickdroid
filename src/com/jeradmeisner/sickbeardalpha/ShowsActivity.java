@@ -73,7 +73,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
         new LoadHistoryTask().execute(apiUrl);
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
-        //viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         indicator = (TitlePageIndicator)findViewById(R.id.title_page_indicator);
 
         List<Fragment> fragments = getFragments();

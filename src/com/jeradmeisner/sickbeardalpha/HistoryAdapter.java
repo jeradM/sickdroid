@@ -40,6 +40,13 @@ public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
             historyView = (LinearLayout)convertView;
         }
 
+        if ((position % 2) == 0) {
+            historyView.setBackgroundResource(R.color.history_list_bg_even);
+        }
+        else {
+            historyView.setBackgroundResource(R.color.history_list_bg_odd);
+        }
+
 
         ImageView posterView = (ImageView)historyView.findViewById(R.id.poster_image);
         TextView titleView = (TextView)historyView.findViewById(R.id.history_show_title);

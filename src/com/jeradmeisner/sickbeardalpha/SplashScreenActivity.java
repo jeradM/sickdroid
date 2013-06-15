@@ -13,11 +13,14 @@ import android.view.Display;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.jeradmeisner.sickbeardalpha.utils.ArtworkDownloader;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.ShowComparator;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -29,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SplashScreenActivity extends SherlockActivity {
+public class SplashScreenActivity extends SherlockActivity { //implements SharedPreferences.OnSharedPreferenceChangeListener{
 
     private String host;
     private String port;
@@ -145,36 +148,19 @@ public class SplashScreenActivity extends SherlockActivity {
                 for (Show show : shows.getShowList()) {
                     fetchBanner(show, urls[0], maxWidth);
                     fetchPoster(show, urls[0], maxHeight);
-                }
 
-                   /* if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
-                        String command = String.format(ApiCommands.BANNER.toString(), show.getTvdbid());
-                        URL url = new URL(urls[0] + "?cmd=" + command);
-                        HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
-                        urlConn.setDoInput(true);
-                        urlConn.connect();
-                        InputStream is = urlConn.getInputStream();
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeStream(is, null, options);
-                        int width = options.outWidth;
-                        final int widthRatio = Math.round((float) width / (float) maxWidth);
-                        options.inSampleSize = widthRatio;
-                        options.inJustDecodeBounds = false;
-                        urlConn = (HttpURLConnection)url.openConnection();
-                        urlConn.setDoInput(true);
-                        urlConn.connect();
-                        is = urlConn.getInputStream();
-                        Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
-                        cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.BANNER);
-                        Log.i(TAG, "Downloaded banner for " + show.getTitle());
-                    }
+                    /*try {
+                        String cmd = String.format(ApiCommands.SEASONLIST.toString(), show.getTvdbid());
+                        JSONObject showJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], cmd);
+                        JSONArray seasonsArray = SickbeardJsonUtils.parseArrayFromJson(showJson, "data");
+                        int[] seasons = new int[seasonsArray.length()];
+                        for (int i = 0; i < seasonsArray.length(); i++) {
+                            seasons[i] = seasonsArray.getInt(i);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error loading seasons");
+                    }*/
                 }
-            }
-            catch (IOException e) {
-                Log.e(TAG, "Error fetching banner");
-
-            }*/
 
             return shows;
         }
@@ -197,18 +183,7 @@ public class SplashScreenActivity extends SherlockActivity {
     {
         try {
             if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
-                String command = String.format(ApiCommands.BANNER.toString(), show.getTvdbid());
-                URL url = new URL(urlstring + "?cmd=" + command);
-                InputStream is = getInputStream(url);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeStream(is, null, options);
-                int width = options.outWidth;
-                final int widthRatio = Math.round((float) width / (float) maxWidth);
-                options.inSampleSize = widthRatio;
-                options.inJustDecodeBounds = false;
-                is = getInputStream(url);
-                Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+                Bitmap bitmap = ArtworkDownloader.fetchBanner(urlstring, show, maxWidth);
                 cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.BANNER);
                 Log.i(TAG, "Downloaded banner for " + show.getTitle());
             }
@@ -223,18 +198,7 @@ public class SplashScreenActivity extends SherlockActivity {
     {
         try {
             if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER)) {
-                String command = String.format(ApiCommands.POSTER.toString(), show.getTvdbid());
-                URL url = new URL(urlstring + "?cmd=" + command);
-                InputStream is = getInputStream(url);
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeStream(is, null, options);
-                int height = options.outHeight;
-                final int heightRatio = Math.round((float) height / (float) maxHeight);
-                options.inSampleSize = heightRatio;
-                options.inJustDecodeBounds = false;
-                is = getInputStream(url);
-                Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
+                Bitmap bitmap = ArtworkDownloader.fetchPoster(urlstring, show, maxHeight);
                 cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.POSTER);
                 Log.i(TAG, "Downloaded banner for " + show.getTitle());
             }

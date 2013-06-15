@@ -4,6 +4,9 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Show implements Parcelable {
 
@@ -19,6 +22,10 @@ public class Show implements Parcelable {
     private int banner;
     private int poster;
     private int paused;
+
+    private int[] seasonList;
+
+    private List<Season> seasons = new ArrayList<Season>();
 
     private Bitmap bannerImage;
     private Bitmap posterImage;
@@ -103,6 +110,16 @@ public class Show implements Parcelable {
 
     public int hasPaused() {
         return paused;
+    }
+
+    public void setSeasonList(int[] seasonList)
+    {
+        this.seasonList = seasonList;
+    }
+
+    public int[] getSeasonList()
+    {
+        return seasonList;
     }
 
     public Bitmap getBannerImage() {
