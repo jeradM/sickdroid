@@ -31,12 +31,12 @@ public class SickbeardJsonUtils {
      * 					webroot and API key ( "http://hostname:port/webroot/api/apikey/" )
      * @param  cmd      the API command to execute
      */
-    public static JSONObject getJsonFromUrl(String hostUrl, ApiCommands cmd)
+    public static JSONObject getJsonFromUrl(String hostUrl, String cmd)
     {
         JSONObject json;
         StringBuilder sb = new StringBuilder();
         HttpClient client = new DefaultHttpClient();
-        String showUrl = hostUrl + "?cmd=" + cmd.toString();
+        String showUrl = hostUrl + "?cmd=" + cmd;
         HttpGet get = new HttpGet(showUrl);
 
         try {

@@ -114,6 +114,10 @@ public class Show implements Parcelable {
         this.bannerImage = bannerImage;
     }
 
+    public Bitmap getPosterImage() {
+        return posterImage;
+    }
+
     public void setPosterImage(Bitmap posterImage)
     {
         this.posterImage = posterImage;

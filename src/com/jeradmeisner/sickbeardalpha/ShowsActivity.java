@@ -1,7 +1,6 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,14 +8,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
+import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
+import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 import com.viewpagerindicator.TitlePageIndicator;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,9 @@ import java.util.List;
 public class ShowsActivity extends SherlockFragmentActivity {
 
     private static final int NUM_PAGES = 3;
+    private static final String TAG = "ShowsActivity";
+
+    private String apiUrl;
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -35,6 +43,9 @@ public class ShowsActivity extends SherlockFragmentActivity {
     private BannerAdapter bannerAdapter;
     private List<Show> showList;
     private Shows shows;
+    private HistoryListFragment historyListFragment;
+    private HistoryAdapter historyAdapter;
+    private List<HistoryItem> historyItems;
 
     private BannerCacheManager bcm;
 
@@ -46,18 +57,23 @@ public class ShowsActivity extends SherlockFragmentActivity {
         Intent i = getIntent();
         showList = i.getParcelableArrayListExtra("showlist");
         shows = new Shows(showList);
+        apiUrl = i.getStringExtra("apiUrl");
 
         bcm = BannerCacheManager.getInstance(this);
 
         getSupportActionBar().setDisplayUseLogoEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        setUpBannerFragment();
+        historyItems = new ArrayList<HistoryItem>();
 
-        new LoadBannersTask().execute(null);
+        setUpBannerFragment();
+        setUpHistoryFragment();
+
+        new LoadImagesTask().execute(null);
+        new LoadHistoryTask().execute(apiUrl);
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
-        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        //viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         indicator = (TitlePageIndicator)findViewById(R.id.title_page_indicator);
 
         List<Fragment> fragments = getFragments();
@@ -93,11 +109,18 @@ public class ShowsActivity extends SherlockFragmentActivity {
         bannerListFragment.setListAdapter(bannerAdapter);
     }
 
+    private void setUpHistoryFragment()
+    {
+        historyListFragment = new HistoryListFragment();
+        historyAdapter = new HistoryAdapter(this, R.layout.history_list_item, historyItems);
+        historyListFragment.setListAdapter(historyAdapter);
+    }
+
     public List<Fragment> getFragments()
     {
         List<Fragment> frags = new ArrayList<Fragment>();
         frags.add(bannerListFragment);
-        frags.add(new BannerListFragment());
+        frags.add(historyListFragment);
         frags.add(new BannerListFragment());
         return frags;
     }
@@ -128,7 +151,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
         }
     }
 
-    public class LoadBannersTask extends AsyncTask<Object, Void, Void> {
+    public class LoadImagesTask extends AsyncTask<Object, Void, Void> {
 
         protected Void doInBackground(Object... params)
         {
@@ -148,6 +171,45 @@ public class ShowsActivity extends SherlockFragmentActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             bannerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public class LoadHistoryTask extends AsyncTask<String, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String historyString = ApiCommands.HISTORY.toString();
+            String historyCmd = String.format(historyString, "40", "downloaded");
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], historyCmd);
+            JSONArray array = SickbeardJsonUtils.parseArrayFromJson(obj, "data");
+
+            try {
+                for(int i = 0; i < array.length(); i++) {
+                    JSONObject nextItem = array.getJSONObject(i);
+                    String date = nextItem.get("date").toString();
+                    String episode = nextItem.get("episode").toString();
+                    String season = nextItem.get("season").toString();
+                    String id = nextItem.get("tvdbid").toString();
+
+                    Show newShow = shows.findShow(id);
+
+                    if (newShow != null) {
+                        newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+                        historyItems.add(new HistoryItem(newShow, season, episode, date));
+                    }
+
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Error loading history");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            historyAdapter.notifyDataSetChanged();
         }
     }
 

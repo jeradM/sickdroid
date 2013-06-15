@@ -38,12 +38,14 @@ public class SplashScreenActivity extends SherlockActivity {
     private String protocol;
     SharedPreferences prefs;
 
+    private String apiUrl;
+
     BannerCacheManager cacheManager;
 
     private static final String TAG = "SplashScreen";
     private static final int REQUEST_CODE_PROFILES = 1;
 
-    String apiurl = "http://192.168.1.151:8081/sickbeard/api/1871f40ea3a3f1b55182d6033ae7062a/";
+    //String apiurl = "http://192.168.1.151:8081/sickbeard/api/1871f40ea3a3f1b55182d6033ae7062a/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,15 +101,16 @@ public class SplashScreenActivity extends SherlockActivity {
         if (!webroot.equals(""))
             webroot += "/";
 
-        String url = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
+        apiUrl = String.format("%s://%s:%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
 
-        new BuildShowsListTask().execute(url);
+        new BuildShowsListTask().execute(apiUrl);
     }
 
     public void launchMainActivity(ArrayList<Show> shows)
     {
         Intent i = new Intent(this, ShowsActivity.class);
         i.putParcelableArrayListExtra("showlist", shows);
+        i.putExtra("apiUrl", apiUrl);
         startActivity(i);
     }
 
@@ -118,14 +121,14 @@ public class SplashScreenActivity extends SherlockActivity {
         protected Shows doInBackground(String... urls) {
 
             //cacheManager.clearCache();
-            JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS);
+            JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS.toString());
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
 
-            try {
+            /*try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
+            }*/
 
             if (dataJson == null)
                 return null;
@@ -136,7 +139,7 @@ public class SplashScreenActivity extends SherlockActivity {
             Point size = new Point();
             display.getSize(size);
             int maxWidth = size.x;
-            int maxHeight = (int)(size.y / 4);
+            int maxHeight = (int)(size.y / 16);
 
             //try {
                 for (Show show : shows.getShowList()) {

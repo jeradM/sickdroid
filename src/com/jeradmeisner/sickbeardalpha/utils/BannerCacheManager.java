@@ -88,8 +88,11 @@ public class BannerCacheManager {
                 dir.mkdirs();
         }
 
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
         int memoryClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        int cacheSize = memoryClass * 1024 * 1024 / 4;
+        //int cacheSize = memoryClass * 1024 * 1024 / 8;
+        int cacheSize = maxMemory / 8;
 
         this.memoryCache = new LruCache<String, Bitmap>(cacheSize) {
             protected int sizeOf(String id, Bitmap bitmap) {
@@ -241,10 +244,11 @@ public class BannerCacheManager {
                 in.close();
 
                 // Add bitmap to memory cache
-                synchronized (memoryCache) {
-                    memoryCache.put(id + type.toString(), bitmap);
+                if (type == BitmapType.BANNER) {
+                    synchronized (memoryCache) {
+                        memoryCache.put(id + type.toString(), bitmap);
+                    }
                 }
-
                 return bitmap;
             }
         }

@@ -3,6 +3,7 @@
     <color name="sickbeard_light_green">#FFC1D53A</color>
     <color name="sickbeard_darker_green">#ffa3da32</color>
     <color name="bannerview_title_background">#88000000</color>
+    <color name="history_list_background">#55C1D53A</color>
     <color name="white">#FFFFFFFF</color>
 
 </resources>
