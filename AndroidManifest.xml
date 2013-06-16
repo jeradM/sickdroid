@@ -20,5 +20,6 @@
         <activity android:name="ShowsActivity"
                   android:label="@string/app_name" />
         <activity android:name=".ProfilesActivity"/>
+        <activity android:name=".ShowDetailsActivity"/>
     </application>
 </manifest>

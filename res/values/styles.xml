@@ -22,4 +22,24 @@
     </style>
 
 
+    <!-- These are just placeholders in the scrollview for show details activity -->
+
+    <style name="Item">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">300dp</item>
+    </style>
+
+    <style name="Item.Top">
+        <item name="android:background">@color/sickbeard_darker_green</item>
+    </style>
+
+    <style name="Item.Bottom">
+        <item name="android:background">@color/sickbeard_light_green</item>
+    </style>
+
+    <style name="Item.Bottom.Alt">
+        <item name="android:background">@color/abs__background_holo_dark</item>
+    </style>
+
+
 </resources>

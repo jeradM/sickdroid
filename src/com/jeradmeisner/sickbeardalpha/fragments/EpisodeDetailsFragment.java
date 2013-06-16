@@ -71,13 +71,16 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         episodeTextView.setText("Season " + season + ", Episode " + episode);
         descriptionTextView.setText(description);
 
-        ImageView titleView = new ImageView(getActivity().getApplicationContext());
-        titleView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        ImageView titleView = (ImageView)inflator.inflate(R.layout.episode_dialog_title, null);
         Drawable banner = new BitmapDrawable(getActivity().getResources(), show.getBannerImage());
         titleView.setBackground(banner);
 
         builder.setCustomTitle(titleView);
-        builder.setView(view);
+        builder.setView(view)
+                .setPositiveButton("Search", null)
+                .setNegativeButton("Close", null)
+                .setNeutralButton("Status", null)
+                ;
         return builder.create();
 
     }

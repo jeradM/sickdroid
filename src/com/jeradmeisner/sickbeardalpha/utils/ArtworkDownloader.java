@@ -51,9 +51,9 @@ public class ArtworkDownloader {
         return BitmapFactory.decodeStream(is, null, options);
     }
 
-    public static Bitmap fetchFanart(String tvdbid) throws IOException
+    public static Bitmap fetchFanart(String tvdbid, int maxWidth) throws IOException
     {
-        return TVDBFanartDownloader.fetchFanart(tvdbid);
+        return TVDBFanartDownloader.fetchFanart(tvdbid, maxWidth);
     }
 
     private static InputStream getInputStream(URL url) throws IOException

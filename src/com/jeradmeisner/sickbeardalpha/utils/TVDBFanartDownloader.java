@@ -40,7 +40,7 @@ public class TVDBFanartDownloader {
      *
      * @return a fanart image for this show (16:9 ratio)
      */
-    public static Bitmap fetchFanart(String tvdbid) throws IOException
+    public static Bitmap fetchFanart(String tvdbid, int maxWidth) throws IOException
     {
         String urlString = getFanartUrl(tvdbid);
 
@@ -50,16 +50,30 @@ public class TVDBFanartDownloader {
 
         try {
             URL url = new URL(urlString);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            InputStream in = conn.getInputStream();
-            return BitmapFactory.decodeStream(in);
+            InputStream is = getInputStream(url);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(is, null, options);
+            int width = options.outWidth;
+            final int widthRatio = Math.round((float) width / (float) maxWidth);
+            options.inSampleSize = widthRatio;
+            options.inJustDecodeBounds = false;
+            is = getInputStream(url);
+            return BitmapFactory.decodeStream(is, null, options);
         }
         catch (IOException e) {
             Log.e(LOG_NAME, "IOException: Failed to fetch image");
             throw e;
         }
+    }
+
+    private static InputStream getInputStream(URL url) throws IOException
+    {
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        conn.setDoInput(true);
+        conn.connect();
+        InputStream in = conn.getInputStream();
+        return in;
     }
 
     /**
