@@ -22,13 +22,7 @@ import com.jeradmeisner.sickbeardalpha.widgets.ObservableScrollView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/16/13
- * Time: 1:22 AM
- * To change this template use File | Settings | File Templates.
- */
+
 public class ShowDetailsActivity extends SherlockActivity implements ObservableScrollView.ScrollListener {
 
     private ObservableScrollView mScrollView;

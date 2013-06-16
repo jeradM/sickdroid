@@ -127,12 +127,6 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS.toString());
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
 
-            /*try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }*/
-
             if (dataJson == null)
                 return null;
 
@@ -144,24 +138,11 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
             int maxWidth = size.x;
             int maxHeight = (int)(size.y / 16);
 
-            //try {
-                for (Show show : shows.getShowList()) {
-                    fetchBanner(show, urls[0], maxWidth);
-                    fetchPoster(show, urls[0], maxHeight);
-                    fetchFanart(show, maxWidth);
-
-                    /*try {
-                        String cmd = String.format(ApiCommands.SEASONLIST.toString(), show.getTvdbid());
-                        JSONObject showJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], cmd);
-                        JSONArray seasonsArray = SickbeardJsonUtils.parseArrayFromJson(showJson, "data");
-                        int[] seasons = new int[seasonsArray.length()];
-                        for (int i = 0; i < seasonsArray.length(); i++) {
-                            seasons[i] = seasonsArray.getInt(i);
-                        }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Error loading seasons");
-                    }*/
-                }
+            for (Show show : shows.getShowList()) {
+                fetchBanner(show, urls[0], maxWidth);
+                fetchPoster(show, urls[0], maxHeight);
+                fetchFanart(show, maxWidth);
+            }
 
             return shows;
         }

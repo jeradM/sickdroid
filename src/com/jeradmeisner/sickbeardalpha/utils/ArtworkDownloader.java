@@ -10,13 +10,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/15/13
- * Time: 10:30 AM
- * To change this template use File | Settings | File Templates.
- */
+
 public class ArtworkDownloader {
 
     public static Bitmap fetchBanner(String urlstring, Show show, int maxWidth) throws IOException
