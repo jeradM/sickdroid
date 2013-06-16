@@ -63,6 +63,9 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         actionBarBackground = getResources().getDrawable(R.drawable.show_details_actionbar);
         getSupportActionBar().setBackgroundDrawable(actionBarBackground);
         getSupportActionBar().setTitle(show.getTitle());
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 
 
     }
