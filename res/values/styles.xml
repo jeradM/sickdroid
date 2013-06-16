@@ -19,6 +19,12 @@
 
     <style name="Widget.Sickdroid.Green.Actionbar" parent="Widget.Sherlock.Light.ActionBar" >
         <item name="android:background">@drawable/actionbar_background_light_green</item>
+        <item name="android:titleTextStyle">@style/Widget.Sickdroid.Green.Actionbar.Text</item>
+    </style>
+
+    <style name="Widget.Sickdroid.Green.Actionbar.Text" parent="Widget.Sickdroid.Green.Actionbar" >
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 
@@ -30,15 +36,15 @@
     </style>
 
     <style name="Item.Top">
-        <item name="android:background">#FFFF0000</item>
+        <item name="android:background">@color/history_list_bg_odd</item>
     </style>
 
     <style name="Item.Bottom">
-        <item name="android:background">#FF44DD22</item>
+        <item name="android:background">@color/history_list_bg_even</item>
     </style>
 
     <style name="Item.Bottom.Alt">
-        <item name="android:background">#FF0044FF</item>
+        <item name="android:background">#FFFFFFFF</item>
     </style>
 
 

@@ -68,6 +68,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
         actionBarBackground = getResources().getDrawable(R.drawable.show_details_actionbar);
         getSupportActionBar().setBackgroundDrawable(actionBarBackground);
+        getSupportActionBar().setTitle(show.getTitle());
 
 
     }
@@ -93,7 +94,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             imageDrawable = new BitmapDrawable(getResources(), bitmap);
-            fanart.setBackground(imageDrawable);
+            fanart.setImageBitmap(bitmap);
             header.setImageBitmap(bitmap);
         }
     }
