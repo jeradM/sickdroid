@@ -148,6 +148,7 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
                 for (Show show : shows.getShowList()) {
                     fetchBanner(show, urls[0], maxWidth);
                     fetchPoster(show, urls[0], maxHeight);
+                    fetchFanart(show, maxWidth);
 
                     /*try {
                         String cmd = String.format(ApiCommands.SEASONLIST.toString(), show.getTvdbid());
@@ -207,6 +208,20 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
             Log.e(TAG, "Error fetching poster");
 
         }
+    }
+
+    private void fetchFanart(Show show, int maxWidth)
+    {
+        try {
+            if (!cacheManager.contains(show.getTvdbid(), BannerCacheManager.BitmapType.FANART)) {
+                Bitmap bitmap = ArtworkDownloader.fetchFanart(show.getTvdbid(), maxWidth);
+                cacheManager.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.FANART);
+            }
+        }
+        catch (IOException e) {
+            Log.e(TAG, "Error fetching fanart");
+        }
+
     }
 
     private InputStream getInputStream(URL url)  throws IOException

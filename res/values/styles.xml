@@ -30,15 +30,15 @@
     </style>
 
     <style name="Item.Top">
-        <item name="android:background">@color/sickbeard_darker_green</item>
+        <item name="android:background">#FFFF0000</item>
     </style>
 
     <style name="Item.Bottom">
-        <item name="android:background">@color/sickbeard_light_green</item>
+        <item name="android:background">#FF44DD22</item>
     </style>
 
     <style name="Item.Bottom.Alt">
-        <item name="android:background">@color/abs__background_holo_dark</item>
+        <item name="android:background">#FF0044FF</item>
     </style>
 
 

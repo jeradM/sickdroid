@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.jeradmeisner.sickbeardalpha.utils.ArtworkDownloader;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.widgets.ObservableScrollView;
 
 import java.io.IOException;
@@ -35,6 +36,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private ImageView header;
     private Drawable actionBarBackground;
     private BitmapDrawable imageDrawable;
+
+    BannerCacheManager bcm = BannerCacheManager.getInstance(this);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,26 +87,14 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
         @Override
         protected Bitmap doInBackground(String... params) {
-
-            Display display = getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int maxWidth = size.x;
-
-            try {
-                Bitmap bitmap = ArtworkDownloader.fetchFanart(params[0], maxWidth);
-                return bitmap;
-            }
-            catch (IOException e) {
-                Log.e("ShowDetailsActivity", "Unable to fetch fanart");
-                return BitmapFactory.decodeResource(getResources(), R.id.transparent_header);
-            }
+            return bcm.get(params[0], BannerCacheManager.BitmapType.FANART);
         }
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             imageDrawable = new BitmapDrawable(getResources(), bitmap);
             fanart.setBackground(imageDrawable);
+            header.setImageBitmap(bitmap);
         }
     }
 }

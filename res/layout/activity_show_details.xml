@@ -32,8 +32,8 @@
                     android:adjustViewBounds="true"
                     android:alpha="0"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/show_scroll_header"
-                    android:contentDescription="ScrollHeader" android:cropToPadding="false"/>
+                    android:contentDescription="ScrollHeader"
+                    android:cropToPadding="false"/>
 
             <View style="@style/Item.Top" android:layout_width="fill_parent"/>
 
