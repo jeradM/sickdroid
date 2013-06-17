@@ -94,6 +94,13 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         getSupportMenuInflater().inflate(R.menu.show_menu, menu);
         searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
         searchView.setOnQueryTextListener(ShowsActivity.this);
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                bannerAdapter.getFilter().filter(null);
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -139,14 +146,23 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        bannerAdapter.getFilter().filter(newText, new Filter.FilterListener() {
-            @Override
-            public void onFilterComplete(int i) {
-                bannerAdapter.notifyDataSetChanged();
-            }
-        });
+        if (newText.length() > 0) {
+            bannerAdapter.getFilter().filter(newText);
+            return true;
+        }
+        else {
+            bannerAdapter.getFilter().filter(null);
+            return true;
+        }
+    }
+
+    public boolean onClose()
+    {
+        bannerAdapter.getFilter().filter(null);
         return true;
     }
+
+
 
     public class ShowPagerAdapter extends FragmentPagerAdapter {
         private final String[] TITLES = {"Shows", "History", "Future"};

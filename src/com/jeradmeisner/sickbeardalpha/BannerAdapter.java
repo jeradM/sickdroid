@@ -13,7 +13,7 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
     int resource;
     Context context;
-    private List<Show> shows;
+    private List<Show> shows, orig;
     private ShowFilter showFilter;
 
     public BannerAdapter (Context context, int resource, List<Show> shows)
@@ -22,6 +22,7 @@ public class BannerAdapter extends ArrayAdapter<Show> {
         this.resource = resource;
         this.context = context;
         this.shows = shows;
+        orig = new ArrayList<Show>(this.shows);
     }
 
 
@@ -53,9 +54,8 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
     @Override
     public Filter getFilter() {
-        if (showFilter == null) {
+        if (showFilter == null)
             showFilter = new ShowFilter();
-        }
         return showFilter;
     }
 
@@ -67,14 +67,14 @@ public class BannerAdapter extends ArrayAdapter<Show> {
             FilterResults results = new FilterResults();
 
             if (constraints == null || constraints.length() == 0) {
-                results.values = shows;
-                results.count = shows.size();
+                results.values = orig;
+                results.count = orig.size();
             }
             else {
                 List<Show> values = new ArrayList<Show>();
 
-                for (Show show : shows) {
-                    if (show.getTitle().toLowerCase().startsWith(constraints.toString().toLowerCase())) {
+                for (Show show : orig) {
+                    if (show.getTitle().toLowerCase().contains(constraints.toString().toLowerCase())) {
                         values.add(show);
                     }
                 }
@@ -87,12 +87,12 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
         @Override
         protected void publishResults(CharSequence constraints, FilterResults results) {
-            if (results.count == 0) {
-                notifyDataSetInvalidated();
+            clear();
+            for (Show show : (List<Show>)results.values) {
+                add(show);
             }
-            else {
-                shows = (List<Show>)results.values;
-            }
+            notifyDataSetChanged();
+
         }
     }
 }
