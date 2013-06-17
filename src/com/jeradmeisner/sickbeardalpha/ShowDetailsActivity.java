@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.jeradmeisner.sickbeardalpha.utils.ArtworkDownloader;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
@@ -63,11 +64,21 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         actionBarBackground = getResources().getDrawable(R.drawable.show_details_actionbar);
         getSupportActionBar().setBackgroundDrawable(actionBarBackground);
         getSupportActionBar().setTitle(show.getTitle());
-        getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

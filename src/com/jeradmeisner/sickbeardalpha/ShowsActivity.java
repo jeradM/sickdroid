@@ -62,7 +62,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
 
         bcm = BannerCacheManager.getInstance(this);
 
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         historyItems = new ArrayList<HistoryItem>();
