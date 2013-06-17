@@ -12,6 +12,10 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.Show;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class EpisodeDetailsFragment extends SherlockDialogFragment {
 
     private Show show;
@@ -55,7 +59,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         descriptionTextView = (TextView)view.findViewById(R.id.details_description);
 
         nameTextView.setText(name);
-        dateTextView.setText(date);
+        dateTextView.setText(toDateFormat(date));
         episodeTextView.setText("Season " + season + ", Episode " + episode);
 
         if (description.length() < 1) {
@@ -71,6 +75,25 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
                 .setNeutralButton("Status", null)
                 ;
         return builder.create();
+
+    }
+
+    private String toDateFormat(String dateString)
+    {
+        String[] dateElements = dateString.split("-");
+
+        int year = Integer.parseInt(dateElements[0]);
+        int month = Integer.parseInt(dateElements[1]);
+        int day = Integer.parseInt(dateElements[2]);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month, day);
+
+        Date date = cal.getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
+        String formatted = formatter.format(date);
+
+        return ("Aired on " + formatted);
 
     }
 }

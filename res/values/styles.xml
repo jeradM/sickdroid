@@ -26,6 +26,7 @@
     <style name="Widget.Sickdroid.Green.Actionbar.Text" parent="Widget.Sickdroid.Green.Actionbar" >
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 

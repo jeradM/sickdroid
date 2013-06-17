@@ -35,7 +35,16 @@
                     android:contentDescription="ScrollHeader"
                     android:cropToPadding="false"/>
 
-            <View style="@style/Item.Top" android:layout_width="fill_parent"/>
+            <TextView
+                android:id="@+id/series_overview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/history_list_bg_odd"
+                android:text="hfksj fkf kshdf skdhf skdhf ksdhf ksdhf ksdhf skhf skdhf skhfskdfhskf skdfh skdfh skdfh skdfh skdfh skdfh ksfh ksdhf ksdfh kshfskfhlsdjfhskfhsfuhisduf sif ih fishf isdfh sifuh"
+                android:paddingLeft="10dp" android:paddingTop="10dp"
+                android:paddingRight="10dp" android:paddingBottom="10dp"/>
+
+
 
             <View style="@style/Item.Bottom" />
             <View style="@style/Item.Bottom.Alt" />

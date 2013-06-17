@@ -18,12 +18,14 @@ public class Show implements Parcelable {
     private String language;
     private String nextEpisodeAirDate;
 
+    private String overview;
+
     private int airByDate;
     private int banner;
     private int poster;
     private int paused;
 
-    private int[] seasonList;
+    private int[] seasonList = new int[20];
 
     private List<Season> seasons = new ArrayList<Season>();
 
@@ -56,10 +58,17 @@ public class Show implements Parcelable {
         status = parcel.readString();
         language = parcel.readString();
         nextEpisodeAirDate = parcel.readString();
+        overview = parcel.readString();
         airByDate = parcel.readInt();
         banner = parcel.readInt();
         poster = parcel.readInt();
         paused = parcel.readInt();
+
+        int len = parcel.readInt();
+
+        for (int i = 0; i < len; i++) {
+            seasonList[i] = parcel.readInt();
+        }
     }
 
 
@@ -94,6 +103,16 @@ public class Show implements Parcelable {
 
     public String getNextEpisodeAirDate() {
         return nextEpisodeAirDate;
+    }
+
+    public void setOverview(String overview)
+    {
+        this.overview = overview;
+    }
+
+    public String getOverview()
+    {
+        return overview;
     }
 
     public int hasAirByDate() {
@@ -154,10 +173,17 @@ public class Show implements Parcelable {
         parcel.writeString(status);
         parcel.writeString(language);
         parcel.writeString(nextEpisodeAirDate);
+        parcel.writeString(overview);
         parcel.writeInt(airByDate);
         parcel.writeInt(banner);
         parcel.writeInt(poster);
         parcel.writeInt(paused);
+
+        parcel.writeInt(seasonList.length);
+
+        for (int s : seasonList) {
+            parcel.writeInt(s);
+        }
     }
 
     public static Creator<Show> CREATOR = new Creator<Show>() {

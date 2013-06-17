@@ -13,10 +13,7 @@ import android.view.Display;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
-import com.jeradmeisner.sickbeardalpha.utils.ArtworkDownloader;
-import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
-import com.jeradmeisner.sickbeardalpha.utils.ShowComparator;
-import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickbeardalpha.utils.*;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 
 import org.json.JSONArray;
@@ -142,6 +139,7 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
                 fetchBanner(show, urls[0], maxWidth);
                 fetchPoster(show, urls[0], maxHeight);
                 fetchFanart(show, maxWidth);
+                fetchSeriesOverview(show);
             }
 
             return shows;
@@ -203,6 +201,11 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
             Log.e(TAG, "Error fetching fanart");
         }
 
+    }
+
+    private void fetchSeriesOverview(Show show)
+    {
+        show.setOverview(TVDBApi.getSeriesOverview(show));
     }
 
     private InputStream getInputStream(URL url)  throws IOException

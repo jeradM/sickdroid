@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class ShowDetailsActivity extends SherlockActivity implements ObservableScrollView.ScrollListener {
 
     private ObservableScrollView mScrollView;
+    private TextView seriesOverview;
     private ImageView fanart;
     private ImageView header;
     private Drawable actionBarBackground;
@@ -42,6 +44,9 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         Intent i = getIntent();
         ArrayList<Show> showList = i.getParcelableArrayListExtra("show");
         Show show = showList.get(0);
+
+        seriesOverview = (TextView)findViewById(R.id.series_overview);
+        seriesOverview.setText(show.getOverview());
 
         fanart = (ImageView)findViewById(R.id.fanart_image);
         new SetFanartTask().execute(show.getTvdbid());

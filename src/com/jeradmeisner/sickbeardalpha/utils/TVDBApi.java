@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.jeradmeisner.sickbeardalpha.Show;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -26,11 +27,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
-public class TVDBFanartDownloader {
+public class TVDBApi {
 
     public static final String LOG_NAME = "TVDatabaseParser";
     public static final String TVDB_API_KEY = "1A41A145E2DA0053";
-    public static final String API_URL = "http://www.thetvdb.com/api/%s/series/%s/banners.xml";
+    public static final String SERIES_API_URL = "http://thetvdb.com/api/GetSeries.php?seriesname=%s";
+    public static final String BANNER_API_URL = "http://www.thetvdb.com/api/%s/series/%s/banners.xml";
     public static final String BANNER_URL_PREFIX = "http://www.thetvdb.com/banners/%s";
 
     /**
@@ -79,9 +81,9 @@ public class TVDBFanartDownloader {
     /**
      * Finds the input stream to the XML content for the given TVDBID
      */
-    private static InputStream getArtworkInputStream(String tvdbid)
+    private static InputStream getInputStream(String url)
     {
-        String url = String.format(API_URL, TVDB_API_KEY, tvdbid);
+        //String url = String.format(BANNER_API_URL, TVDB_API_KEY, tvdbid);
 
         HttpParams params = new BasicHttpParams();
         params.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
@@ -122,11 +124,12 @@ public class TVDBFanartDownloader {
     {
         String url = null;
         String bannerPath = "";
+        String inputUrl = String.format(BANNER_API_URL, TVDB_API_KEY, tvdbid);
 
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = factory.newPullParser();
-            InputStream is = getArtworkInputStream(tvdbid);
+            InputStream is = getInputStream(inputUrl);
             if (is == null) {
                 throw new IOException();
             }
@@ -178,6 +181,65 @@ public class TVDBFanartDownloader {
             Log.e(LOG_NAME, "IOException: No stream available");
             return null;
         }
+    }
+
+    public static String getSeriesOverview(Show show)
+    {
+        String url = String.format(SERIES_API_URL, show.getTitle().replace(" ", "_"));
+
+        InputStream is = getInputStream(url);
+
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = factory.newPullParser();
+            if (is == null) {
+                throw new IOException();
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            parser.setInput(reader);
+
+            int eventType = parser.getEventType();
+            boolean isSeriesId = false;
+            boolean isCorrectSeries = false;
+            boolean isOverview = false;
+
+            while(eventType != XmlPullParser.END_DOCUMENT) {
+                String tagName = parser.getName();
+
+                switch(eventType) {
+                    case XmlPullParser.START_TAG:
+                        if (tagName.equalsIgnoreCase("seriesid")) {
+                            isSeriesId = true;
+                        }
+                        else if (tagName.equalsIgnoreCase("Overview")) {
+                            isOverview = true;
+                        }
+                    break;
+
+                    case XmlPullParser.TEXT:
+                        if (isSeriesId && parser.getText().equalsIgnoreCase(show.getTvdbid())) {
+                            isCorrectSeries = true;
+                            isSeriesId = false;
+                        }
+                        else if (isCorrectSeries && isOverview) {
+                                return parser.getText();
+                        }
+                }
+
+                eventType = parser.next();
+            }
+
+            return null;
+        }
+        catch (XmlPullParserException e) {
+            Log.e(LOG_NAME, "XmlPullParserError: Parser failed");
+            return null;
+        }
+        catch (IOException e) {
+            Log.e(LOG_NAME, "IOException: No stream available");
+            return null;
+        }
+
     }
 
 }

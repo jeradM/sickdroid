@@ -53,7 +53,8 @@ public class BannerAdapter extends ArrayAdapter<Show> {
     }
 
     @Override
-    public Filter getFilter() {
+    public Filter getFilter()
+    {
         if (showFilter == null)
             showFilter = new ShowFilter();
         return showFilter;
@@ -63,7 +64,8 @@ public class BannerAdapter extends ArrayAdapter<Show> {
     {
 
         @Override
-        protected FilterResults performFiltering(CharSequence constraints) {
+        protected FilterResults performFiltering(CharSequence constraints)
+        {
             FilterResults results = new FilterResults();
 
             if (constraints == null || constraints.length() == 0) {
@@ -86,13 +88,14 @@ public class BannerAdapter extends ArrayAdapter<Show> {
         }
 
         @Override
-        protected void publishResults(CharSequence constraints, FilterResults results) {
+        @SuppressWarnings("unchecked")
+        protected void publishResults(CharSequence constraints, FilterResults results)
+        {
             clear();
             for (Show show : (List<Show>)results.values) {
                 add(show);
             }
             notifyDataSetChanged();
-
         }
     }
 }
