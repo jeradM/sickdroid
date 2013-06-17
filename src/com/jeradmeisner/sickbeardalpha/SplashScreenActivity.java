@@ -112,6 +112,7 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
         i.putParcelableArrayListExtra("showlist", shows);
         i.putExtra("apiUrl", apiUrl);
         startActivity(i);
+
     }
 
     private class BuildShowsListTask extends AsyncTask<String, Void, Shows> {

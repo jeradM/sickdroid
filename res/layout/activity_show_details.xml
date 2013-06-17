@@ -42,7 +42,8 @@
                 android:background="@color/history_list_bg_odd"
                 android:text="hfksj fkf kshdf skdhf skdhf ksdhf ksdhf ksdhf skhf skdhf skhfskdfhskf skdfh skdfh skdfh skdfh skdfh skdfh ksfh ksdhf ksdfh kshfskfhlsdjfhskfhsfuhisduf sif ih fishf isdfh sifuh"
                 android:paddingLeft="10dp" android:paddingTop="10dp"
-                android:paddingRight="10dp" android:paddingBottom="10dp"/>
+                android:paddingRight="10dp" android:paddingBottom="10dp" android:textSize="14sp"
+                android:textIsSelectable="true"/>
 
 
 

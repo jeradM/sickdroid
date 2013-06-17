@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -46,7 +47,9 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         Show show = showList.get(0);
 
         seriesOverview = (TextView)findViewById(R.id.series_overview);
+        //Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         seriesOverview.setText(show.getOverview());
+        //seriesOverview.setTypeface(face);
 
         fanart = (ImageView)findViewById(R.id.fanart_image);
         new SetFanartTask().execute(show.getTvdbid());
