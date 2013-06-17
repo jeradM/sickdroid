@@ -8,12 +8,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Filter;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
@@ -30,7 +33,7 @@ import java.util.List;
 /**
  * Created by jerad on 6/10/13.
  */
-public class ShowsActivity extends SherlockFragmentActivity {
+public class ShowsActivity extends SherlockFragmentActivity implements SearchView.OnQueryTextListener {
 
     private static final int NUM_PAGES = 3;
     private static final String TAG = "ShowsActivity";
@@ -47,6 +50,9 @@ public class ShowsActivity extends SherlockFragmentActivity {
     private HistoryListFragment historyListFragment;
     private HistoryAdapter historyAdapter;
     private List<HistoryItem> historyItems;
+    private SearchView searchView;
+
+    MenuItem searchItem;
 
     private BannerCacheManager bcm;
 
@@ -88,11 +94,27 @@ public class ShowsActivity extends SherlockFragmentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.show_menu, menu);
-        return super.onCreateOptionsMenu(menu);    //To change body of overridden methods use File | Settings | File Templates.
+        searchItem = menu.findItem(R.id.search_shows);
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                ShowsActivity.this.onClose();
+                return true;
+            }
+        });
+        searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
+        searchView.setOnQueryTextListener(ShowsActivity.this);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.menu_profiles:
                 Intent i = new Intent(this, ProfilesActivity.class);
@@ -108,12 +130,6 @@ public class ShowsActivity extends SherlockFragmentActivity {
         bannerListFragment = new BannerListFragment();
         bannerAdapter = new BannerAdapter(this, R.layout.banner_list_item, showList);
         bannerListFragment.setListAdapter(bannerAdapter);
-        /*bannerListFragment.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Show show = showList.get(i);
-            }
-        });*/
     }
 
     private void setUpHistoryFragment()
@@ -121,12 +137,6 @@ public class ShowsActivity extends SherlockFragmentActivity {
         historyListFragment = new HistoryListFragment(apiUrl);
         historyAdapter = new HistoryAdapter(this, R.layout.history_list_item, historyItems);
         historyListFragment.setListAdapter(historyAdapter);
-        /*historyListFragment.getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                HistoryItem item = historyItems.get(i);
-            }
-        });*/
     }
 
     public List<Fragment> getFragments()
@@ -137,6 +147,31 @@ public class ShowsActivity extends SherlockFragmentActivity {
         frags.add(new BannerListFragment());
         return frags;
     }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.length() > 0) {
+            bannerAdapter.getFilter().filter(newText);
+            return true;
+        }
+        else {
+            bannerAdapter.getFilter().filter(null);
+            return true;
+        }
+    }
+
+    public boolean onClose()
+    {
+        bannerAdapter.getFilter().filter(null);
+        return true;
+    }
+
+
 
     public class ShowPagerAdapter extends FragmentPagerAdapter {
         private final String[] TITLES = {"Shows", "History", "Future"};
@@ -254,9 +289,9 @@ public class ShowsActivity extends SherlockFragmentActivity {
                 view.setScaleY(scaleFactor);
 
                 // Fade the page relative to its size.
-//                view.setAlpha(MIN_ALPHA +
-//                        (scaleFactor - MIN_SCALE) /
-//                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
+                view.setAlpha(MIN_ALPHA +
+                        (scaleFactor - MIN_SCALE) /
+                                (1 - MIN_SCALE) * (1 - MIN_ALPHA));
 
             } else { // (1,+Infinity]
                 // This page is way off-screen to the right.

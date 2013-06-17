@@ -33,4 +33,10 @@ public class BannerListFragment extends SherlockListFragment {
         });
 
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getListView().setTextFilterEnabled(true);
+    }
 }
