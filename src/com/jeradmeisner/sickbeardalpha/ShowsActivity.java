@@ -52,6 +52,8 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private List<HistoryItem> historyItems;
     private SearchView searchView;
 
+    MenuItem searchItem;
+
     private BannerCacheManager bcm;
 
 
@@ -92,20 +94,27 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getSupportMenuInflater().inflate(R.menu.show_menu, menu);
-        searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
-        searchView.setOnQueryTextListener(ShowsActivity.this);
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchItem = menu.findItem(R.id.search_shows);
+        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onClose() {
-                bannerAdapter.getFilter().filter(null);
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                ShowsActivity.this.onClose();
                 return true;
             }
         });
+        searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
+        searchView.setOnQueryTextListener(ShowsActivity.this);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
             case R.id.menu_profiles:
                 Intent i = new Intent(this, ProfilesActivity.class);
