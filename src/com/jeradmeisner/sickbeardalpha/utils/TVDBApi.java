@@ -185,7 +185,7 @@ public class TVDBApi {
 
     public static String getSeriesOverview(Show show)
     {
-        String url = String.format(SERIES_API_URL, show.getTitle().replace(" ", "_"));
+        String url = String.format(SERIES_API_URL, show.getTitle().replaceAll(" ", "_").replaceAll("&", "-"));
 
         InputStream is = getInputStream(url);
 

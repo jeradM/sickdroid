@@ -111,6 +111,8 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
         Intent i = new Intent(this, ShowsActivity.class);
         i.putParcelableArrayListExtra("showlist", shows);
         i.putExtra("apiUrl", apiUrl);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
 
     }
