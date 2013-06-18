@@ -1,20 +1,15 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 
 
-public class FutureItem {
+public class FutureItem implements FutureListItem {
 
     private Show show;
     private int season;
     private int episode;
     private String date;
-    private String when;
-    boolean header = false;
-
-    protected FutureItem() {
-        header = true;
-    }
 
     public FutureItem(Show show, int season, int episode, String date)
     {
@@ -42,6 +37,6 @@ public class FutureItem {
 
     public boolean isHeader()
     {
-        return header;
+        return false;
     }
 }

@@ -20,6 +20,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.FutureListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
+import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
@@ -56,7 +57,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private List<HistoryItem> historyItems;
 
     private FutureListFragment futureListFragment;
-    private List<FutureItem> futureItems;
+    private List<FutureListItem> futureItems;
     private FutureAdapter futureAdapter;
 
 
@@ -82,7 +83,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         historyItems = new ArrayList<HistoryItem>();
-        futureItems = new ArrayList<FutureItem>();
+        futureItems = new ArrayList<FutureListItem>();
 
         setUpBannerFragment();
         setUpHistoryFragment();

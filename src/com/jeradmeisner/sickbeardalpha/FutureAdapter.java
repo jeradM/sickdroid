@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 
 import java.util.List;
@@ -19,12 +20,12 @@ import java.util.List;
  * Time: 7:42 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FutureAdapter extends ArrayAdapter<FutureItem> {
+public class FutureAdapter extends ArrayAdapter<FutureListItem> {
 
     private Context context;
-    private List<FutureItem> items;
+    private List<FutureListItem> items;
 
-    public FutureAdapter(Context context, int resource, List<FutureItem> items)
+    public FutureAdapter(Context context, int resource, List<FutureListItem> items)
     {
         super(context, resource, items);
 
@@ -36,7 +37,7 @@ public class FutureAdapter extends ArrayAdapter<FutureItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LinearLayout futureView;
-        FutureItem item = getItem(position);
+        FutureListItem item = getItem(position);
 
         if (item.isHeader()) {
 
@@ -50,7 +51,7 @@ public class FutureAdapter extends ArrayAdapter<FutureItem> {
             }
 
             TextView tv = (TextView)futureView.findViewById(R.id.future_section);
-            tv.setText(((FutureSectionHeader) item).getTitle());
+            tv.setText(((FutureSectionHeader)item).getTitle());
         }
         else {
 
@@ -64,7 +65,7 @@ public class FutureAdapter extends ArrayAdapter<FutureItem> {
             }
 
             ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
-            iv.setImageBitmap(item.getShow().getBannerImage());
+            iv.setImageBitmap(((FutureItem)item).getShow().getBannerImage());
         }
 
         return futureView;

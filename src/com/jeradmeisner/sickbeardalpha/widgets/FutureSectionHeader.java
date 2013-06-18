@@ -1,6 +1,6 @@
 package com.jeradmeisner.sickbeardalpha.widgets;
 
-import com.jeradmeisner.sickbeardalpha.FutureItem;
+import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +9,7 @@ import com.jeradmeisner.sickbeardalpha.FutureItem;
  * Time: 7:20 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FutureSectionHeader extends FutureItem {
+public class FutureSectionHeader implements FutureListItem {
 
     private String title;
 
@@ -21,5 +21,10 @@ public class FutureSectionHeader extends FutureItem {
     public String getTitle()
     {
         return title;
+    }
+
+    public boolean isHeader()
+    {
+        return true;
     }
 }
