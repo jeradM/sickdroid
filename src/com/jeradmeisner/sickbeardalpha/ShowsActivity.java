@@ -18,10 +18,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
+import com.jeradmeisner.sickbeardalpha.fragments.FutureListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
+import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +45,21 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private TitlePageIndicator indicator;
+
     private BannerListFragment bannerListFragment;
     private BannerAdapter bannerAdapter;
     private List<Show> showList;
     private Shows shows;
+
     private HistoryListFragment historyListFragment;
     private HistoryAdapter historyAdapter;
     private List<HistoryItem> historyItems;
+
+    private FutureListFragment futureListFragment;
+    private List<FutureItem> futureItems;
+    private FutureAdapter futureAdapter;
+
+
     private SearchView searchView;
 
     MenuItem searchItem;
@@ -72,9 +82,11 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         historyItems = new ArrayList<HistoryItem>();
+        futureItems = new ArrayList<FutureItem>();
 
         setUpBannerFragment();
         setUpHistoryFragment();
+        setUpFutureFragment();
 
         new LoadImagesTask().execute(null);
         new LoadHistoryTask().execute(apiUrl);
@@ -139,12 +151,19 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         historyListFragment.setListAdapter(historyAdapter);
     }
 
+    private void setUpFutureFragment()
+    {
+        futureListFragment = new FutureListFragment();
+        futureAdapter = new FutureAdapter(this, 0, futureItems);
+        futureListFragment.setListAdapter(futureAdapter);
+    }
+
     public List<Fragment> getFragments()
     {
         List<Fragment> frags = new ArrayList<Fragment>();
         frags.add(bannerListFragment);
         frags.add(historyListFragment);
-        frags.add(new BannerListFragment());
+        frags.add(futureListFragment);
         return frags;
     }
 
@@ -259,6 +278,59 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         protected void onPostExecute(Void aVoid) {
             historyAdapter.notifyDataSetChanged();
         }
+    }
+
+    public class LoadFuturetask extends AsyncTask<String, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            futureItems.clear();
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], ApiCommands.FUTURE.toString());
+            JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+            JSONArray today = SickbeardJsonUtils.parseArrayFromJson(data, "today");
+            JSONArray soon = SickbeardJsonUtils.parseArrayFromJson(data, "soon");
+            JSONArray later = SickbeardJsonUtils.parseArrayFromJson(data, "later");
+            JSONArray missed = SickbeardJsonUtils.parseArrayFromJson(data, "missed");
+
+            try {
+                futureItems.add(new FutureSectionHeader("Today"));
+                for (int t = 0; t < today.length(); t++) {
+                    JSONObject next = today.getJSONObject(t);
+                    addFutureItem(next);
+                }
+                futureItems.add(new FutureSectionHeader("Soon"));
+                for (int i = 0; i < soon.length(); i++) {
+                    JSONObject next = soon.getJSONObject(i);
+                    addFutureItem(next);
+                }
+                futureItems.add(new FutureSectionHeader("Later"));
+                for (int i = 0; i < later.length(); i++) {
+                    JSONObject next = later.getJSONObject(i);
+                    addFutureItem(next);
+                }
+            }
+            catch (JSONException e) {
+                Log.e(TAG, "Error fetching future");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            futureAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void addFutureItem(JSONObject next) throws JSONException
+    {
+        String tvdbid = next.getString("tvdbid");
+        int season = next.getInt("season");
+        int episode = next.getInt("episode");
+        String airdate = next.getString("airdate");
+        Show show = shows.findShow(tvdbid);
+        futureItems.add(new FutureItem(show, season, episode, airdate));
     }
 
     public class ZoomOutPageTransformer implements ViewPager.PageTransformer {

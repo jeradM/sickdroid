@@ -1,4 +1,4 @@
-package com.jeradmeisner.sickbeardalpha.widgets;
+package com.jeradmeisner.sickbeardalpha;
 
 import com.jeradmeisner.sickbeardalpha.Show;
 
@@ -6,11 +6,17 @@ import com.jeradmeisner.sickbeardalpha.Show;
 public class FutureItem {
 
     private Show show;
-    private String season;
-    private String episode;
+    private int season;
+    private int episode;
     private String date;
+    private String when;
+    boolean header = false;
 
-    public FutureItem(Show show, String season, String episode, String date)
+    protected FutureItem() {
+        header = true;
+    }
+
+    public FutureItem(Show show, int season, int episode, String date)
     {
         this.show = show;
         this.season = season;
@@ -22,15 +28,20 @@ public class FutureItem {
         return show;
     }
 
-    public String getSeason() {
+    public int getSeason() {
         return season;
     }
 
-    public String getEpisode() {
+    public int getEpisode() {
         return episode;
     }
 
     public String getDate() {
         return date;
+    }
+
+    public boolean isHeader()
+    {
+        return header;
     }
 }
