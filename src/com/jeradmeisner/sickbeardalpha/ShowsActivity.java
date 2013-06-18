@@ -1,24 +1,27 @@
 package com.jeradmeisner.sickbeardalpha;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Filter;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
+import com.jeradmeisner.sickbeardalpha.service.ShowLoaderService;
+import com.jeradmeisner.sickbeardalpha.service.ShowLoaderService.SickBinder;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
@@ -33,7 +36,7 @@ import java.util.List;
 /**
  * Created by jerad on 6/10/13.
  */
-public class ShowsActivity extends SherlockFragmentActivity implements SearchView.OnQueryTextListener {
+public class ShowsActivity extends SherlockFragmentActivity implements SearchView.OnQueryTextListener, ShowLoaderService.ShowLoaderListener {
 
     private static final int NUM_PAGES = 3;
     private static final String TAG = "ShowsActivity";
@@ -51,6 +54,9 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private HistoryAdapter historyAdapter;
     private List<HistoryItem> historyItems;
     private SearchView searchView;
+
+    private ShowLoaderService mService;
+    private boolean isBound = false;
 
     MenuItem searchItem;
 
@@ -89,6 +95,23 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         indicator.setViewPager(viewPager);
         indicator.setFooterColor(getResources().getColor(R.color.white));
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent i = new Intent(this, ShowLoaderService.class);
+        bindService(i, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (isBound) {
+            unbindService(mConnection);
+            isBound = false;
+        }
     }
 
     @Override
@@ -169,6 +192,11 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     {
         bannerAdapter.getFilter().filter(null);
         return true;
+    }
+
+    public void onServiceUpdate(int flag)
+    {
+
     }
 
 
@@ -299,5 +327,19 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
             }
         }
     }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            SickBinder binder = (SickBinder)iBinder;
+            mService = binder.getService();
+            isBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            isBound = false;
+        }
+    };
 
 }

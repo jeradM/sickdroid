@@ -56,9 +56,8 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         profileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SickbeardProfile prof =  profileList.get(i);
+                SickbeardProfile prof = profileList.get(i);
                 prof.setProfile();
-                setResult(RESULT_OK, null);
                 finish();
             }
         });
