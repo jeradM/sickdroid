@@ -85,12 +85,14 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         historyItems = new ArrayList<HistoryItem>();
         futureItems = new ArrayList<FutureListItem>();
 
-        setUpBannerFragment();
+        //setUpBannerFragment();
+        bannerListFragment = new BannerListFragment(shows);
         setUpHistoryFragment();
         setUpFutureFragment();
 
-        new LoadImagesTask().execute(null);
+        //new LoadImagesTask().execute(null);
         new LoadHistoryTask().execute(apiUrl);
+        new LoadFuturetask().execute(apiUrl);
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -138,12 +140,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         }
     }
 
-    private void setUpBannerFragment()
+   /* private void setUpBannerFragment()
     {
         bannerListFragment = new BannerListFragment();
         bannerAdapter = new BannerAdapter(this, R.layout.banner_list_item, showList);
         bannerListFragment.setListAdapter(bannerAdapter);
-    }
+    }*/
 
     private void setUpHistoryFragment()
     {
