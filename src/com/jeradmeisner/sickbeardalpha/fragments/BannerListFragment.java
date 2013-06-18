@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.*;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BannerListFragment extends SherlockListFragment {
+public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener {
 
     private Shows shows;
     private BannerCacheManager bcm;
@@ -58,7 +59,7 @@ public class BannerListFragment extends SherlockListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new LoadImagesTask().execute(null);
+        new LoadImagesTask().execute();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -68,9 +69,31 @@ public class BannerListFragment extends SherlockListFragment {
         getListView().setTextFilterEnabled(true);
     }
 
-    public class LoadImagesTask extends AsyncTask<Object, Void, Void> {
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
-        protected Void doInBackground(Object... params)
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (newText.length() > 0) {
+            adapter.getFilter().filter(newText);
+            return true;
+        }
+        else {
+            adapter.getFilter().filter(null);
+            return true;
+        }
+    }
+
+    public void clearFilter()
+    {
+        adapter.getFilter().filter(null);
+    }
+
+    public class LoadImagesTask extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... params)
         {
             for (Show show : shows.getShowList()) {
                 show.setBannerImage(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));

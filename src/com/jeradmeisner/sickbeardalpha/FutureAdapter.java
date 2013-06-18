@@ -13,13 +13,7 @@ import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/17/13
- * Time: 7:42 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class FutureAdapter extends ArrayAdapter<FutureListItem> {
 
     private Context context;
@@ -39,30 +33,19 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
         LinearLayout futureView;
         FutureListItem item = getItem(position);
 
+        futureView = new LinearLayout(getContext());
+        LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
         if (item.isHeader()) {
 
-            if (convertView == null) {
-                futureView = new LinearLayout(getContext());
-                LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                li.inflate(R.layout.future_section_header, futureView, true);
-            }
-            else {
-                futureView = (LinearLayout)convertView;
-            }
+            li.inflate(R.layout.future_section_header, futureView, true);
 
             TextView tv = (TextView)futureView.findViewById(R.id.future_section);
             tv.setText(((FutureSectionHeader)item).getTitle());
         }
         else {
-
-            if (convertView == null) {
-                futureView = new LinearLayout(getContext());
-                LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                li.inflate(R.layout.future_list_item, futureView, true);
-            }
-            else {
-                futureView = (LinearLayout)convertView;
-            }
+            li.inflate(R.layout.future_list_item, futureView, true);
 
             ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
             iv.setImageBitmap(((FutureItem)item).getShow().getBannerImage());

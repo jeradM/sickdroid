@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by jerad on 6/10/13.
  */
-public class ShowsActivity extends SherlockFragmentActivity implements SearchView.OnQueryTextListener {
+public class ShowsActivity extends SherlockFragmentActivity {
 
     private static final int NUM_PAGES = 3;
     private static final String TAG = "ShowsActivity";
@@ -48,7 +48,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private TitlePageIndicator indicator;
 
     private BannerListFragment bannerListFragment;
-    private BannerAdapter bannerAdapter;
     private List<Show> showList;
     private Shows shows;
 
@@ -57,8 +56,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
     private List<HistoryItem> historyItems;
 
     private FutureListFragment futureListFragment;
-    private List<FutureListItem> futureItems;
-    private FutureAdapter futureAdapter;
 
 
     private SearchView searchView;
@@ -83,16 +80,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         historyItems = new ArrayList<HistoryItem>();
-        futureItems = new ArrayList<FutureListItem>();
 
-        //setUpBannerFragment();
         bannerListFragment = new BannerListFragment(shows);
-        setUpHistoryFragment();
-        setUpFutureFragment();
+        futureListFragment = new FutureListFragment(shows, apiUrl);
 
-        //new LoadImagesTask().execute(null);
+        setUpHistoryFragment();
         new LoadHistoryTask().execute(apiUrl);
-        new LoadFuturetask().execute(apiUrl);
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -118,12 +111,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                ShowsActivity.this.onClose();
+                bannerListFragment.clearFilter();
                 return true;
             }
         });
         searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
-        searchView.setOnQueryTextListener(ShowsActivity.this);
+        searchView.setOnQueryTextListener(bannerListFragment);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -140,13 +133,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         }
     }
 
-   /* private void setUpBannerFragment()
-    {
-        bannerListFragment = new BannerListFragment();
-        bannerAdapter = new BannerAdapter(this, R.layout.banner_list_item, showList);
-        bannerListFragment.setListAdapter(bannerAdapter);
-    }*/
-
     private void setUpHistoryFragment()
     {
         historyListFragment = new HistoryListFragment(apiUrl);
@@ -154,49 +140,17 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         historyListFragment.setListAdapter(historyAdapter);
     }
 
-    private void setUpFutureFragment()
-    {
-        futureListFragment = new FutureListFragment();
-        futureAdapter = new FutureAdapter(this, 0, futureItems);
-        futureListFragment.setListAdapter(futureAdapter);
-    }
-
     public List<Fragment> getFragments()
     {
         List<Fragment> frags = new ArrayList<Fragment>();
         frags.add(bannerListFragment);
-        frags.add(historyListFragment);
         frags.add(futureListFragment);
+        frags.add(historyListFragment);
         return frags;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (newText.length() > 0) {
-            bannerAdapter.getFilter().filter(newText);
-            return true;
-        }
-        else {
-            bannerAdapter.getFilter().filter(null);
-            return true;
-        }
-    }
-
-    public boolean onClose()
-    {
-        bannerAdapter.getFilter().filter(null);
-        return true;
-    }
-
-
-
     public class ShowPagerAdapter extends FragmentPagerAdapter {
-        private final String[] TITLES = {"Shows", "History", "Future"};
+        private final String[] TITLES = {"Shows", "Future", "History"};
         List<Fragment> frags;
 
         public ShowPagerAdapter(FragmentManager fm, List<Fragment> frags)
@@ -218,29 +172,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         @Override
         public CharSequence getPageTitle(int position) {
             return TITLES[position % TITLES.length];
-        }
-    }
-
-    public class LoadImagesTask extends AsyncTask<Object, Void, Void> {
-
-        protected Void doInBackground(Object... params)
-        {
-            for (Show show : showList) {
-                show.setBannerImage(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
-                publishProgress();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            bannerAdapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            bannerAdapter.notifyDataSetChanged();
         }
     }
 
@@ -283,7 +214,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         }
     }
 
-    public class LoadFuturetask extends AsyncTask<String, Void, Void>
+    /*public class LoadFuturetask extends AsyncTask<String, Void, Void>
     {
 
         @Override
@@ -334,7 +265,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements SearchVie
         String airdate = next.getString("airdate");
         Show show = shows.findShow(tvdbid);
         futureItems.add(new FutureItem(show, season, episode, airdate));
-    }
+    }*/
 
     public class ZoomOutPageTransformer implements ViewPager.PageTransformer {
         private  float MIN_SCALE = 0.85f;
