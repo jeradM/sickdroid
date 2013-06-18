@@ -1,37 +1,72 @@
 package com.jeradmeisner.sickbeardalpha.fragments;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.jeradmeisner.sickbeardalpha.HistoryItem;
-import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.*;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/14/13
- * Time: 10:29 PM
- * To change this template use File | Settings | File Templates.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class HistoryListFragment extends SherlockListFragment {
 
+    private static final String TAG = "HistoryListFragment";
+
+    private List<HistoryItem> items;
+    private HistoryAdapter adapter;
+    private Shows shows;
     private String apiurl;
+
     private String episode;
     private String season;
     private String title;
+
+    BannerCacheManager bcm;
+
     SherlockDialogFragment showDetails;
     Show show;
 
-    public HistoryListFragment(String apiurl)
+    public HistoryListFragment(Shows shows, String apiurl)
     {
         super();
+        this.shows = shows;
         this.apiurl = apiurl;
+        items = new ArrayList<HistoryItem>();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bcm = BannerCacheManager.getInstance(getSherlockActivity());
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ListView list = getListView();
+        list.setDividerHeight(0);
+
+        adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
+        setListAdapter(adapter);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        new LoadHistoryTask().execute(apiurl);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
@@ -42,6 +77,45 @@ public class HistoryListFragment extends SherlockListFragment {
         episode = item.getEpisode();
         season = item.getSeason();
         new LoadEpisodeDetailsTask().execute(show.getTvdbid());
+    }
+
+    public class LoadHistoryTask extends AsyncTask<String, Void, Void>
+    {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            String historyString = ApiCommands.HISTORY.toString();
+            String historyCmd = String.format(historyString, "40", "downloaded");
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], historyCmd);
+            JSONArray array = SickbeardJsonUtils.parseArrayFromJson(obj, "data");
+
+            try {
+                for(int i = 0; i < array.length(); i++) {
+                    JSONObject nextItem = array.getJSONObject(i);
+                    String date = nextItem.get("date").toString();
+                    String episode = nextItem.get("episode").toString();
+                    String season = nextItem.get("season").toString();
+                    String id = nextItem.get("tvdbid").toString();
+
+                    Show newShow = shows.findShow(id);
+
+                    if (newShow != null) {
+                        newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+                        items.add(new HistoryItem(newShow, season, episode, date));
+                    }
+
+                }
+            } catch (JSONException e) {
+                Log.e(TAG, "Error loading history");
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private class LoadEpisodeDetailsTask extends AsyncTask<String, Void, String[]>
