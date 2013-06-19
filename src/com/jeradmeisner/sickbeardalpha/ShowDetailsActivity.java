@@ -43,8 +43,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         setContentView(R.layout.activity_show_details);
 
         Intent i = getIntent();
-        ArrayList<Show> showList = i.getParcelableArrayListExtra("show");
-        Show show = showList.get(0);
+        Show show = i.getParcelableExtra("show");
 
         seriesOverview = (TextView)findViewById(R.id.series_overview);
         //Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");

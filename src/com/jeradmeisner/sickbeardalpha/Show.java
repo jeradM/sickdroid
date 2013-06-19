@@ -66,6 +66,9 @@ public class Show implements Parcelable {
 
         int len = parcel.readInt();
 
+        bannerImage = parcel.readParcelable(null);
+        posterImage = parcel.readParcelable(null);
+
         for (int i = 0; i < len; i++) {
             seasonList[i] = parcel.readInt();
         }
@@ -180,6 +183,9 @@ public class Show implements Parcelable {
         parcel.writeInt(paused);
 
         parcel.writeInt(seasonList.length);
+
+        parcel.writeParcelable(bannerImage, PARCELABLE_WRITE_RETURN_VALUE);
+        parcel.writeParcelable(posterImage, PARCELABLE_WRITE_RETURN_VALUE);
 
         for (int s : seasonList) {
             parcel.writeInt(s);

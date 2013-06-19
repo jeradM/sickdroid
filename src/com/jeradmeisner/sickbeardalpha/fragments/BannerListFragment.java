@@ -48,7 +48,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
                 Show show = (Show)adapterView.getItemAtPosition(i);
                 ArrayList<Show> shows = new ArrayList<Show>();
                 shows.add(show);
-                intent.putParcelableArrayListExtra("show", shows);
+                intent.putExtra("show", show);
                 startActivity(intent);
             }
         });
