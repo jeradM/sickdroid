@@ -1,7 +1,9 @@
 package com.jeradmeisner.sickbeardalpha.fragments;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,10 +78,21 @@ public class FutureListFragment extends SherlockListFragment {
             JSONArray later = SickbeardJsonUtils.parseArrayFromJson(data, "later");
             JSONArray missed = SickbeardJsonUtils.parseArrayFromJson(data, "missed");
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getSherlockActivity());
+            boolean showMissed = prefs.getBoolean("show_missed", true);
+
             try {
+                if (showMissed && missed.length() > 0) {
+                    items.add(new FutureSectionHeader("Missed"));
+                    for (int i = 0; i < missed.length(); i++) {
+                        JSONObject next = missed.getJSONObject(i);
+                        addFutureItem(next);
+                    }
+                }
+                publishProgress();
                 items.add(new FutureSectionHeader("Today"));
-                for (int t = 0; t < today.length(); t++) {
-                    JSONObject next = today.getJSONObject(t);
+                for (int i = 0; i < today.length(); i++) {
+                    JSONObject next = today.getJSONObject(i);
                     addFutureItem(next);
                 }
                 publishProgress();

@@ -98,6 +98,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
         searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                viewPager.setCurrentItem(0);
                 return true;
             }
 
@@ -109,6 +110,7 @@ public class ShowsActivity extends SherlockFragmentActivity {
         });
         searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
         searchView.setOnQueryTextListener(bannerListFragment);
+
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -32,6 +32,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        new LoadImagesTask().execute();
     }
 
     @Override
@@ -59,7 +60,6 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new LoadImagesTask().execute();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
