@@ -32,6 +32,11 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        refreshBanners();
+    }
+
+    public void refreshBanners()
+    {
         new LoadImagesTask().execute();
     }
 

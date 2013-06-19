@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
+import com.jeradmeisner.sickbeardalpha.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
@@ -51,6 +52,12 @@ public class HistoryListFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        refreshHistory();
+    }
+
+    public void refreshHistory()
+    {
+        new LoadHistoryTask().execute(apiurl);
     }
 
     @Override
@@ -65,18 +72,13 @@ public class HistoryListFragment extends SherlockListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new LoadHistoryTask().execute(apiurl);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         HistoryItem item = (HistoryItem)l.getAdapter().getItem(position);
-        show = item.getShow();
-        title = show.getTitle();
-        episode = item.getEpisode();
-        season = item.getSeason();
-        new LoadEpisodeDetailsTask().execute(show.getTvdbid());
+        new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
     public class LoadHistoryTask extends AsyncTask<String, Void, Void>
@@ -118,7 +120,7 @@ public class HistoryListFragment extends SherlockListFragment {
         }
     }
 
-    private class LoadEpisodeDetailsTask extends AsyncTask<String, Void, String[]>
+    /*private class LoadEpisodeDetailsTask extends AsyncTask<String, Void, String[]>
     {
         @Override
         protected String[] doInBackground(String... s) {
@@ -144,5 +146,5 @@ public class HistoryListFragment extends SherlockListFragment {
             showDetails = new EpisodeDetailsFragment(show, s[0], s[1], s[2], s[3], s[4], s[5]);
             showDetails.show(getActivity().getSupportFragmentManager(), "episodeDetails");
         }
-    }
+    }*/
 }

@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
+import com.jeradmeisner.sickbeardalpha.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
@@ -47,6 +48,12 @@ public class FutureListFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        refreshFuture();
+    }
+
+    public void refreshFuture()
+    {
+        new LoadFuturetask().execute(apiurl);
     }
 
     @Override
@@ -61,8 +68,13 @@ public class FutureListFragment extends SherlockListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        new LoadFuturetask().execute(apiurl);
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        HistoryItem item = (HistoryItem)l.getAdapter().getItem(position);
+        new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
     public class LoadFuturetask extends AsyncTask<String, Void, Void>
@@ -118,8 +130,8 @@ public class FutureListFragment extends SherlockListFragment {
         private void addFutureItem(JSONObject next) throws JSONException
         {
             String tvdbid = next.getString("tvdbid");
-            int season = next.getInt("season");
-            int episode = next.getInt("episode");
+            String season = String.valueOf(next.getInt("season"));
+            String episode = String.valueOf(next.getInt("episode"));
             String airdate = next.getString("airdate");
             Show show = shows.findShow(tvdbid);
             items.add(new FutureItem(show, season, episode, airdate));
