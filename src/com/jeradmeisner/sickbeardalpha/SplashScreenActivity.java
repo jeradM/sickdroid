@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.jeradmeisner.sickbeardalpha.utils.*;
@@ -126,8 +127,12 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
             JSONObject mainJson = SickbeardJsonUtils.getJsonFromUrl(urls[0], ApiCommands.SHOWS.toString());
             JSONObject dataJson = SickbeardJsonUtils.parseObjectFromJson(mainJson, "data");
 
-            if (dataJson == null)
+            if (dataJson == null) {
+                Intent i = new Intent(SplashScreenActivity.this, ProfilesActivity.class);
+                i.putExtra("failed", true);
+                startActivityForResult(i, REQUEST_CODE_PROFILES);
                 return null;
+            }
 
             Shows shows = new Shows(dataJson);
 
@@ -149,7 +154,7 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
 
         @Override
         protected void onPostExecute(Shows shows) {
-            if (shows.getShowList() == null) {
+            if (shows == null) {
                 Log.e(TAG, "Null show list");
             }
             else {

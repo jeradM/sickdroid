@@ -1,5 +1,6 @@
 package com.jeradmeisner.sickbeardalpha;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -27,11 +29,23 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
 
+
+
         profileListView = (ListView)findViewById(R.id.profiles_list_view);
 
         profiles = SickbeardProfiles.getInstance();
 
         new LoadProfilesTask().execute(null);
+    }
+
+    @Override
+    protected void onResume() {
+        Intent i = getIntent();
+        boolean failed = i.getBooleanExtra("failed", false);
+        if (failed) {
+            Toast.makeText(this, "Connection to host failed", 2000).show();
+        }
+        super.onResume();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override

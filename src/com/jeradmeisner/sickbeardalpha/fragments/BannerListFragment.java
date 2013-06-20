@@ -51,8 +51,6 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getSherlockActivity(), ShowDetailsActivity.class);
                 Show show = (Show)adapterView.getItemAtPosition(i);
-                ArrayList<Show> shows = new ArrayList<Show>();
-                shows.add(show);
                 intent.putExtra("show", show);
                 startActivity(intent);
             }

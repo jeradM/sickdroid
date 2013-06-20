@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -12,6 +14,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +40,11 @@ public class SickbeardJsonUtils {
     {
         JSONObject json;
         StringBuilder sb = new StringBuilder();
-        HttpClient client = new DefaultHttpClient();
+        HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, 2000);
+        HttpConnectionParams.setSoTimeout(params, 2000);
+        HttpClient client = new DefaultHttpClient(params);
+
         String showUrl = hostUrl + "?cmd=" + cmd;
         HttpGet get = new HttpGet(showUrl);
 
@@ -51,7 +60,7 @@ public class SickbeardJsonUtils {
                     sb.append(line);
                 }
 
-                json = new JSONObject(sb.toString());
+                return new JSONObject(sb.toString());
             }
             else {
                 Log.e(LOG_NAME, "Unable to contact sickbeard host");
@@ -63,15 +72,13 @@ public class SickbeardJsonUtils {
             return null;
         }
         catch (IOException e) {
-            Log.e(LOG_NAME, "IO Error");
+            //Log.e(LOG_NAME, "IO Error: " + e.getMessage());
             return null;
         }
         catch (JSONException e) {
             Log.e(LOG_NAME, "JSON Error");
             return null;
         }
-
-        return json;
     }
 
     /**
