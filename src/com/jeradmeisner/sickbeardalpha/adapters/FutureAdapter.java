@@ -1,4 +1,4 @@
-package com.jeradmeisner.sickbeardalpha;
+package com.jeradmeisner.sickbeardalpha.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.jeradmeisner.sickbeardalpha.R;
+import com.jeradmeisner.sickbeardalpha.data.FutureItem;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 

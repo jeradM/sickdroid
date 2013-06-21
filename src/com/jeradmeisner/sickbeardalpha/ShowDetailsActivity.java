@@ -2,15 +2,10 @@ package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Point;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -18,12 +13,9 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.jeradmeisner.sickbeardalpha.utils.ArtworkDownloader;
+import com.jeradmeisner.sickbeardalpha.data.Show;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.widgets.ObservableScrollView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class ShowDetailsActivity extends SherlockActivity implements ObservableScrollView.ScrollListener {

@@ -1,15 +1,14 @@
-package com.jeradmeisner.sickbeardalpha;
+package com.jeradmeisner.sickbeardalpha.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jeradmeisner.sickbeardalpha.data.Show;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.Log;
 
 public class Shows implements Serializable

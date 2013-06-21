@@ -2,7 +2,7 @@ package com.jeradmeisner.sickbeardalpha.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.data.Show;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 
 import java.io.IOException;

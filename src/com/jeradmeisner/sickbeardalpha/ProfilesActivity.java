@@ -1,7 +1,6 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,8 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jeradmeisner.sickbeardalpha.data.SickbeardProfile;
+import com.jeradmeisner.sickbeardalpha.data.SickbeardProfiles;
 import com.jeradmeisner.sickbeardalpha.fragments.AddProfileFragment;
 
 import java.util.List;

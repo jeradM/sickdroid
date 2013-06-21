@@ -1,11 +1,8 @@
 package com.jeradmeisner.sickbeardalpha.task;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
-import com.actionbarsherlock.app.SherlockListFragment;
-import com.jeradmeisner.sickbeardalpha.HistoryItem;
-import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
 import com.jeradmeisner.sickbeardalpha.fragments.EpisodeDetailsFragment;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
@@ -19,11 +16,11 @@ import org.json.JSONObject;
  * Time: 12:02 AM
  * To change this template use File | Settings | File Templates.
  */
-public class LoadEpisodeDetailsTask extends AsyncTask<HistoryItem, Void, String[]>
+public class LoadEpisodeDetailsTask extends AsyncTask<HistoryEpisode, Void, String[]>
 {
     private String apiurl;
     FragmentManager fm;
-    HistoryItem i;
+    HistoryEpisode i;
 
     public LoadEpisodeDetailsTask(String apiurl, FragmentManager fm)
     {
@@ -32,7 +29,7 @@ public class LoadEpisodeDetailsTask extends AsyncTask<HistoryItem, Void, String[
     }
 
     @Override
-    protected String[] doInBackground(HistoryItem... s) {
+    protected String[] doInBackground(HistoryEpisode... s) {
         i = s[0];
         String cmd = String.format(ApiCommands.EPISODE.toString(), i.getShow().getTvdbid(), i.getSeason(), i.getEpisode());
         JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);

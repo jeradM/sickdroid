@@ -1,4 +1,4 @@
-package com.jeradmeisner.sickbeardalpha;
+package com.jeradmeisner.sickbeardalpha.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

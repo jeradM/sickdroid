@@ -3,7 +3,6 @@ package com.jeradmeisner.sickbeardalpha;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,24 +10,22 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 
-import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
+import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.data.Shows;
+import com.jeradmeisner.sickbeardalpha.data.SickbeardProfiles;
 import com.jeradmeisner.sickbeardalpha.utils.*;
 import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class SplashScreenActivity extends SherlockActivity { //implements SharedPreferences.OnSharedPreferenceChangeListener{
 

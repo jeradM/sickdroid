@@ -1,10 +1,13 @@
-package com.jeradmeisner.sickbeardalpha;
+package com.jeradmeisner.sickbeardalpha.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.jeradmeisner.sickbeardalpha.R;
+import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
+import com.jeradmeisner.sickbeardalpha.data.Show;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,12 +15,12 @@ import java.util.Date;
 import java.util.List;
 
 
-public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
+public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
 
     private Context context;
     private int resource;
 
-    public HistoryAdapter(Context context, int resource, List<HistoryItem> items)
+    public HistoryAdapter(Context context, int resource, List<HistoryEpisode> items)
     {
         super(context, resource, items);
         this.context = context;
@@ -28,7 +31,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LinearLayout historyView;
-        HistoryItem item = getItem(position);
+        HistoryEpisode item = getItem(position);
 
         if (convertView == null) {
             historyView = new LinearLayout(getContext());

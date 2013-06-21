@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.jeradmeisner.sickbeardalpha.R;
-import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.data.Show;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

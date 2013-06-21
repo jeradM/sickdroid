@@ -10,6 +10,10 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
+import com.jeradmeisner.sickbeardalpha.adapters.HistoryAdapter;
+import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
+import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
@@ -26,7 +30,7 @@ public class HistoryListFragment extends SherlockListFragment {
 
     private static final String TAG = "HistoryListFragment";
 
-    private List<HistoryItem> items;
+    private List<HistoryEpisode> items;
     private HistoryAdapter adapter;
     private Shows shows;
     private String apiurl;
@@ -45,7 +49,7 @@ public class HistoryListFragment extends SherlockListFragment {
         super();
         this.shows = shows;
         this.apiurl = apiurl;
-        items = new ArrayList<HistoryItem>();
+        items = new ArrayList<HistoryEpisode>();
     }
 
     @Override
@@ -77,7 +81,7 @@ public class HistoryListFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        HistoryItem item = (HistoryItem)l.getAdapter().getItem(position);
+        HistoryEpisode item = (HistoryEpisode)l.getAdapter().getItem(position);
         new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
@@ -95,15 +99,16 @@ public class HistoryListFragment extends SherlockListFragment {
                 for(int i = 0; i < array.length(); i++) {
                     JSONObject nextItem = array.getJSONObject(i);
                     String date = nextItem.get("date").toString();
-                    String episode = nextItem.get("episode").toString();
-                    String season = nextItem.get("season").toString();
+                    int episode = nextItem.getInt("episode");
+                    int season = nextItem.getInt("season");
                     String id = nextItem.get("tvdbid").toString();
+                    String status = nextItem.get("status").toString();
 
                     Show newShow = shows.findShow(id);
 
                     if (newShow != null) {
                         newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
-                        items.add(new HistoryItem(newShow, season, episode, date));
+                        items.add(new HistoryEpisode(newShow, season, episode, date, status));
                     }
 
                 }

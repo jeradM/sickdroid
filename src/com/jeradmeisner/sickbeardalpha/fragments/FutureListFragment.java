@@ -10,7 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.jeradmeisner.sickbeardalpha.*;
+import com.jeradmeisner.sickbeardalpha.adapters.FutureAdapter;
+import com.jeradmeisner.sickbeardalpha.data.FutureItem;
+import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
+import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
@@ -73,7 +77,7 @@ public class FutureListFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        HistoryItem item = (HistoryItem)l.getAdapter().getItem(position);
+        HistoryEpisode item = (HistoryEpisode)l.getAdapter().getItem(position);
         new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 

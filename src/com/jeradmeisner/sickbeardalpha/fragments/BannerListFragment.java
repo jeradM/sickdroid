@@ -11,10 +11,10 @@ import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.*;
+import com.jeradmeisner.sickbeardalpha.adapters.BannerAdapter;
+import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener {
 

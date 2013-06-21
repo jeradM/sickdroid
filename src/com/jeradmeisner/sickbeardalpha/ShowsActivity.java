@@ -1,34 +1,24 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Filter;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.FutureListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
-import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
-import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
-import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
-import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;

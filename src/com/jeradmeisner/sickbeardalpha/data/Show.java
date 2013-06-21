@@ -1,4 +1,4 @@
-package com.jeradmeisner.sickbeardalpha;
+package com.jeradmeisner.sickbeardalpha.data;
 
 import android.graphics.Bitmap;
 import android.os.Parcel;

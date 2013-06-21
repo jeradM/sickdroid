@@ -1,6 +1,6 @@
 package com.jeradmeisner.sickbeardalpha.utils;
 
-import com.jeradmeisner.sickbeardalpha.Show;
+import com.jeradmeisner.sickbeardalpha.data.Show;
 
 import java.util.Comparator;
 
