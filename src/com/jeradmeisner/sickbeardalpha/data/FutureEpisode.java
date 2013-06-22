@@ -5,8 +5,8 @@ import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 
 public class FutureEpisode extends Episode implements FutureListItem {
 
-    public FutureEpisode(Show show, int season, int episode, String date, String status) {
-        super(show, season, episode, date, status);
+    public FutureEpisode(Show show, int season, int episode, String date) {
+        super(show, season, episode, date, null);
     }
 
     @Override

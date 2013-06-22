@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.FutureEpisode;
-import com.jeradmeisner.sickbeardalpha.data.FutureItem;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 
@@ -46,6 +45,14 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
     }
 
     @Override
+    public boolean isEnabled(int position) {
+        if (getItemViewType(position) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LinearLayout futureView;
@@ -64,7 +71,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
             }
 
             TextView tv = (TextView)futureView.findViewById(R.id.future_section);
-            tv.setText(((FutureSectionHeader)item).getTitle());
+            tv.setText(((FutureSectionHeader) item).getTitle());
 
         }
         else {

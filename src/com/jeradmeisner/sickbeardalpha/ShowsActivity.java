@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -36,19 +37,12 @@ public class ShowsActivity extends SherlockFragmentActivity {
     private TitlePageIndicator indicator;
 
     private BannerListFragment bannerListFragment;
-    private List<Show> showList;
-    private Shows shows;
-
     private HistoryListFragment historyListFragment;
-
     private FutureListFragment futureListFragment;
-
 
     private SearchView searchView;
 
     MenuItem searchItem;
-
-    private BannerCacheManager bcm;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -56,11 +50,9 @@ public class ShowsActivity extends SherlockFragmentActivity {
         setContentView(R.layout.activity_shows);
 
         Intent i = getIntent();
-        showList = i.getParcelableArrayListExtra("showlist");
-        shows = new Shows(showList);
+        List<Show> showList = i.getParcelableArrayListExtra("showlist");
+        Shows shows = new Shows(showList);
         apiUrl = i.getStringExtra("apiUrl");
-
-        bcm = BannerCacheManager.getInstance(this);
 
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);;
@@ -111,6 +103,12 @@ public class ShowsActivity extends SherlockFragmentActivity {
             case R.id.menu_profiles:
                 Intent i = new Intent(this, ProfilesActivity.class);
                 startActivity(i);
+                return true;
+            case R.id.add_show:
+                Toast.makeText(this, "Add Show", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_settings:
+                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

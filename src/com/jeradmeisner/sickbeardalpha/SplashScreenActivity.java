@@ -55,7 +55,7 @@ public class SplashScreenActivity extends SherlockActivity { //implements Shared
         cacheManager = BannerCacheManager.getInstance(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit().remove(SickbeardProfiles.PREFS_CURRENT_PROFILE).commit();
+        //prefs.edit().remove(SickbeardProfiles.PREFS_CURRENT_PROFILE).commit();
 
 
         String currentProfile = prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE");

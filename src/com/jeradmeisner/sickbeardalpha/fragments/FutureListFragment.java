@@ -75,7 +75,12 @@ public class FutureListFragment extends SherlockListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Episode item = (Episode)l.getAdapter().getItem(position);
-        new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
+        new GetStatusTask().execute(item);
+    }
+
+    public void showDetails(Episode e)
+    {
+        new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(e);
     }
 
     public class LoadFuturetask extends AsyncTask<String, Void, Void>
@@ -140,9 +145,8 @@ public class FutureListFragment extends SherlockListFragment {
             int season = next.getInt("season");
             int episode = next.getInt("episode");
             String airdate = next.getString("airdate");
-            String status = "Unaired";
             Show show = shows.findShow(tvdbid);
-            items.add(new FutureEpisode(show, season, episode, airdate, status));
+            items.add(new FutureEpisode(show, season, episode, airdate));
         }
 
         @Override
@@ -156,5 +160,29 @@ public class FutureListFragment extends SherlockListFragment {
         }
     }
 
+    private class GetStatusTask extends AsyncTask<Episode, Void, Episode>
+    {
+        @Override
+        protected Episode doInBackground(Episode... episode) {
+            Show s = episode[0].getShow();
+            int season = episode[0].getSeason();
+            int ep = episode[0].getEpisode();
+            String cmd = String.format(ApiCommands.EPISODE.toString(), s.getTvdbid(), season, ep);
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+            JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+            String status;
+            try {
+                status = data.getString("status");
+            } catch (JSONException e) {
+                status = "";
+            }
+            episode[0].setStatus(status);
+            return episode[0];
+        }
 
+        @Override
+        protected void onPostExecute(Episode episode) {
+            showDetails(episode);
+        }
+    }
 }
