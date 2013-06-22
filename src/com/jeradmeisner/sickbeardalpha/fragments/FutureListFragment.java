@@ -147,7 +147,7 @@ public class FutureListFragment extends SherlockListFragment {
             int episode = next.getInt("episode");
             String airdate = next.getString("airdate");
             Show show = shows.findShow(tvdbid);
-            items.add(new FutureEpisode(show, season, episode, airdate));
+            items.add(new FutureEpisode(show, title, season, episode, airdate));
         }
 
         @Override
