@@ -11,10 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.adapters.FutureAdapter;
-import com.jeradmeisner.sickbeardalpha.data.FutureItem;
-import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
-import com.jeradmeisner.sickbeardalpha.data.Show;
-import com.jeradmeisner.sickbeardalpha.data.Shows;
+import com.jeradmeisner.sickbeardalpha.data.*;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
@@ -77,8 +74,8 @@ public class FutureListFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        HistoryEpisode item = (HistoryEpisode)l.getAdapter().getItem(position);
-        new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
+        Episode item = (Episode)l.getAdapter().getItem(position);
+        new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
     public class LoadFuturetask extends AsyncTask<String, Void, Void>
@@ -106,22 +103,28 @@ public class FutureListFragment extends SherlockListFragment {
                     }
                 }
                 publishProgress();
-                items.add(new FutureSectionHeader("Today"));
-                for (int i = 0; i < today.length(); i++) {
-                    JSONObject next = today.getJSONObject(i);
-                    addFutureItem(next);
+                if (today.length() > 0) {
+                    items.add(new FutureSectionHeader("Today"));
+                    for (int i = 0; i < today.length(); i++) {
+                        JSONObject next = today.getJSONObject(i);
+                        addFutureItem(next);
+                    }
                 }
                 publishProgress();
-                items.add(new FutureSectionHeader("Soon"));
-                for (int i = 0; i < soon.length(); i++) {
-                    JSONObject next = soon.getJSONObject(i);
-                    addFutureItem(next);
+                if (soon.length() > 0) {
+                    items.add(new FutureSectionHeader("Soon"));
+                    for (int i = 0; i < soon.length(); i++) {
+                        JSONObject next = soon.getJSONObject(i);
+                        addFutureItem(next);
+                    }
                 }
                 publishProgress();
-                items.add(new FutureSectionHeader("Later"));
-                for (int i = 0; i < later.length(); i++) {
-                    JSONObject next = later.getJSONObject(i);
-                    addFutureItem(next);
+                if (later.length() > 0) {
+                    items.add(new FutureSectionHeader("Later"));
+                    for (int i = 0; i < later.length(); i++) {
+                        JSONObject next = later.getJSONObject(i);
+                        addFutureItem(next);
+                    }
                 }
             }
             catch (JSONException e) {
@@ -134,11 +137,12 @@ public class FutureListFragment extends SherlockListFragment {
         private void addFutureItem(JSONObject next) throws JSONException
         {
             String tvdbid = next.getString("tvdbid");
-            String season = String.valueOf(next.getInt("season"));
-            String episode = String.valueOf(next.getInt("episode"));
+            int season = next.getInt("season");
+            int episode = next.getInt("episode");
             String airdate = next.getString("airdate");
+            String status = "Unaired";
             Show show = shows.findShow(tvdbid);
-            items.add(new FutureItem(show, season, episode, airdate));
+            items.add(new FutureEpisode(show, season, episode, airdate, status));
         }
 
         @Override

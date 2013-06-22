@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.jeradmeisner.sickbeardalpha.R;
+import com.jeradmeisner.sickbeardalpha.data.FutureEpisode;
 import com.jeradmeisner.sickbeardalpha.data.FutureItem;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
 import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
@@ -50,7 +51,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
             li.inflate(R.layout.future_list_item, futureView, true);
 
             ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
-            iv.setImageBitmap(((FutureItem)item).getShow().getBannerImage());
+            iv.setImageBitmap(((FutureEpisode)item).getShow().getBannerImage());
         }
 
         return futureView;

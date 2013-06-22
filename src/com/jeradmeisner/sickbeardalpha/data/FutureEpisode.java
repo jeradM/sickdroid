@@ -11,7 +11,7 @@ public class FutureEpisode extends Episode implements FutureListItem {
 
     @Override
     public String airString() {
-        return "Airs on " + date;
+        return "Airs on ";
     }
 
     @Override

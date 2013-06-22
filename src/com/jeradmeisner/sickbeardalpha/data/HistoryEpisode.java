@@ -16,6 +16,6 @@ public class HistoryEpisode extends Episode {
 
     @Override
     public String airString() {
-        return "Aired on " + date;
+        return "Aired on ";
     }
 }

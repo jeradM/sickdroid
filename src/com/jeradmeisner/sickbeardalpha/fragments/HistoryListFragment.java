@@ -11,6 +11,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
 import com.jeradmeisner.sickbeardalpha.adapters.HistoryAdapter;
+import com.jeradmeisner.sickbeardalpha.data.Episode;
 import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
 import com.jeradmeisner.sickbeardalpha.data.Show;
 import com.jeradmeisner.sickbeardalpha.data.Shows;
@@ -81,8 +82,8 @@ public class HistoryListFragment extends SherlockListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        HistoryEpisode item = (HistoryEpisode)l.getAdapter().getItem(position);
-        new LoadEpisodeDetailsTask(apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
+        Episode item = (Episode)l.getAdapter().getItem(position);
+        new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
     public class LoadHistoryTask extends AsyncTask<String, Void, Void>
