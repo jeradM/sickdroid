@@ -26,6 +26,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
     private TextView dateTextView;
     private TextView episodeTextView;
     private TextView descriptionTextView;
+    private TextView statusTextView;
 
     public EpisodeDetailsFragment(Episode episode)
     {
@@ -45,6 +46,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         nameTextView = (TextView)view.findViewById(R.id.details_episode_name);
         dateTextView = (TextView)view.findViewById(R.id.details_airdate);
         episodeTextView = (TextView)view.findViewById(R.id.details_season_episode);
+        statusTextView = (TextView)view.findViewById(R.id.episode_status);
         descriptionTextView = (TextView)view.findViewById(R.id.details_description);
 
         nameTextView.setText(episode.getShow().getTitle());
@@ -55,6 +57,8 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         }
         dateTextView.setText(date);
         episodeTextView.setText("Season " + episode.getSeason() + ", Episode " + episode.getEpisode());
+
+        statusTextView.setText(episode.getStatus());
 
         if (episode.getDescription().length() < 1) {
             episode.setDescription("No Description Available");
@@ -86,7 +90,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
             cal.set(year, month, day);
 
             Date date = cal.getTime();
-            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d");
+            SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d yyyy");
             String formatted = formatter.format(date);
 
             return formatted;

@@ -46,7 +46,17 @@
         android:gravity="center"
         android:textSize="12sp"
         android:paddingTop="2dp"
+        android:paddingBottom="4dp"
         android:text="Season 1, Episode 6"/>
+
+    <TextView
+        android:id="@+id/episode_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:paddingTop="2dp"
+        android:text="Downloaded" />
 
     <TextView
         android:layout_width="match_parent"
