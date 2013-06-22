@@ -137,12 +137,13 @@ public class FutureListFragment extends SherlockListFragment {
         private void addFutureItem(JSONObject next) throws JSONException
         {
             String tvdbid = next.getString("tvdbid");
+            String title = next.getString("ep_name");
             int season = next.getInt("season");
             int episode = next.getInt("episode");
             String airdate = next.getString("airdate");
             String status = "Unaired";
             Show show = shows.findShow(tvdbid);
-            items.add(new FutureEpisode(show, season, episode, airdate, status));
+            items.add(new FutureEpisode(show, title, season, episode, airdate, status));
         }
 
         @Override

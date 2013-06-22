@@ -49,7 +49,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         statusTextView = (TextView)view.findViewById(R.id.episode_status);
         descriptionTextView = (TextView)view.findViewById(R.id.details_description);
 
-        nameTextView.setText(episode.getShow().getTitle());
+        nameTextView.setText(episode.getTitle());
         String date = (toDateFormat(episode.getDate()));
 
         if (!date.equals("No Date Found")) {

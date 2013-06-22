@@ -4,14 +4,16 @@ package com.jeradmeisner.sickbeardalpha.data;
 public abstract class Episode {
 
     protected Show show;
+    protected String title;
     protected int season;
     protected int episode;
     protected String date;
     protected String status;
     protected String description;
 
-    protected Episode(Show show, int season, int episode, String date, String status) {
+    protected Episode(Show show, String title, int season, int episode, String date, String status) {
         this.show = show;
+        this.title = title;
         this.season = season;
         this.episode = episode;
         this.date = date;
@@ -22,6 +24,16 @@ public abstract class Episode {
 
     public Show getShow() {
         return show;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
     }
 
     public int getSeason() {

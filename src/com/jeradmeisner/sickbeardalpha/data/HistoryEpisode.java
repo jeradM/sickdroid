@@ -12,8 +12,8 @@ public class HistoryEpisode extends Episode {
 
     private String airDate;
 
-    public HistoryEpisode(Show show, int season, int episode, String date, String status) {
-        super(show, season, episode, date, status);
+    public HistoryEpisode(Show show, String title, int season, int episode, String date, String status) {
+        super(show, title, season, episode, date, status);
     }
 
     @Override

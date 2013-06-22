@@ -106,7 +106,7 @@ public class HistoryListFragment extends SherlockListFragment {
 
                     if (newShow != null) {
                         newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
-                        items.add(new HistoryEpisode(newShow, season, episode, date, status));
+                        items.add(new HistoryEpisode(newShow, null, season, episode, date, status));
                     }
                     publishProgress();
 
@@ -140,12 +140,16 @@ public class HistoryListFragment extends SherlockListFragment {
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
             String airDate;
+            String title;
             try {
                 airDate = data.getString("airdate");
+                title = data.getString("name");
             } catch (JSONException e) {
                 airDate = "";
+                title = "Title unavailable";
             }
             ((HistoryEpisode)episode[0]).setAirDate(airDate);
+            episode[0].setTitle(title);
             return episode[0];
         }
 
