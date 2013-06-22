@@ -6,13 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/sickbeard_light_green" >
+    android:background="@color/sickbeard_darker_green" >
 
     <TextView
         android:id="@+id/toast_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:padding="2dp"
-        android:textColor="@color/white" />
+        android:padding="6dp"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
 
 </LinearLayout>

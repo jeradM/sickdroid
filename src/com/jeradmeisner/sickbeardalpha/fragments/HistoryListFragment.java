@@ -139,7 +139,7 @@ public class HistoryListFragment extends SherlockListFragment {
             String cmd = String.format(ApiCommands.EPISODE.toString(), s.getTvdbid(), season, ep);
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
-            String airDate = null;
+            String airDate;
             try {
                 airDate = data.getString("airdate");
             } catch (JSONException e) {

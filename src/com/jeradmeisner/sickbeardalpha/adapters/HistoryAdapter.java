@@ -86,7 +86,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
         cal.set(year, month, day, hour, minute);
 
         Date date = cal.getTime();
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d, h:m a");
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, MMMM d, h:mm a");
         return formatter.format(date);
     }
 }
