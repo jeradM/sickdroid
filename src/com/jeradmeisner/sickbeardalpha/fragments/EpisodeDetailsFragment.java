@@ -79,7 +79,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
             String[] dateElements = dateTime[0].split("-");
 
             int year = Integer.parseInt(dateElements[0]);
-            int month = Integer.parseInt(dateElements[1]);
+            int month = Integer.parseInt(dateElements[1]) - 1;
             int day = Integer.parseInt(dateElements[2]);
 
             Calendar cal = Calendar.getInstance();

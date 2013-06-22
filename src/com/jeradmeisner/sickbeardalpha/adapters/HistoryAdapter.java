@@ -62,7 +62,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
         titleView.setText(show.getTitle());
         episodeView.setText(String.format("Season %s, Episode %s", item.getSeason(), item.getEpisode()));
 
-        String date = item.getDate();
+        String date = item.getDownloadedDate();
         String formattedDate = formatDate(date);
 
         dateView.setText(formattedDate);
@@ -77,7 +77,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
         String[] timeInfo = dateSplit[1].split(":");
 
         int year = Integer.parseInt(dayInfo[0]);
-        int month = Integer.parseInt(dayInfo[1]);
+        int month = Integer.parseInt(dayInfo[1]) - 1;
         int day = Integer.parseInt(dayInfo[2]);
         int hour = Integer.parseInt(timeInfo[0]);
         int minute = Integer.parseInt(timeInfo[1]);

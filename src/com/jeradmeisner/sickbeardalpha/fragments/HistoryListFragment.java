@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
 import com.jeradmeisner.sickbeardalpha.adapters.HistoryAdapter;
@@ -36,14 +35,7 @@ public class HistoryListFragment extends SherlockListFragment {
     private Shows shows;
     private String apiurl;
 
-    private String episode;
-    private String season;
-    private String title;
-
     BannerCacheManager bcm;
-
-    SherlockDialogFragment showDetails;
-    Show show;
 
     public HistoryListFragment(Shows shows, String apiurl)
     {
@@ -83,6 +75,11 @@ public class HistoryListFragment extends SherlockListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Episode item = (Episode)l.getAdapter().getItem(position);
+        new GetAirDateTask().execute(item);
+    }
+
+    private void showDetails(Episode item)
+    {
         new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
@@ -111,6 +108,7 @@ public class HistoryListFragment extends SherlockListFragment {
                         newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
                         items.add(new HistoryEpisode(newShow, season, episode, date, status));
                     }
+                    publishProgress();
 
                 }
             } catch (JSONException e) {
@@ -121,36 +119,39 @@ public class HistoryListFragment extends SherlockListFragment {
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
         protected void onPostExecute(Void aVoid) {
             adapter.notifyDataSetChanged();
         }
     }
 
-    /*private class LoadEpisodeDetailsTask extends AsyncTask<String, Void, String[]>
+    private class GetAirDateTask extends AsyncTask<Episode, Void, Episode>
     {
         @Override
-        protected String[] doInBackground(String... s) {
-            String cmd = String.format(ApiCommands.EPISODE.toString(), s[0], season, episode);
+        protected Episode doInBackground(Episode... episode) {
+            Show s = episode[0].getShow();
+            int season = episode[0].getSeason();
+            int ep = episode[0].getEpisode();
+            String cmd = String.format(ApiCommands.EPISODE.toString(), s.getTvdbid(), season, ep);
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+            String airDate = null;
             try {
-                String description = data.getString("description");
-                String episodeName = data.getString("name");
-                String date = data.getString("airdate");
-                String[] str = {title, episodeName, date, season, episode, description};
-                return str;
-                //String status = data.getString("status");
+                airDate = data.getString("airdate");
             } catch (JSONException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                airDate = "";
             }
-
-            return null;
+            ((HistoryEpisode)episode[0]).setAirDate(airDate);
+            return episode[0];
         }
 
         @Override
-        protected void onPostExecute(String[] s) {
-            showDetails = new EpisodeDetailsFragment(show, s[0], s[1], s[2], s[3], s[4], s[5]);
-            showDetails.show(getActivity().getSupportFragmentManager(), "episodeDetails");
+        protected void onPostExecute(Episode episode) {
+            showDetails(episode);
         }
-    }*/
+    }
 }

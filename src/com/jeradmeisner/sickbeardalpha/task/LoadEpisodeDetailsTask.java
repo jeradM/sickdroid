@@ -1,9 +1,17 @@
 package com.jeradmeisner.sickbeardalpha.task;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.Episode;
 import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
 import com.jeradmeisner.sickbeardalpha.fragments.EpisodeDetailsFragment;
@@ -62,7 +70,18 @@ public class LoadEpisodeDetailsTask extends AsyncTask<Episode, Void, Episode>
             showDetails.show(fm, "EpisodeDetails");
         }
         else {
-            Toast.makeText(context, "Sickbeard encountered an error", 1500).show();
+
+            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = li.inflate(R.layout.custom_toast_layout, (ViewGroup)((Activity)context).findViewById(R.id.toast_layout_root));
+
+            TextView tv = (TextView)view.findViewById(R.id.toast_text);
+            tv.setText("Sickbeard encountered an error");
+
+            Toast toast = new Toast(context.getApplicationContext());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(view);
+            toast.show();
+            //Toast.makeText(context, "Sickbeard encountered an error", 1500).show();
         }
     }
 }

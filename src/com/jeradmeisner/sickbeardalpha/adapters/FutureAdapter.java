@@ -31,27 +31,56 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
     }
 
     @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(getItem(position).isHeader()) {
+            return 0;
+        }
+        else {
+            return 1;
+        }
+    }
+
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LinearLayout futureView;
         FutureListItem item = getItem(position);
 
-        futureView = new LinearLayout(getContext());
-        LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        if (getItemViewType(position) == 0) {
 
-        if (item.isHeader()) {
-
-            li.inflate(R.layout.future_section_header, futureView, true);
+            if (convertView == null) {
+                futureView = new LinearLayout(getContext());
+                LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                li.inflate(R.layout.future_section_header, futureView, true);
+            }
+            else {
+                futureView = (LinearLayout)convertView;
+            }
 
             TextView tv = (TextView)futureView.findViewById(R.id.future_section);
             tv.setText(((FutureSectionHeader)item).getTitle());
+
         }
         else {
-            li.inflate(R.layout.future_list_item, futureView, true);
 
-            ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
-            iv.setImageBitmap(((FutureEpisode)item).getShow().getBannerImage());
+            if (convertView == null) {
+                futureView = new LinearLayout(getContext());
+                LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                li.inflate(R.layout.future_list_item, futureView, true);
+            }
+            else {
+                futureView = (LinearLayout)convertView;
+            }
+
+                ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
+                iv.setImageBitmap(((FutureEpisode)item).getShow().getBannerImage());
+
         }
 
         return futureView;
