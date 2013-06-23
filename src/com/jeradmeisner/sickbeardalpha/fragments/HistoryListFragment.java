@@ -40,8 +40,8 @@ public class HistoryListFragment extends SherlockListFragment {
     public HistoryListFragment(Shows shows, String apiurl)
     {
         super();
-        this.shows = shows;
         this.apiurl = apiurl;
+        this.shows = shows;
         items = new ArrayList<HistoryEpisode>();
     }
 
@@ -49,11 +49,12 @@ public class HistoryListFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        refreshHistory();
+        new LoadHistoryTask().execute(apiurl);
     }
 
-    public void refreshHistory()
+    public void refreshHistory(String apiurl)
     {
+        this.apiurl = apiurl;
         new LoadHistoryTask().execute(apiurl);
     }
 

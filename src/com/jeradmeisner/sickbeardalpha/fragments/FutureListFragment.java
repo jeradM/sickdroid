@@ -40,8 +40,8 @@ public class FutureListFragment extends SherlockListFragment {
     public FutureListFragment(Shows shows, String apiurl)
     {
         super();
-        this.shows = shows;
         this.apiurl = apiurl;
+        this.shows = shows;
         items = new ArrayList<FutureListItem>();
     }
 
@@ -49,11 +49,14 @@ public class FutureListFragment extends SherlockListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        refreshFuture();
+
+        new LoadFuturetask().execute(apiurl);
+        //refreshFuture();
     }
 
-    public void refreshFuture()
+    public void refreshFuture(String apiurl)
     {
+        this.apiurl = apiurl;
         new LoadFuturetask().execute(apiurl);
     }
 

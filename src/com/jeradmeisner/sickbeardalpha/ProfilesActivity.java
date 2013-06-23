@@ -1,8 +1,10 @@
 package com.jeradmeisner.sickbeardalpha;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,14 +32,17 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profiles);
 
-
-
-        profileListView = (ListView)findViewById(R.id.profiles_list_view);
-
         profiles = SickbeardProfiles.getInstance();
 
         new LoadProfilesTask().execute(null);
+
+        profileListView = (ListView)findViewById(R.id.profiles_list_view);
+
+
     }
+
+
+
 
     @Override
     protected void onResume() {
@@ -71,9 +76,8 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         profileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                SickbeardProfile prof =  profileList.get(i);
+                SickbeardProfile prof = profileList.get(i);
                 prof.setProfile();
-                setResult(RESULT_OK, null);
                 finish();
             }
         });
@@ -95,9 +99,6 @@ public class ProfilesActivity extends SherlockFragmentActivity implements AddPro
         profileAdapter.notifyDataSetChanged();
         SickbeardProfile prof = profiles.findProfile(info[0]);
         prof.savePrefs();
-        prof.setProfile();
-        setResult(RESULT_OK, null);
-        finish();
     }
 
     private class LoadProfilesTask extends AsyncTask<Object, Void, Void> {

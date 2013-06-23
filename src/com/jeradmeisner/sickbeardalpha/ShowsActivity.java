@@ -1,12 +1,16 @@
 package com.jeradmeisner.sickbeardalpha;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -15,22 +19,34 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickbeardalpha.data.Show;
 import com.jeradmeisner.sickbeardalpha.data.Shows;
+import com.jeradmeisner.sickbeardalpha.data.SickbeardProfiles;
 import com.jeradmeisner.sickbeardalpha.fragments.BannerListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.FutureListFragment;
 import com.jeradmeisner.sickbeardalpha.fragments.HistoryListFragment;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
+import com.jeradmeisner.sickbeardalpha.utils.ShowComparator;
+import com.jeradmeisner.sickbeardalpha.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickbeardalpha.utils.enumerations.ApiCommands;
 import com.viewpagerindicator.TitlePageIndicator;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 
-public class ShowsActivity extends SherlockFragmentActivity {
+public class ShowsActivity extends SherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final int REQUEST_CODE_PROFILES = 1;
 
     private static final int NUM_PAGES = 3;
     private static final String TAG = "ShowsActivity";
 
     private String apiUrl;
+
+    private List<Show> showList;
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -42,6 +58,10 @@ public class ShowsActivity extends SherlockFragmentActivity {
 
     private SearchView searchView;
 
+    private Shows shows;
+
+    private SharedPreferences prefs;
+
     MenuItem searchItem;
 
 
@@ -49,28 +69,89 @@ public class ShowsActivity extends SherlockFragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shows);
 
-        Intent i = getIntent();
-        List<Show> showList = i.getParcelableArrayListExtra("showlist");
-        Shows shows = new Shows(showList);
-        apiUrl = i.getStringExtra("apiUrl");
+        showList = new ArrayList<Show>();
+
+
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        prefs.edit().putString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").commit();
+        if (prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").equals("NONE")) {
+            showProfilesActivity();
+        }
+        else {
+            getApiurl();
+            new FetchShowsTask().execute();
+        }
+
+
+        /*Intent i = getIntent(); */
+
 
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);;
 
-        bannerListFragment = new BannerListFragment(shows);
-        futureListFragment = new FutureListFragment(shows, apiUrl);
-        historyListFragment = new HistoryListFragment(shows, apiUrl);
+
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         indicator = (TitlePageIndicator)findViewById(R.id.title_page_indicator);
 
-        List<Fragment> fragments = getFragments();
-        pagerAdapter = new ShowPagerAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setAdapter(pagerAdapter);
-        indicator.setViewPager(viewPager);
+
         indicator.setFooterColor(getResources().getColor(R.color.white));
 
+    }
+
+
+    public void getApiurl()
+    {
+        String host = prefs.getString(SickbeardProfiles.PREFS_HOST, "localhost");
+        String port = prefs.getString(SickbeardProfiles.PREFS_PORT, "8080");
+        String webroot = prefs.getString(SickbeardProfiles.PREFS_WEBROOT, "");
+        String apiKey = prefs.getString(SickbeardProfiles.PREFS_APIKEY, "12345");
+        Boolean useHttps = prefs.getBoolean(SickbeardProfiles.PREFS_USEHTTPS, false);
+
+        String protocol;
+        if (useHttps)
+            protocol = "https";
+        else
+            protocol = "http";
+
+        if (!webroot.equals(""))
+            webroot += "/";
+
+        if (!port.equals("")) {
+            port = ":" + port;
+        }
+
+        apiUrl = String.format("%s://%s%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        getApiurl();
+        update();
+    }
+
+    public void update()
+    {
+        new FetchShowsTask().execute();
+    }
+
+    public void showProfilesActivity()
+    {
+        Intent i = new Intent(this, ProfilesActivity.class);
+        startActivity(i);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PROFILES) {
+            if (resultCode == RESULT_OK) {
+                getApiurl();
+            }
+        }
     }
 
     @Override
@@ -122,6 +203,64 @@ public class ShowsActivity extends SherlockFragmentActivity {
         frags.add(futureListFragment);
         frags.add(historyListFragment);
         return frags;
+    }
+
+    public class FetchShowsTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... strings) {
+            String cmd = ApiCommands.SHOWS.toString();
+            JSONObject main = SickbeardJsonUtils.getJsonFromUrl(apiUrl, cmd);
+            JSONObject data = SickbeardJsonUtils.parseObjectFromJson(main, "data");
+
+            if (data == null) {
+                showProfilesActivity();
+                return null;
+            }
+
+            showList.clear();
+            Iterator<?> itr = data.keys();
+            while(itr.hasNext()) {
+                try {
+                    String id = itr.next().toString();
+                    JSONObject nextObject = data.getJSONObject(id);
+                    String title = nextObject.getString("show_name");
+                    String network = nextObject.getString("network");
+                    String quality = nextObject.getString("quality");
+                    String status = nextObject.getString("status");
+                    String language = nextObject.getString("language");
+                    String nextEp = nextObject.getString("next_ep_airdate");
+
+                    int airByDate = nextObject.getInt("air_by_date");
+                    int paused = nextObject.getInt("paused");
+
+                    JSONObject cache = nextObject.getJSONObject("cache");
+                    int banner = cache.getInt("banner");
+                    int poster = cache.getInt("poster");
+
+                    showList.add(new Show(id, title, network, quality, status, language, nextEp, airByDate, banner, poster, paused));
+
+                }
+                catch (JSONException e) {
+                    Log.e("Show Builder", "Error parsing JSON information");
+                    showList.clear();
+                }
+            }
+            shows = new Shows(showList);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            Collections.sort(showList, new ShowComparator());
+            bannerListFragment = new BannerListFragment(shows);
+            futureListFragment = new FutureListFragment(shows, apiUrl);
+            historyListFragment = new HistoryListFragment(shows, apiUrl);
+            List<Fragment> fragments = getFragments();
+            pagerAdapter = new ShowPagerAdapter(getSupportFragmentManager(), fragments);
+            viewPager.setAdapter(pagerAdapter);
+            indicator.setViewPager(viewPager);
+        }
     }
 
     public class ShowPagerAdapter extends FragmentPagerAdapter {
