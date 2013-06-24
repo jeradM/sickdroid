@@ -38,8 +38,15 @@ public class LoadEpisodeDetailsTask extends AsyncTask<Episode, Void, Episode>
     @Override
     protected Episode doInBackground(Episode... s) {
         i = s[0];
+
+        if (i == null)
+            return null;
+
         String cmd = String.format(ApiCommands.EPISODE.toString(), i.getShow().getTvdbid(), i.getSeason(), i.getEpisode());
         JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+
+        if (obj == null)
+            return null;
 
         String result;
         try {

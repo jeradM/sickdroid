@@ -48,13 +48,14 @@ public class HistoryListFragment extends SherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        new LoadHistoryTask().execute(apiurl);
+
+
     }
 
     public void refreshHistory(String apiurl)
     {
         this.apiurl = apiurl;
+        bcm = BannerCacheManager.getInstance(getSherlockActivity());
         new LoadHistoryTask().execute(apiurl);
     }
 
@@ -66,7 +67,9 @@ public class HistoryListFragment extends SherlockListFragment {
 
         adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
         setListAdapter(adapter);
+        refreshHistory(apiurl);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,14 +87,20 @@ public class HistoryListFragment extends SherlockListFragment {
         new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
-    public class LoadHistoryTask extends AsyncTask<String, Void, Void>
+    public class LoadHistoryTask extends AsyncTask<String, Void, Integer>
     {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
+            items.clear();
             String historyString = ApiCommands.HISTORY.toString();
             String historyCmd = String.format(historyString, "40", "downloaded");
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], historyCmd);
+
+            if (obj == null) {
+                return 1;
+            }
+
             JSONArray array = SickbeardJsonUtils.parseArrayFromJson(obj, "data");
 
             try {
@@ -116,7 +125,7 @@ public class HistoryListFragment extends SherlockListFragment {
                 Log.e(TAG, "Error loading history");
             }
 
-            return null;
+            return 0;
         }
 
         @Override
@@ -125,8 +134,15 @@ public class HistoryListFragment extends SherlockListFragment {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            adapter.notifyDataSetChanged();
+        protected void onPostExecute(Integer status) {
+            if (status == 0) {
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            else {
+                adapter.notifyDataSetInvalidated();
+            }
         }
     }
 
@@ -140,6 +156,10 @@ public class HistoryListFragment extends SherlockListFragment {
             String cmd = String.format(ApiCommands.EPISODE.toString(), s.getTvdbid(), season, ep);
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+
+            if (data == null)
+                return null;
+
             String airDate;
             String title;
             try {
@@ -156,6 +176,7 @@ public class HistoryListFragment extends SherlockListFragment {
 
         @Override
         protected void onPostExecute(Episode episode) {
+
             showDetails(episode);
         }
     }

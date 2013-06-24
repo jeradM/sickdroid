@@ -37,7 +37,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class ShowsActivity extends SherlockFragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class ShowsActivity extends SherlockFragmentActivity implements SickbeardProfiles.OnProfileChangedListener {
 
     private static final int REQUEST_CODE_PROFILES = 1;
 
@@ -60,6 +60,8 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
 
     private Shows shows;
 
+    private SickbeardProfiles profiles;
+
     private SharedPreferences prefs;
 
     MenuItem searchItem;
@@ -70,11 +72,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
         setContentView(R.layout.activity_shows);
 
         showList = new ArrayList<Show>();
+        shows = new Shows(showList);
 
-
+        profiles = SickbeardProfiles.getInstance();
+        profiles.registerOnProfileChangedListener(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.registerOnSharedPreferenceChangeListener(this);
         prefs.edit().putString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").commit();
         if (prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").equals("NONE")) {
             showProfilesActivity();
@@ -129,9 +132,9 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+    public void onProfileChanged() {
         getApiurl();
-        update();
+        new FetchShowsTask().execute();
     }
 
     public void update()
@@ -172,7 +175,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
             }
         });
         searchView = (SearchView)menu.findItem(R.id.search_shows).getActionView();
-        searchView.setOnQueryTextListener(bannerListFragment);
+        //searchView.setOnQueryTextListener(bannerListFragment);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -210,12 +213,13 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
         protected Void doInBackground(Void... strings) {
             String cmd = ApiCommands.SHOWS.toString();
             JSONObject main = SickbeardJsonUtils.getJsonFromUrl(apiUrl, cmd);
+            if (main == null) {
+                showProfilesActivity();
+                cancel(true);
+            }
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(main, "data");
 
-            if (data == null) {
-                showProfilesActivity();
-                return null;
-            }
+
 
             showList.clear();
             Iterator<?> itr = data.keys();
@@ -245,7 +249,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
                     showList.clear();
                 }
             }
-            shows = new Shows(showList);
 
             return null;
         }
@@ -253,13 +256,33 @@ public class ShowsActivity extends SherlockFragmentActivity implements SharedPre
         @Override
         protected void onPostExecute(Void aVoid) {
             Collections.sort(showList, new ShowComparator());
-            bannerListFragment = new BannerListFragment(shows);
-            futureListFragment = new FutureListFragment(shows, apiUrl);
-            historyListFragment = new HistoryListFragment(shows, apiUrl);
+            if (bannerListFragment == null) {
+                bannerListFragment = new BannerListFragment(shows);
+                searchView.setOnQueryTextListener(bannerListFragment);
+            }
+            else {
+                bannerListFragment.refreshBanners();
+            }
+            if (futureListFragment == null) {
+                futureListFragment = new FutureListFragment(shows, apiUrl);
+            }
+            else {
+                futureListFragment.refreshFuture(apiUrl);
+            }
+            if (historyListFragment == null) {
+                historyListFragment = new HistoryListFragment(shows, apiUrl);
+            }
+            else {
+                historyListFragment.refreshHistory(apiUrl);
+            }
             List<Fragment> fragments = getFragments();
-            pagerAdapter = new ShowPagerAdapter(getSupportFragmentManager(), fragments);
-            viewPager.setAdapter(pagerAdapter);
-            indicator.setViewPager(viewPager);
+            if (pagerAdapter == null) {
+                pagerAdapter = new ShowPagerAdapter(getSupportFragmentManager(), fragments);
+                viewPager.setAdapter(pagerAdapter);
+                indicator.setViewPager(viewPager);
+            }
+
+
         }
     }
 

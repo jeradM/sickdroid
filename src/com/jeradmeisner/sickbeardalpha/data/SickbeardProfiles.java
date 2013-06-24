@@ -37,6 +37,25 @@ public class SickbeardProfiles {
         return instance;
     }
 
+    public interface OnProfileChangedListener
+    {
+        public void onProfileChanged();
+    }
+
+    private OnProfileChangedListener mListener;
+
+    public void registerOnProfileChangedListener(OnProfileChangedListener mListener)
+    {
+        this.mListener = mListener;
+    }
+
+    public void notifyProfileChanged()
+    {
+        if (mListener != null) {
+            mListener.onProfileChanged();
+        }
+    }
+
     private SickbeardProfiles()
     {
     }

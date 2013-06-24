@@ -48,15 +48,13 @@ public class FutureListFragment extends SherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
-
-        new LoadFuturetask().execute(apiurl);
-        //refreshFuture();
+        refreshFuture(apiurl);
     }
 
     public void refreshFuture(String apiurl)
     {
         this.apiurl = apiurl;
+        bcm = BannerCacheManager.getInstance(getSherlockActivity());
         new LoadFuturetask().execute(apiurl);
     }
 
@@ -68,6 +66,15 @@ public class FutureListFragment extends SherlockListFragment {
 
         adapter = new FutureAdapter(getSherlockActivity(), 0, items);
         setListAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (adapter == null) {
+            adapter = new FutureAdapter(getSherlockActivity(), 0, items);
+            setListAdapter(adapter);
+        }
     }
 
     @Override
@@ -86,13 +93,18 @@ public class FutureListFragment extends SherlockListFragment {
         new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(e);
     }
 
-    public class LoadFuturetask extends AsyncTask<String, Void, Void>
+    public class LoadFuturetask extends AsyncTask<String, Void, Integer>
     {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
             items.clear();
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], ApiCommands.FUTURE.toString());
+
+            if (obj == null) {
+                return 1;
+            }
+
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
             JSONArray today = SickbeardJsonUtils.parseArrayFromJson(data, "today");
             JSONArray soon = SickbeardJsonUtils.parseArrayFromJson(data, "soon");
@@ -139,7 +151,7 @@ public class FutureListFragment extends SherlockListFragment {
                 Log.e(TAG, "Error fetching future");
             }
 
-            return null;
+            return 0;
         }
 
         private void addFutureItem(JSONObject next) throws JSONException
@@ -159,8 +171,15 @@ public class FutureListFragment extends SherlockListFragment {
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            adapter.notifyDataSetChanged();
+        protected void onPostExecute(Integer status) {
+            if (status == 0) {
+                if (adapter != null) {
+                    adapter.notifyDataSetChanged();
+                }
+            }
+            else {
+                adapter.notifyDataSetInvalidated();
+            }
         }
     }
 
@@ -174,6 +193,10 @@ public class FutureListFragment extends SherlockListFragment {
             String cmd = String.format(ApiCommands.EPISODE.toString(), s.getTvdbid(), season, ep);
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+
+            if (data == null)
+                return null;
+
             String status;
             try {
                 status = data.getString("status");
