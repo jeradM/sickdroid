@@ -1,5 +1,6 @@
 package com.jeradmeisner.sickbeardalpha.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,27 +35,26 @@ public class HistoryListFragment extends SherlockListFragment {
     private HistoryAdapter adapter;
     private Shows shows;
     private String apiurl;
+    private Context context;
 
     BannerCacheManager bcm;
 
-    public HistoryListFragment(Shows shows, String apiurl)
+    public HistoryListFragment(Context context, Shows shows, String apiurl)
     {
         super();
+        this.context = context;
         this.apiurl = apiurl;
         this.shows = shows;
         items = new ArrayList<HistoryEpisode>();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
 
     }
 
     public void refreshHistory(String apiurl)
     {
-        this.apiurl = apiurl;
+        if (adapter == null) {
+            adapter = new HistoryAdapter(context, R.layout.history_list_item, items);
+            setListAdapter(adapter);
+        }
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
         new LoadHistoryTask().execute(apiurl);
     }
@@ -65,14 +65,12 @@ public class HistoryListFragment extends SherlockListFragment {
         ListView list = getListView();
         list.setDividerHeight(0);
 
-        adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
-        setListAdapter(adapter);
-        refreshHistory(apiurl);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        refreshHistory(apiurl);
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -115,7 +113,7 @@ public class HistoryListFragment extends SherlockListFragment {
                     Show newShow = shows.findShow(id);
 
                     if (newShow != null) {
-                        newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+                        //newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
                         items.add(new HistoryEpisode(newShow, null, season, episode, date, status));
                     }
                     publishProgress();

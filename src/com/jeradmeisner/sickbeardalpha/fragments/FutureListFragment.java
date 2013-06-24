@@ -53,6 +53,10 @@ public class FutureListFragment extends SherlockListFragment {
 
     public void refreshFuture(String apiurl)
     {
+        if (adapter == null) {
+            adapter = new FutureAdapter(getSherlockActivity(), 0, items);
+            setListAdapter(adapter);
+        }
         this.apiurl = apiurl;
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
         new LoadFuturetask().execute(apiurl);
@@ -64,17 +68,6 @@ public class FutureListFragment extends SherlockListFragment {
         ListView list = getListView();
         list.setDividerHeight(0);
 
-        adapter = new FutureAdapter(getSherlockActivity(), 0, items);
-        setListAdapter(adapter);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (adapter == null) {
-            adapter = new FutureAdapter(getSherlockActivity(), 0, items);
-            setListAdapter(adapter);
-        }
     }
 
     @Override

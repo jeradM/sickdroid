@@ -29,9 +29,9 @@ public class Show implements Parcelable {
 
     private List<Season> seasons = new ArrayList<Season>();
 
-    private Bitmap bannerImage;
+    /*private Bitmap bannerImage;
     private Bitmap posterImage;
-
+*/
     public Show(String tvdbid, String title, String network, String quality,
                 String status, String language, String nextEpisodeAirDate,
                 int airByDate, int banner, int poster, int paused)
@@ -66,9 +66,9 @@ public class Show implements Parcelable {
 
         int len = parcel.readInt();
 
-        bannerImage = parcel.readParcelable(null);
+        /*bannerImage = parcel.readParcelable(null);
         posterImage = parcel.readParcelable(null);
-
+*/
         for (int i = 0; i < len; i++) {
             seasonList[i] = parcel.readInt();
         }
@@ -144,7 +144,7 @@ public class Show implements Parcelable {
         return seasonList;
     }
 
-    public Bitmap getBannerImage() {
+   /* public Bitmap getBannerImage() {
         return bannerImage;
     }
 
@@ -160,7 +160,7 @@ public class Show implements Parcelable {
     public void setPosterImage(Bitmap posterImage)
     {
         this.posterImage = posterImage;
-    }
+    }*/
 
     @Override
     public int describeContents() {
@@ -184,9 +184,9 @@ public class Show implements Parcelable {
 
         parcel.writeInt(seasonList.length);
 
-        parcel.writeParcelable(bannerImage, PARCELABLE_WRITE_RETURN_VALUE);
+       /* parcel.writeParcelable(bannerImage, PARCELABLE_WRITE_RETURN_VALUE);
         parcel.writeParcelable(posterImage, PARCELABLE_WRITE_RETURN_VALUE);
-
+*/
         for (int s : seasonList) {
             parcel.writeInt(s);
         }

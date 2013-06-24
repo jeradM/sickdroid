@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class BannerAdapter extends ArrayAdapter<Show> {
     Context context;
     private List<Show> shows, orig;
     private ShowFilter showFilter;
+
 
     public BannerAdapter (Context context, int resource, List<Show> shows)
     {
@@ -33,6 +35,7 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
         RelativeLayout bannerView;
         Show show = getItem(position);
+        BannerCacheManager bcm = BannerCacheManager.getInstance(context);
 
         if (convertView == null) {
             bannerView = new RelativeLayout(getContext());
@@ -48,7 +51,7 @@ public class BannerAdapter extends ArrayAdapter<Show> {
         ImageView imageView = (ImageView)bannerView.findViewById(R.id.banner_image_view);
         TextView textView = (TextView)bannerView.findViewById(R.id.banner_text_view);
 
-        imageView.setImageBitmap(show.getBannerImage());
+        imageView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
         textView.setText(show.getTitle());
 
         return bannerView;

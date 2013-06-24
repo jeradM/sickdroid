@@ -191,6 +191,9 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             case R.id.add_show:
                 Toast.makeText(this, "Add Show", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.refresh_shows:
+                update();
+                return true;
             case R.id.menu_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
                 return true;
@@ -270,7 +273,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
                 futureListFragment.refreshFuture(apiUrl);
             }
             if (historyListFragment == null) {
-                historyListFragment = new HistoryListFragment(shows, apiUrl);
+                historyListFragment = new HistoryListFragment(ShowsActivity.this, shows, apiUrl);
             }
             else {
                 historyListFragment.refreshHistory(apiUrl);

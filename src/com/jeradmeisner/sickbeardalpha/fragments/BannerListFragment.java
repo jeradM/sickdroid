@@ -42,7 +42,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
             adapter.notifyDataSetInvalidated();
 
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        new LoadImagesTask().execute();
+        //new LoadImagesTask().execute();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         adapter.getFilter().filter(null);
     }
 
-    public class LoadImagesTask extends AsyncTask<Void, Void, Void> {
+   /* public class LoadImagesTask extends AsyncTask<Void, Void, Void> {
 
         protected Void doInBackground(Void... params)
         {
@@ -118,7 +118,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         protected void onPostExecute(Void aVoid) {
             adapter.notifyDataSetChanged();
         }
-    }
+    }*/
 
     public class FetchDescriptionTask extends AsyncTask<Show, Void, Show> {
         @Override

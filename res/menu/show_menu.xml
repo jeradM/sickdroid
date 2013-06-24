@@ -10,6 +10,12 @@
         android:actionViewClass="com.actionbarsherlock.widget.SearchView" />
 
     <item
+        android:id="@+id/refresh_shows"
+        android:title="Refresh"
+        android:icon="@drawable/ic_popup_sync_1"
+        android:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/add_show"
         android:title="Add Show"
         android:icon="@drawable/ic_ab_add"

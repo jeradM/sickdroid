@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.FutureEpisode;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.widgets.FutureSectionHeader;
 
 import java.util.List;
@@ -57,6 +58,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
 
         LinearLayout futureView;
         FutureListItem item = getItem(position);
+        BannerCacheManager bcm = BannerCacheManager.getInstance(context);
 
 
         if (getItemViewType(position) == 0) {
@@ -86,7 +88,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
             }
 
                 ImageView iv = (ImageView)futureView.findViewById(R.id.future_item);
-                iv.setImageBitmap(((FutureEpisode)item).getShow().getBannerImage());
+                iv.setImageBitmap(bcm.get(((FutureEpisode)item).getShow().getTvdbid(), BannerCacheManager.BitmapType.BANNER));
 
         }
 

@@ -8,6 +8,7 @@ import android.widget.*;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.HistoryEpisode;
 import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +33,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
 
         LinearLayout historyView;
         HistoryEpisode item = getItem(position);
+        BannerCacheManager bcm = BannerCacheManager.getInstance(context);
 
         if (convertView == null) {
             historyView = new LinearLayout(getContext());
@@ -58,7 +60,7 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
 
         Show show = item.getShow();
 
-        posterView.setImageBitmap(show.getPosterImage());
+        posterView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
         titleView.setText(show.getTitle());
         episodeView.setText(String.format("Season %s, Episode %s", item.getSeason(), item.getEpisode()));
 

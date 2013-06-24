@@ -12,6 +12,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.jeradmeisner.sickbeardalpha.R;
 import com.jeradmeisner.sickbeardalpha.data.Episode;
 import com.jeradmeisner.sickbeardalpha.data.Show;
+import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,8 +40,10 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         LayoutInflater inflator = getActivity().getLayoutInflater();
         View view = inflator.inflate(R.layout.episode_dialog, null);
 
+        BannerCacheManager bcm = BannerCacheManager.getInstance(getSherlockActivity());
+
         ImageView dialogHeaderBanner = (ImageView)view.findViewById(R.id.details_dialog_title_banner);
-        dialogHeaderBanner.setImageBitmap(episode.getShow().getBannerImage());
+        dialogHeaderBanner.setImageBitmap(bcm.get(episode.getShow().getTvdbid(), BannerCacheManager.BitmapType.BANNER));
 
 
         nameTextView = (TextView)view.findViewById(R.id.details_episode_name);

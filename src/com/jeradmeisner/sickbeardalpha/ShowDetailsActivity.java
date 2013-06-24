@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
@@ -65,6 +66,11 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         getSupportActionBar().setTitle(show.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        LinearLayout lin = (LinearLayout)findViewById(R.id.seasons_lists_layout);
+        TextView tv = new TextView(this);
+        tv.setText("This is also a test");
+        lin.addView(tv);
 
 
     }
