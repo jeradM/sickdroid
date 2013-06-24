@@ -15,6 +15,7 @@ import com.jeradmeisner.sickbeardalpha.adapters.BannerAdapter;
 import com.jeradmeisner.sickbeardalpha.data.Show;
 import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
+import com.jeradmeisner.sickbeardalpha.utils.TVDBApi;
 
 public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener {
 
@@ -53,10 +54,8 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getSherlockActivity(), ShowDetailsActivity.class);
-                Show show = (Show)adapterView.getItemAtPosition(i);
-                intent.putExtra("show", show);
-                startActivity(intent);
+
+                new FetchDescriptionTask().execute((Show) (adapterView.getItemAtPosition(i)));
             }
         });
 
@@ -118,6 +117,29 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         @Override
         protected void onPostExecute(Void aVoid) {
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    public class FetchDescriptionTask extends AsyncTask<Show, Void, Show> {
+        @Override
+        protected Show doInBackground(Show... shows) {
+            Show show = shows[0];
+            String summary = TVDBApi.getSeriesOverview(show);
+
+            if (summary == null || summary.length() < 1) {
+                summary = "No series overview available";
+            }
+
+            show.setOverview(summary);
+
+            return show;
+        }
+
+        @Override
+        protected void onPostExecute(Show show) {
+            Intent intent = new Intent(getSherlockActivity(), ShowDetailsActivity.class);
+            intent.putExtra("show", show);
+            startActivity(intent);
         }
     }
 }
