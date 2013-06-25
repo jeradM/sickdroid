@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.jeradmeisner.sickbeardalpha.*;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HistoryListFragment extends SherlockListFragment {
+public class HistoryListFragment extends SherlockListFragment implements ShowsActivity.SickFragment {
 
     private static final String TAG = "HistoryListFragment";
 
@@ -49,14 +50,10 @@ public class HistoryListFragment extends SherlockListFragment {
 
     }
 
-    public void refreshHistory(String apiurl)
-    {
-        if (adapter == null) {
-            adapter = new HistoryAdapter(context, R.layout.history_list_item, items);
-            setListAdapter(adapter);
-        }
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        new LoadHistoryTask().execute(apiurl);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        refreshHistory(apiurl);
     }
 
     @Override
@@ -67,17 +64,29 @@ public class HistoryListFragment extends SherlockListFragment {
 
     }
 
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        refreshHistory(apiurl);
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Episode item = (Episode)l.getAdapter().getItem(position);
         new GetAirDateTask().execute(item);
+    }
+
+    public void refreshHistory(String apiurl)
+    {
+        if (adapter == null) {
+            adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
+            setListAdapter(adapter);
+        }
+        bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        items.clear();
+        adapter.notifyDataSetInvalidated();
+        new LoadHistoryTask().execute(apiurl);
+    }
+
+    public void update()
+    {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void showDetails(Episode item)
@@ -128,7 +137,7 @@ public class HistoryListFragment extends SherlockListFragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
         }
 
         @Override
@@ -139,7 +148,9 @@ public class HistoryListFragment extends SherlockListFragment {
                 }
             }
             else {
-                adapter.notifyDataSetInvalidated();
+                if (adapter != null) {
+                    adapter.notifyDataSetInvalidated();
+                }
             }
         }
     }

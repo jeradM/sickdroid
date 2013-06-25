@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.jeradmeisner.sickbeardalpha.ShowsActivity;
 import com.jeradmeisner.sickbeardalpha.adapters.FutureAdapter;
 import com.jeradmeisner.sickbeardalpha.data.*;
 import com.jeradmeisner.sickbeardalpha.interfaces.FutureListItem;
@@ -26,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FutureListFragment extends SherlockListFragment {
+public class FutureListFragment extends SherlockListFragment implements ShowsActivity.SickFragment {
 
     private static final String TAG = "FutureListFragment";
 
@@ -51,17 +53,6 @@ public class FutureListFragment extends SherlockListFragment {
         refreshFuture(apiurl);
     }
 
-    public void refreshFuture(String apiurl)
-    {
-        if (adapter == null) {
-            adapter = new FutureAdapter(getSherlockActivity(), 0, items);
-            setListAdapter(adapter);
-        }
-        this.apiurl = apiurl;
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        new LoadFuturetask().execute(apiurl);
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -71,14 +62,29 @@ public class FutureListFragment extends SherlockListFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Episode item = (Episode)l.getAdapter().getItem(position);
         new GetStatusTask().execute(item);
+    }
+
+    public void refreshFuture(String apiurl)
+    {
+        if (adapter == null) {
+            adapter = new FutureAdapter(getSherlockActivity(), 0, items);
+            setListAdapter(adapter);
+        }
+        this.apiurl = apiurl;
+        items.clear();
+        adapter.notifyDataSetInvalidated();
+        bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        new LoadFuturetask().execute(apiurl);
+    }
+
+    public void update()
+    {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void showDetails(Episode e)
@@ -103,6 +109,8 @@ public class FutureListFragment extends SherlockListFragment {
             JSONArray soon = SickbeardJsonUtils.parseArrayFromJson(data, "soon");
             JSONArray later = SickbeardJsonUtils.parseArrayFromJson(data, "later");
             JSONArray missed = SickbeardJsonUtils.parseArrayFromJson(data, "missed");
+
+
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getSherlockActivity());
             boolean showMissed = prefs.getBoolean("show_missed", true);

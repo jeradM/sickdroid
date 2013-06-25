@@ -40,6 +40,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
         seriesOverview = (TextView)findViewById(R.id.series_overview);
         //Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
+        seriesOverview.setPadding(0, 20, 0, 0);
         seriesOverview.setText(show.getOverview());
         //seriesOverview.setTypeface(face);
 

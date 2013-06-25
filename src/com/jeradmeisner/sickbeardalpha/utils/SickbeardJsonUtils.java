@@ -60,7 +60,12 @@ public class SickbeardJsonUtils {
                     sb.append(line);
                 }
 
-                return new JSONObject(sb.toString());
+                json = new JSONObject(sb.toString());
+                String stat = json.getString("result");
+                if (!stat.equals("success")) {
+                    throw new IOException("Incorrect API key");
+                }
+                return json;
             }
             else {
                 Log.e(LOG_NAME, "Unable to contact sickbeard host");
@@ -72,7 +77,7 @@ public class SickbeardJsonUtils {
             return null;
         }
         catch (IOException e) {
-            //Log.e(LOG_NAME, "IO Error: " + e.getMessage());
+            Log.e(LOG_NAME, "IO Error: " + e.getMessage());
             return null;
         }
         catch (JSONException e) {

@@ -1,7 +1,7 @@
 package com.jeradmeisner.sickbeardalpha;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,9 +11,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
@@ -60,16 +62,25 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
 
     private Shows shows;
 
+    private BroadcastReceiver broadcastReceiver;
+    private IntentFilter intentFilter;
+
     private SickbeardProfiles profiles;
 
     private SharedPreferences prefs;
 
     MenuItem searchItem;
 
+    public interface SickFragment {
+        public void update();
+    }
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shows);
+
+        BannerCacheManager.getInstance(this).clearCache();
 
         showList = new ArrayList<Show>();
         shows = new Shows(showList);
@@ -87,10 +98,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             new FetchShowsTask().execute();
         }
 
-
-        /*Intent i = getIntent(); */
-
-
         getSupportActionBar().setDisplayUseLogoEnabled(false);
         getSupportActionBar().setDisplayShowTitleEnabled(false);;
 
@@ -100,11 +107,29 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         indicator = (TitlePageIndicator)findViewById(R.id.title_page_indicator);
 
-
         indicator.setFooterColor(getResources().getColor(R.color.white));
+
+        intentFilter = new IntentFilter(ImageCacheService.IMAGES_UPDATES);
+        broadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                for (Fragment frag : getFragments()) {
+                    if (frag != null) {
+                        ((SickFragment)frag).update();
+                    }
+                }
+            }
+        };
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.registerReceiver(broadcastReceiver, intentFilter);
+
+    }
 
     public void getApiurl()
     {
@@ -259,6 +284,13 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         @Override
         protected void onPostExecute(Void aVoid) {
             Collections.sort(showList, new ShowComparator());
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            int maxWidth = size.x;
+            int maxHeight = (int)(size.y / 16);
+
             if (bannerListFragment == null) {
                 bannerListFragment = new BannerListFragment(shows);
                 searchView.setOnQueryTextListener(bannerListFragment);
@@ -284,6 +316,13 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
                 viewPager.setAdapter(pagerAdapter);
                 indicator.setViewPager(viewPager);
             }
+
+            Intent downloadImagesIntent = new Intent(ShowsActivity.this, ImageCacheService.class);
+            downloadImagesIntent.putParcelableArrayListExtra("showlist", (ArrayList<Show>)showList);
+            downloadImagesIntent.putExtra("apiurl", apiUrl);
+            downloadImagesIntent.putExtra("maxWidth", maxWidth);
+            downloadImagesIntent.putExtra("maxHeight", maxHeight);
+            startService(downloadImagesIntent);
 
 
         }

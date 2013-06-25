@@ -244,7 +244,7 @@ public class BannerCacheManager {
                 in.close();
 
                 // Add bitmap to memory cache
-                if (type == BitmapType.BANNER) {
+                if (id != null && bitmap != null && type == BitmapType.BANNER) {
                     synchronized (memoryCache) {
                         memoryCache.put(id + type.toString(), bitmap);
                     }

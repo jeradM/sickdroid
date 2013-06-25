@@ -50,9 +50,10 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
         ImageView imageView = (ImageView)bannerView.findViewById(R.id.banner_image_view);
         TextView textView = (TextView)bannerView.findViewById(R.id.banner_text_view);
-
-        imageView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
-        textView.setText(show.getTitle());
+        if (show != null) {
+            imageView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
+            textView.setText(show.getTitle());
+        }
 
         return bannerView;
     }

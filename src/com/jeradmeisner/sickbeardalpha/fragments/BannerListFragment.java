@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.widget.SearchView;
@@ -17,7 +18,7 @@ import com.jeradmeisner.sickbeardalpha.data.Shows;
 import com.jeradmeisner.sickbeardalpha.utils.BannerCacheManager;
 import com.jeradmeisner.sickbeardalpha.utils.TVDBApi;
 
-public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener {
+public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener, ShowsActivity.SickFragment {
 
     private Shows shows;
     private BannerCacheManager bcm;
@@ -96,6 +97,14 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
     {
         adapter.getFilter().filter(null);
     }
+
+    public void update()
+    {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
    /* public class LoadImagesTask extends AsyncTask<Void, Void, Void> {
 

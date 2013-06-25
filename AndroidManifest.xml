@@ -20,5 +20,6 @@
         <activity android:name=".SplashScreenActivity"/>
         <activity android:name=".ProfilesActivity"/>
         <activity android:name=".ShowDetailsActivity"/>
+        <service android:name=".ImageCacheService"/>
     </application>
 </manifest>
