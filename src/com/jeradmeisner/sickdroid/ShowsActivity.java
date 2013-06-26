@@ -79,7 +79,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shows);
 
-        BannerCacheManager.getInstance(this).clearCache();
+        //BannerCacheManager.getInstance(this).clearCache();
 
         showList = new ArrayList<Show>();
         shows = new Shows(showList);

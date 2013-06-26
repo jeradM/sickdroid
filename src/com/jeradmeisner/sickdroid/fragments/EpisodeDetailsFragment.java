@@ -2,6 +2,8 @@ package com.jeradmeisner.sickdroid.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.jeradmeisner.sickdroid.EpisodeSearchService;
 import com.jeradmeisner.sickdroid.R;
 import com.jeradmeisner.sickdroid.data.Episode;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
@@ -21,6 +24,7 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
 
 
     private Episode episode;
+    private String apiurl;
 
     private TextView nameTextView;
     private TextView dateTextView;
@@ -28,9 +32,10 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
     private TextView descriptionTextView;
     private TextView statusTextView;
 
-    public EpisodeDetailsFragment(Episode episode)
+    public EpisodeDetailsFragment(Episode episode, String apiurl)
     {
         this.episode = episode;
+        this.apiurl = apiurl;
     }
 
     @Override
@@ -70,7 +75,18 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
 
         setStyle(SherlockDialogFragment.STYLE_NO_TITLE, R.style.Theme_Sickdroid_LightGreen);
         builder.setView(view)
-                .setPositiveButton("Search", null)
+                .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(getSherlockActivity(), EpisodeSearchService.class);
+                        intent.putExtra("apiurl", apiurl);
+                        intent.putExtra("title", episode.getShow().getTitle());
+                        intent.putExtra("tvdbid", episode.getShow().getTvdbid());
+                        intent.putExtra("season", episode.getSeason());
+                        intent.putExtra("episode", episode.getEpisode());
+                        getSherlockActivity().startService(intent);
+                    }
+                })
                 .setNegativeButton("Close", null)
                 .setNeutralButton("Status", null)
                 ;

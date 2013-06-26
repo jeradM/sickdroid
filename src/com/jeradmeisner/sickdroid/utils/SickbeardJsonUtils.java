@@ -39,6 +39,12 @@ public class SickbeardJsonUtils {
         HttpParams params = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(params, 2000);
         HttpConnectionParams.setSoTimeout(params, 2000);
+
+        if (cmd.startsWith("episode.search")) {
+            HttpConnectionParams.setConnectionTimeout(params, 30000);
+            HttpConnectionParams.setSoTimeout(params, 30000);
+        }
+
         HttpClient client = new DefaultHttpClient(params);
 
         String showUrl = hostUrl + "?cmd=" + cmd;
@@ -59,7 +65,7 @@ public class SickbeardJsonUtils {
                 json = new JSONObject(sb.toString());
                 String stat = json.getString("result");
                 if (!stat.equals("success")) {
-                    throw new IOException("Incorrect API key");
+                    throw new IOException("Request Failed");
                 }
                 return json;
             }

@@ -70,7 +70,7 @@ public class LoadEpisodeDetailsTask extends AsyncTask<Episode, Void, Episode>
     @Override
     protected void onPostExecute(Episode e) {
         if (e != null) {
-            EpisodeDetailsFragment showDetails = new EpisodeDetailsFragment(e);
+            EpisodeDetailsFragment showDetails = new EpisodeDetailsFragment(e, apiurl);
             showDetails.show(fm, "EpisodeDetails");
         }
         else {

@@ -21,5 +21,6 @@
         <activity android:name=".ProfilesActivity"/>
         <activity android:name=".ShowDetailsActivity"/>
         <service android:name=".ImageCacheService"/>
+        <service android:name=".EpisodeSearchService"/>
     </application>
 </manifest>
