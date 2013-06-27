@@ -53,7 +53,7 @@ public class ImageCacheService extends Service {
 
         bcm = BannerCacheManager.getInstance(this);
 
-        new FetchBannersTask().execute(width, height);
+        new FetchBannersTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, width, height);
 
 
         return START_REDELIVER_INTENT;

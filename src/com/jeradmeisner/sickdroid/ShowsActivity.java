@@ -88,7 +88,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         profiles.registerOnProfileChangedListener(this);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        prefs.edit().putString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").commit();
+        //prefs.edit().putString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").commit();
         if (prefs.getString(SickbeardProfiles.PREFS_CURRENT_PROFILE, "NONE").equals("NONE")) {
             showProfilesActivity();
         }
@@ -128,6 +128,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         super.onResume();
         this.registerReceiver(broadcastReceiver, intentFilter);
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        this.unregisterReceiver(broadcastReceiver);
     }
 
     public void getApiurl()

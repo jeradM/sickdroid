@@ -30,7 +30,7 @@ public class EpisodeSearchService extends Service {
         title = intent.getStringExtra("title");
         season = intent.getIntExtra("season", -1);
         episode = intent.getIntExtra("episode", -1);
-        new EpisodeSearchTask().execute();
+        new EpisodeSearchTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         return START_NOT_STICKY;
     }
 
