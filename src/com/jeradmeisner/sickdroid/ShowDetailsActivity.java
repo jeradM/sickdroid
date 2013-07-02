@@ -33,6 +33,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private ImageView header;
     private Drawable actionBarBackground;
     private BitmapDrawable imageDrawable;
+    boolean isExpanded = false;
 
     BannerCacheManager bcm = BannerCacheManager.getInstance(this);
 
@@ -47,9 +48,13 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         new SetFanartTask().execute(show.getTvdbid());
 
         seriesOverview = (TextView)findViewById(R.id.series_overview);
-        //Typeface face = Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         seriesOverview.setText(show.getOverview());
-        //seriesOverview.setTypeface(face);
+        seriesOverview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                expandOverview();
+            }
+        });
 
         header = (ImageView)findViewById(R.id.transparent_header);
 
@@ -94,11 +99,16 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     @Override
     public void onScrollChanged(View who, int l, int t, int oldl, int oldt)
     {
-        fanart.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 3)));
+        fanart.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 5)));
         final int headerHeight = findViewById(R.id.fanart_image).getHeight() - getSupportActionBar().getHeight();
         final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
         final int newAlpha = (int) (ratio * 255);
         actionBarBackground.setAlpha(newAlpha);
+    }
+
+    public void expandOverview() {
+        seriesOverview.setMaxLines((isExpanded ? 4 : 35));
+        isExpanded = !isExpanded;
     }
 
     private class SetFanartTask extends AsyncTask<String, Void, Bitmap>

@@ -4,13 +4,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
-    <ImageView
+    <com.jeradmeisner.sickdroid.widgets.BannerImageView
             android:id="@+id/banner_image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:fadingEdge="vertical"
-            android:scaleType="centerCrop" />
+            android:scaleType="fitXY" android:background="@drawable/banner" android:src="@drawable/banner"/>
 
     <TextView
             android:id="@+id/banner_text_view"

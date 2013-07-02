@@ -7,11 +7,11 @@
     android:layout_height="match_parent"
     android:background="@color/history_list_bg_odd" >
 
-    <ImageView
+    <com.jeradmeisner.sickdroid.widgets.BannerImageView
         android:id="@+id/details_dialog_title_banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:adjustViewBounds="true" />
 
     <FrameLayout
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:text="A Boy and His Dog"
         android:gravity="center"
-        android:textSize="16sp"
+        android:textSize="@dimen/text_episode_dialog_header"
         android:textStyle="bold"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"/>
@@ -35,7 +35,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_episode_dialog_info"
         android:paddingBottom="4dp"
         android:text="Aired on Monday, May 6"/>
 
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_episode_dialog_info"
         android:paddingTop="2dp"
         android:paddingBottom="4dp"
         android:text="Season 1, Episode 6"/>
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_episode_dialog_info"
         android:paddingTop="2dp"
         android:text="Downloaded" />
 
@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="14sp"
+        android:textSize="@dimen/text_episode_dialog_header"
         android:textStyle="bold"
         android:paddingTop="10dp"
         android:text="Episode Summary"/>
@@ -71,7 +71,7 @@
         android:id="@+id/details_description"
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:textSize="12sp"
+        android:textSize="@dimen/text_episode_dialog_info"
         android:paddingTop="6dp"
         android:text="lksjf lfjs dlfjdlf jldfj lsdfj ldfjsldfjld fjlsdkfj lsdf jldfj ld fjlsdfj lsdfj dslfj sdlfj sdlfj sldfj lsfj lsdfj sldf jlsdfj sldfj lsdkfj sldf jlsdfj lsdfj d"
         android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_marginBottom="15dp"

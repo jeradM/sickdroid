@@ -1,11 +1,20 @@
 package com.jeradmeisner.sickdroid.data;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Celestina
- * Date: 6/21/13
- * Time: 4:57 PM
- * To change this template use File | Settings | File Templates.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class Season {
+
+    private List<Episode> episodes;
+
+    public Season()
+    {
+        episodes = new ArrayList<Episode>();
+    }
+
+    public void addEpisode(Episode episode)
+    {
+        episodes.add(episode);
+    }
 }

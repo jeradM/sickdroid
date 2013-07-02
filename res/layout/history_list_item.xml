@@ -8,12 +8,15 @@
 
     <ImageView
         android:id="@+id/poster_image"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:src="@drawable/poster"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:layout_margin="2dp"/>
+        android:layout_margin="6dp"
+        android:contentDescription="Poster View"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,16 +28,16 @@
             android:id="@+id/history_show_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:text="The Daily Show with Jon Stewart"
+            android:textSize="@dimen/text_list_show_title"
             android:textStyle="bold"
-            android:paddingTop="6dp" android:paddingBottom="2dp"/>
+            android:paddingTop="6dp"
+            android:paddingBottom="2dp"/>
 
         <TextView
             android:id="@+id/history_episode_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_list_show_info"
             android:text="Season 5, Episode 8"
             android:paddingBottom="4dp" />
 
@@ -42,9 +45,9 @@
             android:id="@+id/history_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
+            android:textSize="@dimen/text_list_show_info"
             android:text="Friday, June 14, 9:48 am"
-            android:paddingTop="12dp"/>
+            android:paddingTop="20dp"/>
 
         </LinearLayout>
 

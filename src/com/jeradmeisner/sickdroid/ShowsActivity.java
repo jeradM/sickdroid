@@ -103,7 +103,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
 
 
         viewPager = (ViewPager)findViewById(R.id.shows_view_pager);
-        viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
+        //viewPager.setPageTransformer(true, new ZoomOutPageTransformer());
         indicator = (TitlePageIndicator)findViewById(R.id.title_page_indicator);
 
         indicator.setFooterColor(getResources().getColor(R.color.white));
@@ -294,7 +294,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             Point size = new Point();
             display.getSize(size);
             int maxWidth = size.x;
-            int maxHeight = (int)(size.y / 16);
+            int maxHeight = (int)(size.y / 8);
 
             if (bannerListFragment == null) {
                 bannerListFragment = new BannerListFragment(shows);

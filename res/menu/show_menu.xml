@@ -12,7 +12,7 @@
     <item
         android:id="@+id/refresh_shows"
         android:title="Refresh"
-        android:icon="@drawable/ic_popup_sync_1"
+        android:icon="@drawable/ic_ab_refresh"
         android:showAsAction="ifRoom" />
 
     <item

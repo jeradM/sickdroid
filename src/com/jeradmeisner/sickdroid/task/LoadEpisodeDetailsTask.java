@@ -75,7 +75,7 @@ public class LoadEpisodeDetailsTask extends AsyncTask<Episode, Void, Episode>
         }
         else {
 
-            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            /*LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View view = li.inflate(R.layout.custom_toast_layout, (ViewGroup)((Activity)context).findViewById(R.id.toast_layout_root));
 
             TextView tv = (TextView)view.findViewById(R.id.toast_text);
@@ -84,8 +84,8 @@ public class LoadEpisodeDetailsTask extends AsyncTask<Episode, Void, Episode>
             Toast toast = new Toast(context.getApplicationContext());
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(view);
-            toast.show();
-            //Toast.makeText(context, "Sickbeard encountered an error", 1500).show();
+            toast.show();*/
+            Toast.makeText(context, "Sickbeard encountered an error", Toast.LENGTH_SHORT).show();
         }
     }
 }
