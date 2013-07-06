@@ -113,6 +113,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         @Override
         protected Bitmap doInBackground(String... params) {
             Bitmap b = bcm.get(params[0], BannerCacheManager.BitmapType.FANART);
+            publishProgress();
             if (b == null) {
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
@@ -129,11 +130,15 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            poster.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+        }
+
+        @Override
         protected void onPostExecute(Bitmap bitmap) {
             imageDrawable = new BitmapDrawable(getResources(), bitmap);
             fanart.setImageBitmap(bitmap);
             header.setImageBitmap(bitmap);
-            poster.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
         }
     }
 }

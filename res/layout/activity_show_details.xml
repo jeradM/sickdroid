@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent" >
@@ -7,6 +7,7 @@
             android:id="@+id/fanart_image"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@drawable/fanart_placeholder"
@@ -20,7 +21,8 @@
     <com.jeradmeisner.sickdroid.widgets.ObservableScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,16 +52,60 @@
                     android:paddingBottom="10dp"
                     android:textSize="@dimen/text_episode_overview" />  -->
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/seasons_lists_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:background="#FF00FF00" />
+                    android:background="@color/history_list_bg_even">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="140dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="15dp"
+                        android:padding="0dp"
+                        android:clickable="false">
+
+                        <LinearLayout
+                            android:id="@+id/show_stats_bg"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:background="@drawable/show_stats_rounded" android:layout_marginRight="6dp"
+                            android:layout_marginBottom="6dp" android:padding="5dp">
+
+                            <TextView
+                                android:id="@+id/airs"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="10sp"
+                                android:text="Airs: Tuesdays at 10:30pm" android:paddingBottom="4dp"/>
+
+                            <TextView
+                                    android:id="@+id/airs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="10sp"
+                                    android:text="Quality: Any" android:paddingBottom="4dp"/>
+
+                            <TextView
+                                    android:id="@+id/airs"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="10sp"
+                                    android:text="Language: en" android:paddingBottom="4dp"/>
 
 
+                        </LinearLayout>
 
-                <View style="@style/Item.Bottom" />
+                    </FrameLayout>
+
+                </RelativeLayout>
+
+
+                <View style="@style/Item.Bottom" android:layout_width="fill_parent"/>
                 <View style="@style/Item.Bottom.Alt" />
                 <View style="@style/Item.Bottom" />
                 <View style="@style/Item.Bottom.Alt" />
@@ -77,8 +123,8 @@
             android:src="@drawable/poster_placeholder"
             android:adjustViewBounds="true"
             android:scaleType="fitXY"
-            android:background="@drawable/gradient_poster" android:layout_marginTop="120dp"
-            android:layout_marginLeft="15dp" android:paddingLeft="1dp" android:paddingTop="1dp"
-            android:paddingRight="3dp" android:paddingBottom="3dp"/>
+            android:background="@drawable/gradient_bg_square" android:layout_marginTop="120dp"
+            android:layout_marginLeft="15dp"
+            android:paddingRight="6dp" android:paddingBottom="6dp" android:paddingLeft="0dp" android:paddingTop="0dp"/>
 
-</FrameLayout>
+</RelativeLayout>
