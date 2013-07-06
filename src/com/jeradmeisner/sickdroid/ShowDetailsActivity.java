@@ -31,9 +31,12 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private TextView seriesOverview;
     private ImageView fanart;
     private ImageView header;
+    private ImageView poster;
     private Drawable actionBarBackground;
     private BitmapDrawable imageDrawable;
     boolean isExpanded = false;
+
+    private Show show;
 
     BannerCacheManager bcm = BannerCacheManager.getInstance(this);
 
@@ -43,20 +46,15 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         setContentView(R.layout.activity_show_details);
 
         Intent i = getIntent();
-        Show show = i.getParcelableExtra("show");
+        show = i.getParcelableExtra("show");
         fanart = (ImageView)findViewById(R.id.fanart_image);
         new SetFanartTask().execute(show.getTvdbid());
 
-        seriesOverview = (TextView)findViewById(R.id.series_overview);
-        seriesOverview.setText(show.getOverview());
-        seriesOverview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                expandOverview();
-            }
-        });
+        //seriesOverview = (TextView)findViewById(R.id.series_overview);
+        //seriesOverview.setText(show.getOverview());
 
         header = (ImageView)findViewById(R.id.transparent_header);
+        poster = (ImageView)findViewById(R.id.show_poster);
 
         mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
         mScrollView.setScrollListener(this);
@@ -71,7 +69,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
                 });
 
-        actionBarBackground = getResources().getDrawable(R.drawable.show_details_actionbar);
+        actionBarBackground = getResources().getDrawable(R.drawable.ab_bg);
         getSupportActionBar().setBackgroundDrawable(actionBarBackground);
         getSupportActionBar().setTitle(show.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -99,16 +97,14 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     @Override
     public void onScrollChanged(View who, int l, int t, int oldl, int oldt)
     {
+        if (poster != null) {
+            poster.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 1.1f)));
+        }
         fanart.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 5)));
         final int headerHeight = findViewById(R.id.fanart_image).getHeight() - getSupportActionBar().getHeight();
         final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
         final int newAlpha = (int) (ratio * 255);
         actionBarBackground.setAlpha(newAlpha);
-    }
-
-    public void expandOverview() {
-        seriesOverview.setMaxLines((isExpanded ? 4 : 35));
-        isExpanded = !isExpanded;
     }
 
     private class SetFanartTask extends AsyncTask<String, Void, Bitmap>
@@ -137,6 +133,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
             imageDrawable = new BitmapDrawable(getResources(), bitmap);
             fanart.setImageBitmap(bitmap);
             header.setImageBitmap(bitmap);
+            poster.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
         }
     }
 }

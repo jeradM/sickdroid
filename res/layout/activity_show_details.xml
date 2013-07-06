@@ -22,11 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <ImageView
+                <ImageView
                     android:id="@+id/transparent_header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -37,35 +38,46 @@
                     android:contentDescription="ScrollHeader"
                     android:cropToPadding="false"/>
 
-            <TextView
-                android:id="@+id/series_overview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/history_list_bg_odd"
-                android:text="hfksj fkf kshdf skdhf skdhf ksdhf ksdhf ksdhf skhf skdhf skhfskdfhskf skdfh skdfh skdfh skdfh skdfh skdfh ksfh ksdhf ksdfh kshfskfhlsdjfhskfhsfuhisduf sif ih fishf isdfh sifuh"
-                android:paddingLeft="10dp" android:paddingTop="10dp"
-                android:paddingRight="10dp" android:paddingBottom="10dp" android:textSize="14sp"
-                android:maxLines="4"
-                android:textIsSelectable="true"/>
+                <!-- <TextView
+                    android:id="@+id/series_overview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/history_list_bg_odd"
+                    android:text="hfksj fkf kshdf skdhf skdhf ksdhf ksdhf ksdhf skhf skdhf skhfskdfhskf skdfh skdfh skdfh skdfh skdfh skdfh ksfh ksdhf ksdfh kshfskfhlsdjfhskfhsfuhisduf sif ih fishf isdfh sifuh"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:textSize="@dimen/text_episode_overview" />  -->
 
-            <LinearLayout
-                android:id="@+id/seasons_lists_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="#FF00FF00" />
+                <LinearLayout
+                    android:id="@+id/seasons_lists_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="#FF00FF00" />
 
 
 
-            <View style="@style/Item.Bottom" />
-            <View style="@style/Item.Bottom.Alt" />
-            <View style="@style/Item.Bottom" />
-            <View style="@style/Item.Bottom.Alt" />
-            <View style="@style/Item.Bottom" />
-            <View style="@style/Item.Bottom.Alt" />
+                <View style="@style/Item.Bottom" />
+                <View style="@style/Item.Bottom.Alt" />
+                <View style="@style/Item.Bottom" />
+                <View style="@style/Item.Bottom.Alt" />
+                <View style="@style/Item.Bottom" />
+                <View style="@style/Item.Bottom.Alt" />
 
-        </LinearLayout>
+            </LinearLayout>
 
     </com.jeradmeisner.sickdroid.widgets.ObservableScrollView>
+
+    <ImageView
+            android:id="@+id/show_poster"
+            android:layout_width="120dp"
+            android:layout_height="175dp"
+            android:src="@drawable/poster_placeholder"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:background="@drawable/shadow_black" android:layout_marginTop="120dp"
+            android:layout_marginLeft="15dp"/>
 
 </FrameLayout>

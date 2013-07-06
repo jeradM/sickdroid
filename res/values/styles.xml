@@ -18,7 +18,7 @@
     </style>
 
     <style name="Widget.Sickdroid.Green.Actionbar" parent="Widget.Sherlock.Light.ActionBar" >
-        <item name="android:background">@color/sickbeard_darker_green</item>
+        <item name="android:background">@drawable/ab_bg</item>
         <item name="android:titleTextStyle">@style/Widget.Sickdroid.Green.Actionbar.Text</item>
         <item name="android:icon">@drawable/ic_actionbar</item>
     </style>
