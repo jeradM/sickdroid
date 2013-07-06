@@ -16,7 +16,7 @@
         android:layout_margin="6dp"
         android:contentDescription="Poster View"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"/>
+        android:paddingBottom="4dp" android:maxHeight="60dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_list_show_info"
             android:text="Season 5, Episode 8"
-            android:paddingBottom="4dp" />
+                />
 
         <TextView
             android:id="@+id/history_date"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_list_show_info"
             android:text="Friday, June 14, 9:48 am"
-            android:paddingTop="20dp"/>
+            android:paddingTop="4dp"/>
 
         </LinearLayout>
 
