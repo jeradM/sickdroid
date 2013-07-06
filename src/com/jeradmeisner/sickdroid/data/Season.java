@@ -6,14 +6,14 @@ import java.util.List;
 
 public class Season {
 
-    private List<Episode> episodes;
+    private List<SeasonEpisode> episodes;
 
     public Season()
     {
-        episodes = new ArrayList<Episode>();
+        episodes = new ArrayList<SeasonEpisode>();
     }
 
-    public void addEpisode(Episode episode)
+    public void addEpisode(SeasonEpisode episode)
     {
         episodes.add(episode);
     }

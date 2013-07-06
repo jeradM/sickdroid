@@ -22,21 +22,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginLeft="8dp" android:padding="4dp">
+        android:layout_marginLeft="8dp" android:padding="6dp">
 
         <TextView
             android:id="@+id/history_show_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textSize="@dimen/text_list_show_title"
-            android:textStyle="bold"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"/>
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/history_episode_number"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textSize="@dimen/text_list_show_info"
             android:text="Season 5, Episode 8"
                 />
@@ -44,10 +44,10 @@
         <TextView
             android:id="@+id/history_date"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:textSize="@dimen/text_list_show_info"
-            android:text="Friday, June 14, 9:48 am"
-            android:paddingTop="8dp"/>
+            android:text="Friday, June 14, 9:48 am" />
 
         </LinearLayout>
 

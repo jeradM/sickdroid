@@ -297,7 +297,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             int maxHeight = (int)(size.y / 8);
 
             if (bannerListFragment == null) {
-                bannerListFragment = new BannerListFragment(shows);
+                bannerListFragment = new BannerListFragment(shows, apiUrl);
                 searchView.setOnQueryTextListener(bannerListFragment);
             }
             else {

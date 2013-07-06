@@ -38,6 +38,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
     private Show show;
 
+    private String apiurl;
+
     BannerCacheManager bcm = BannerCacheManager.getInstance(this);
 
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         Intent i = getIntent();
         show = i.getParcelableExtra("show");
         fanart = (ImageView)findViewById(R.id.fanart_image);
+        apiurl = i.getStringExtra(apiurl);
         new SetFanartTask().execute(show.getTvdbid());
 
         //seriesOverview = (TextView)findViewById(R.id.series_overview);
@@ -105,6 +108,13 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
         final int newAlpha = (int) (ratio * 255);
         actionBarBackground.setAlpha(newAlpha);
+    }
+
+    private class FetchSeasonSTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
     }
 
     private class SetFanartTask extends AsyncTask<String, Void, Bitmap>

@@ -10,7 +10,9 @@ public enum ApiCommands {
     SEASONLIST("show.seasonlist&tvdbid=%s"),
     EPISODE("episode&tvdbid=%s&season=%s&episode=%s"),
     EPISODE_SEARCH("episode.search&tvdbid=%s&season=%s&episode=%s"),
-    FUTURE("future");
+    FUTURE("future"),
+    SEASON_LIST("show.seasonlist&tvdbid="),
+    SEASONS("show.seasons");
 
     private String cmdString;
 

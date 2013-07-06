@@ -23,10 +23,13 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
     private BannerCacheManager bcm;
     private BannerAdapter adapter;
 
-    public BannerListFragment(Shows shows)
+    private String apiurl;
+
+    public BannerListFragment(Shows shows, String apiurl)
     {
         super();
         this.shows = shows;
+        this.apiurl = apiurl;
     }
 
     @Override
@@ -147,6 +150,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         protected void onPostExecute(Show show) {
             Intent intent = new Intent(getSherlockActivity(), ShowDetailsActivity.class);
             intent.putExtra("show", show);
+            intent.putExtra("apiurl", apiurl);
             startActivity(intent);
         }
     }
