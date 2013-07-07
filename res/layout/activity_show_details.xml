@@ -1,7 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
-             android:layout_height="match_parent" >
+             android:layout_height="match_parent"
+             android:background="@color/history_list_bg_even">
 
     <ImageView
             android:id="@+id/fanart_image"
@@ -15,7 +16,7 @@
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="60dp"
             android:background="@drawable/gradient"/>
 
     <com.jeradmeisner.sickdroid.widgets.ObservableScrollView
@@ -25,8 +26,12 @@
             android:layout_alignParentTop="true">
 
             <LinearLayout
+                android:id="@+id/main_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -53,64 +58,70 @@
                     android:textSize="@dimen/text_episode_overview" />  -->
 
                 <RelativeLayout
-                    android:id="@+id/seasons_lists_layout"
+                    android:id="@+id/main_content_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:background="@color/history_list_bg_even">
 
-                    <FrameLayout
+                    <LinearLayout
+                        android:id="@+id/show_stats_bg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="150dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/show_stats_rounded"
+                        android:layout_marginBottom="6dp" android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/airs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="12sp"
+                            android:text="Airs: Tuesdays at 10:30pm" android:paddingBottom="4dp"/>
+
+                        <TextView
+                            android:id="@+id/airs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="12sp"
+                            android:text="Quality: Any" android:paddingBottom="4dp"/>
+
+                        <TextView
+                            android:id="@+id/airs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:textSize="12sp"
+                            android:text="Language: en" android:paddingBottom="4dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/seasons_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="140dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="15dp"
-                        android:padding="0dp"
-                        android:clickable="false">
-
-                        <LinearLayout
-                            android:id="@+id/show_stats_bg"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:background="@drawable/show_stats_rounded" android:layout_marginRight="6dp"
-                            android:layout_marginBottom="6dp" android:padding="5dp">
-
-                            <TextView
-                                android:id="@+id/airs"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textSize="10sp"
-                                android:text="Airs: Tuesdays at 10:30pm" android:paddingBottom="4dp"/>
-
-                            <TextView
-                                    android:id="@+id/airs"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="10sp"
-                                    android:text="Quality: Any" android:paddingBottom="4dp"/>
-
-                            <TextView
-                                    android:id="@+id/airs"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="10sp"
-                                    android:text="Language: en" android:paddingBottom="4dp"/>
+                        android:layout_below="@id/show_stats_bg"
+                        android:layout_marginTop="35dp"
+                        android:orientation="vertical" />
 
 
-                        </LinearLayout>
-
-                    </FrameLayout>
 
                 </RelativeLayout>
 
 
-                <View style="@style/Item.Bottom" android:layout_width="fill_parent"/>
+
+
+               <!-- <View style="@style/Item.Bottom" android:layout_width="fill_parent"/>
                 <View style="@style/Item.Bottom.Alt" />
                 <View style="@style/Item.Bottom" />
                 <View style="@style/Item.Bottom.Alt" />
                 <View style="@style/Item.Bottom" />
-                <View style="@style/Item.Bottom.Alt" />
+                <View style="@style/Item.Bottom.Alt" />  -->
 
             </LinearLayout>
 

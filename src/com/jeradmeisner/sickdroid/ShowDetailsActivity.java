@@ -8,24 +8,33 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.internal.view.menu.ActionMenuView;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.jeradmeisner.sickdroid.data.Season;
+import com.jeradmeisner.sickdroid.data.SeasonEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.utils.ArtworkDownloader;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
+import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import com.jeradmeisner.sickdroid.widgets.ObservableScrollView;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class ShowDetailsActivity extends SherlockActivity implements ObservableScrollView.ScrollListener {
+
+    private static final String TAG = "ShowDetailsActivity";
 
     private ObservableScrollView mScrollView;
     private TextView seriesOverview;
@@ -36,9 +45,14 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private BitmapDrawable imageDrawable;
     boolean isExpanded = false;
 
+    LinearLayout seasonLayout;
+    LinearLayout showStats;
+
     private Show show;
 
     private String apiurl;
+
+    private List<Season> seasons;
 
     BannerCacheManager bcm = BannerCacheManager.getInstance(this);
 
@@ -50,11 +64,19 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         Intent i = getIntent();
         show = i.getParcelableExtra("show");
         fanart = (ImageView)findViewById(R.id.fanart_image);
-        apiurl = i.getStringExtra(apiurl);
+        apiurl = i.getStringExtra("apiurl");
+
+
+        seasons = new ArrayList<Season>();
+        new FetchSeasonsTask().execute();
+
         new SetFanartTask().execute(show.getTvdbid());
 
         //seriesOverview = (TextView)findViewById(R.id.series_overview);
         //seriesOverview.setText(show.getOverview());
+
+        showStats = (LinearLayout)findViewById(R.id.show_stats_bg);
+        seasonLayout = (LinearLayout)findViewById(R.id.seasons_layout);
 
         header = (ImageView)findViewById(R.id.transparent_header);
         poster = (ImageView)findViewById(R.id.show_poster);
@@ -110,10 +132,61 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         actionBarBackground.setAlpha(newAlpha);
     }
 
-    private class FetchSeasonSTask extends AsyncTask<Void, Void, Void> {
+    private class FetchSeasonsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            return null;  //To change body of implemented methods use File | Settings | File Templates.
+            String cmd = String.format(ApiCommands.SEASONS.toString(), show.getTvdbid());
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+            JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+
+            Iterator<?> dataItr = data.keys();
+            while(dataItr.hasNext()) {
+                String seasonNumber = dataItr.next().toString();
+                int seasonInt = Integer.parseInt(seasonNumber);
+                JSONObject nextSeason = SickbeardJsonUtils.parseObjectFromJson(data, seasonNumber);
+
+                Season season = new Season(seasonInt);
+
+                Iterator<?> epItr = nextSeason.keys();
+                while (epItr.hasNext()) {
+                    String epNum = epItr.next().toString();
+                    int epInt = Integer.parseInt(epNum);
+                    JSONObject episode = SickbeardJsonUtils.parseObjectFromJson(nextSeason, epNum);
+
+                    try {
+                        String airdate = episode.getString("airdate");
+                        String name = episode.getString("name");
+                        String quality = episode.getString("quality");
+                        String status = episode.getString("status");
+                        season.addEpisode(new SeasonEpisode(show, name, seasonInt, epInt, airdate, status, quality));
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error parsing seasons");
+                    }
+                }
+
+                seasons.add(season);
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+           /* for (Season season : seasons) {
+                TextView tv = new TextView(ShowDetailsActivity.this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.topMargin = 4;
+                params.bottomMargin = 4;
+                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv.setLayoutParams(params);
+                tv.setTextSize(20);
+                tv.setText("Season " + season.getSeasonNumber());
+                seasonLayout.addView(tv);
+            }*/
+
+            ExpandableListView expandList = new ExpandableListView(ShowDetailsActivity.this);
+
         }
     }
 
