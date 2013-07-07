@@ -23,16 +23,17 @@
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true">
+            android:layout_alignParentTop="true"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:id="@+id/main_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="10dp"
+                android:paddingTop="0dp"
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
-                android:orientation="vertical">
+                android:orientation="vertical" android:weightSum="2">
 
                 <ImageView
                     android:id="@+id/transparent_header"
@@ -57,29 +58,22 @@
                     android:paddingBottom="10dp"
                     android:textSize="@dimen/text_episode_overview" />  -->
 
-                <RelativeLayout
-                    android:id="@+id/main_content_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="@color/history_list_bg_even">
 
                     <LinearLayout
                         android:id="@+id/show_stats_bg"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="150dp"
-                        android:layout_marginRight="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="130dp"
+                        android:layout_marginRight="0dp"
                         android:layout_marginTop="10dp"
                         android:orientation="vertical"
-                        android:background="@drawable/show_stats_rounded"
                         android:layout_marginBottom="6dp" android:padding="5dp">
 
                         <TextView
                             android:id="@+id/airs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
                             android:textSize="12sp"
                             android:text="Airs: Tuesdays at 10:30pm" android:paddingBottom="4dp"/>
 
@@ -87,7 +81,7 @@
                             android:id="@+id/airs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
                             android:textSize="12sp"
                             android:text="Quality: Any" android:paddingBottom="4dp"/>
 
@@ -95,26 +89,17 @@
                             android:id="@+id/airs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
+                            android:gravity="center_horizontal"
                             android:textSize="12sp"
                             android:text="Language: en" android:paddingBottom="4dp"/>
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/seasons_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/show_stats_bg"
-                        android:layout_marginTop="35dp"
-                        android:orientation="vertical" />
-
-
-
-                </RelativeLayout>
-
-
-
+                    <ExpandableListView
+                            android:id="@+id/seasons_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="40dp" android:layout_weight="2"/>
 
                <!-- <View style="@style/Item.Bottom" android:layout_width="fill_parent"/>
                 <View style="@style/Item.Bottom.Alt" />

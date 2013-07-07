@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.internal.view.menu.ActionMenuView;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.jeradmeisner.sickdroid.adapters.SeasonListAdapter;
 import com.jeradmeisner.sickdroid.data.Season;
 import com.jeradmeisner.sickdroid.data.SeasonEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
@@ -47,8 +48,10 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private BitmapDrawable imageDrawable;
     boolean isExpanded = false;
 
-    LinearLayout seasonLayout;
     LinearLayout showStats;
+
+    ExpandableListView expandList;
+    SeasonListAdapter adapter;
 
     private Show show;
 
@@ -70,6 +73,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
 
         seasons = new ArrayList<Season>();
+        expandList = (ExpandableListView)findViewById(R.id.seasons_layout);
+        adapter = new SeasonListAdapter(ShowDetailsActivity.this, seasons);
         new FetchSeasonsTask().execute();
 
         new SetFanartTask().execute(show.getTvdbid());
@@ -77,8 +82,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         //seriesOverview = (TextView)findViewById(R.id.series_overview);
         //seriesOverview.setText(show.getOverview());
 
+
         showStats = (LinearLayout)findViewById(R.id.show_stats_bg);
-        seasonLayout = (LinearLayout)findViewById(R.id.seasons_layout);
 
         header = (ImageView)findViewById(R.id.transparent_header);
         poster = (ImageView)findViewById(R.id.show_poster);
@@ -176,7 +181,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         @Override
         protected void onPostExecute(Void aVoid) {
             Collections.sort(seasons, new SeasonComparator());
-            for (Season season : seasons) {
+            /*for (Season season : seasons) {
                 TextView tv = new TextView(ShowDetailsActivity.this);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.topMargin = 4;
@@ -186,9 +191,10 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
                 tv.setTextSize(20);
                 tv.setText(season.toString());
                 seasonLayout.addView(tv);
-            }
+            }*/
 
-            //ExpandableListView expandList = new ExpandableListView(ShowDetailsActivity.this);
+
+            expandList.setAdapter(adapter);
 
         }
     }
