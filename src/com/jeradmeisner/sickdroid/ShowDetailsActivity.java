@@ -40,12 +40,22 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private static final String TAG = "ShowDetailsActivity";
 
     private ObservableScrollView mScrollView;
+
+    private TextView airsTextView;
+    private TextView qualityTextView;
+    private TextView langTextView;
+    private TextView statusTextView;
     private TextView seriesOverview;
+
     private ImageView fanart;
     private ImageView header;
     private ImageView poster;
+
     private Drawable actionBarBackground;
     private BitmapDrawable imageDrawable;
+
+    LinearLayout seasonsLayout;
+
     boolean isExpanded = false;
 
     private Show show;
@@ -61,15 +71,20 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         setContentView(R.layout.activity_show_details);
 
+        airsTextView = (TextView)findViewById(R.id.airs);
+        qualityTextView = (TextView)findViewById(R.id.quality);
+        langTextView = (TextView)findViewById(R.id.language);
+        statusTextView = (TextView)findViewById(R.id.status);
+        seriesOverview = (TextView)findViewById(R.id.series_overview);
+
         Intent i = getIntent();
         show = i.getParcelableExtra("show");
         fanart = (ImageView)findViewById(R.id.fanart_image);
         apiurl = i.getStringExtra("apiurl");
 
-
         seasons = new ArrayList<Season>();
+        new GetAirsStringTask().execute();
         new FetchSeasonsTask().execute();
-
         new SetFanartTask().execute(show.getTvdbid());
 
         header = (ImageView)findViewById(R.id.transparent_header);
@@ -120,6 +135,33 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         actionBarBackground.setAlpha(newAlpha);
     }
 
+    private class GetAirsStringTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            String cmd = String.format(ApiCommands.SHOW.toString(), show.getTvdbid());
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+            JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
+
+            String airs;
+            try {
+                airs = data.getString("airs");
+            } catch (JSONException e) {
+                airs = "Unknown";
+            }
+
+            return airs;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            airsTextView.setText("Airs: " + s);
+            qualityTextView.setText("Quality: " + show.getQuality());
+            langTextView.setText("Language: " + show.getLanguage());
+            statusTextView.setText("Status: " + show.getStatus());
+            seriesOverview.setText(show.getOverview());
+        }
+    }
+
     private class FetchSeasonsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -157,10 +199,6 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
             }
             Collections.sort(seasons, new SeasonComparator());
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
         }
     }
 

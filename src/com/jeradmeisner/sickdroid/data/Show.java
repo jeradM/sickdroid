@@ -1,5 +1,6 @@
 package com.jeradmeisner.sickdroid.data;
 
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -23,6 +24,8 @@ public class Show implements Parcelable {
     private int banner;
     private int poster;
     private int paused;
+
+    private String airs;
 
     private int[] seasonList = new int[20];
 
@@ -62,6 +65,7 @@ public class Show implements Parcelable {
         banner = parcel.readInt();
         poster = parcel.readInt();
         paused = parcel.readInt();
+
 
         int len = parcel.readInt();
 
@@ -142,24 +146,6 @@ public class Show implements Parcelable {
     {
         return seasonList;
     }
-
-   /* public Bitmap getBannerImage() {
-        return bannerImage;
-    }
-
-    public void setBannerImage(Bitmap bannerImage)
-    {
-        this.bannerImage = bannerImage;
-    }
-
-    public Bitmap getPosterImage() {
-        return posterImage;
-    }
-
-    public void setPosterImage(Bitmap posterImage)
-    {
-        this.posterImage = posterImage;
-    }*/
 
     @Override
     public int describeContents() {

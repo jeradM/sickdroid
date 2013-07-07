@@ -13,11 +13,11 @@
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
         android:src="@drawable/fanart_placeholder"
-        android:contentDescription="@string/image_view_content_description"/>
+        android:contentDescription="@string/image_view_content_description" android:maxHeight="165dp"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:background="@drawable/gradient"/>
 
     <com.jeradmeisner.sickdroid.widgets.ObservableScrollView
@@ -45,7 +45,7 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/fanart_placeholder"
                 android:contentDescription="ScrollHeader"
-                android:cropToPadding="false"/>
+                android:cropToPadding="false" android:maxHeight="165dp" android:longClickable="false"/>
 
             <LinearLayout
                 android:id="@+id/main_linear_layout"
@@ -71,24 +71,51 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textSize="12sp"
-                        android:text="Airs: Tuesdays at 10:30pm" android:paddingBottom="4dp"/>
+                        android:textSize="13sp"
+                        android:padding="4dp"/>
 
                     <TextView
-                        android:id="@+id/airs"
+                        android:id="@+id/status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textSize="12sp"
-                        android:text="Quality: Any" android:paddingBottom="4dp"/>
+                        android:textSize="13sp"
+                        android:padding="4dp"/>
 
                     <TextView
-                        android:id="@+id/airs"
+                        android:id="@+id/quality"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textSize="12sp"
-                        android:text="Language: en" android:paddingBottom="4dp"/>
+                        android:textSize="13sp"
+                        android:padding="4dp"/>
+
+                    <TextView
+                        android:id="@+id/language"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:padding="4dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/show_stats_rounded" >
+
+                    <TextView
+                        android:id="@+id/series_overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="6dp"
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
