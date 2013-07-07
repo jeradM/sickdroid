@@ -20,6 +20,7 @@ import com.jeradmeisner.sickdroid.data.SeasonEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.utils.ArtworkDownloader;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
+import com.jeradmeisner.sickdroid.utils.SeasonComparator;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import com.jeradmeisner.sickdroid.widgets.ObservableScrollView;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -173,7 +175,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
         @Override
         protected void onPostExecute(Void aVoid) {
-           /* for (Season season : seasons) {
+            Collections.sort(seasons, new SeasonComparator());
+            for (Season season : seasons) {
                 TextView tv = new TextView(ShowDetailsActivity.this);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.topMargin = 4;
@@ -181,11 +184,11 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
                 tv.setGravity(Gravity.CENTER_HORIZONTAL);
                 tv.setLayoutParams(params);
                 tv.setTextSize(20);
-                tv.setText("Season " + season.getSeasonNumber());
+                tv.setText(season.toString());
                 seasonLayout.addView(tv);
-            }*/
+            }
 
-            ExpandableListView expandList = new ExpandableListView(ShowDetailsActivity.this);
+            //ExpandableListView expandList = new ExpandableListView(ShowDetailsActivity.this);
 
         }
     }

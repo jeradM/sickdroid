@@ -8,13 +8,7 @@ import com.jeradmeisner.sickdroid.data.Season;
 
 import java.util.ArrayList;
 
-/**
- * Created with IntelliJ IDEA.
- * User: celestina
- * Date: 7/6/13
- * Time: 4:52 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class SeasonListAdapter extends BaseExpandableListAdapter {
 
     private Context context;

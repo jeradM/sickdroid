@@ -31,4 +31,12 @@ public class Season {
     public int getEpisodeCount() {
         return episodes.size();
     }
+
+    @Override
+    public String toString() {
+        if (seasonNumber == 0)
+            return "Specials";
+        else
+            return "Season " + seasonNumber;
+    }
 }
