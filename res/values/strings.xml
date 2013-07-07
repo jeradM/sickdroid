@@ -14,5 +14,7 @@
     <string name="add_apikey_hint">Sickbeard API Key</string>
     <string name="add_use_https">Use HTTPS</string>
 
+    <string name="image_view_content_description">Image</string>
+
 
 </resources>

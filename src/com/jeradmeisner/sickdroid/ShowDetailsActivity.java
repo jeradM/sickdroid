@@ -48,11 +48,6 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private BitmapDrawable imageDrawable;
     boolean isExpanded = false;
 
-    LinearLayout showStats;
-
-    ExpandableListView expandList;
-    SeasonListAdapter adapter;
-
     private Show show;
 
     private String apiurl;
@@ -73,17 +68,9 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
 
 
         seasons = new ArrayList<Season>();
-        expandList = (ExpandableListView)findViewById(R.id.seasons_layout);
-        adapter = new SeasonListAdapter(ShowDetailsActivity.this, seasons);
         new FetchSeasonsTask().execute();
 
         new SetFanartTask().execute(show.getTvdbid());
-
-        //seriesOverview = (TextView)findViewById(R.id.series_overview);
-        //seriesOverview.setText(show.getOverview());
-
-
-        showStats = (LinearLayout)findViewById(R.id.show_stats_bg);
 
         header = (ImageView)findViewById(R.id.transparent_header);
         poster = (ImageView)findViewById(R.id.show_poster);
@@ -106,12 +93,6 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         getSupportActionBar().setTitle(show.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
-
-        /*LinearLayout lin = (LinearLayout)findViewById(R.id.seasons_lists_layout);
-        TextView tv = new TextView(this);
-        tv.setText("This is also a test");
-        lin.addView(tv);*/
-
 
     }
 
@@ -174,28 +155,12 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
                 seasons.add(season);
 
             }
-
+            Collections.sort(seasons, new SeasonComparator());
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Collections.sort(seasons, new SeasonComparator());
-            /*for (Season season : seasons) {
-                TextView tv = new TextView(ShowDetailsActivity.this);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.topMargin = 4;
-                params.bottomMargin = 4;
-                tv.setGravity(Gravity.CENTER_HORIZONTAL);
-                tv.setLayoutParams(params);
-                tv.setTextSize(20);
-                tv.setText(season.toString());
-                seasonLayout.addView(tv);
-            }*/
-
-
-            expandList.setAdapter(adapter);
-
         }
     }
 
