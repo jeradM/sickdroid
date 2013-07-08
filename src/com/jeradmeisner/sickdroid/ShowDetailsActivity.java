@@ -3,6 +3,7 @@ package com.jeradmeisner.sickdroid;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.view.*;
 import android.widget.*;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.internal.view.menu.ActionMenuView;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
@@ -19,12 +21,14 @@ import com.jeradmeisner.sickdroid.adapters.SeasonListAdapter;
 import com.jeradmeisner.sickdroid.data.Season;
 import com.jeradmeisner.sickdroid.data.SeasonEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
+import com.jeradmeisner.sickdroid.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickdroid.utils.ArtworkDownloader;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.SeasonComparator;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import com.jeradmeisner.sickdroid.widgets.ObservableScrollView;
+import android.support.v4.app.FragmentManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class ShowDetailsActivity extends SherlockActivity implements ObservableScrollView.ScrollListener {
+public class ShowDetailsActivity extends SherlockFragmentActivity implements ObservableScrollView.ScrollListener {
 
     private static final String TAG = "ShowDetailsActivity";
 
@@ -50,6 +54,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
     private ImageView fanart;
     private ImageView header;
     private ImageView poster;
+
+    private FragmentManager fm;
 
     private Drawable actionBarBackground;
     private BitmapDrawable imageDrawable;
@@ -77,6 +83,8 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         statusTextView = (TextView)findViewById(R.id.status);
         seriesOverview = (TextView)findViewById(R.id.series_overview);
 
+        seasonsLayout = (LinearLayout)findViewById(R.id.seasons_layout);
+
         Intent i = getIntent();
         show = i.getParcelableExtra("show");
         fanart = (ImageView)findViewById(R.id.fanart_image);
@@ -93,7 +101,7 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
         mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
         mScrollView.setScrollListener(this);
 
-        mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(
+        /*mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
 
                     @Override
@@ -101,9 +109,10 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
                         onScrollChanged(null, 0, 0, 0, 0);
                     }
 
-                });
+                });*/
 
         actionBarBackground = getResources().getDrawable(R.drawable.ab_bg);
+        actionBarBackground.setAlpha(0);
         getSupportActionBar().setBackgroundDrawable(actionBarBackground);
         getSupportActionBar().setTitle(show.getTitle());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -199,6 +208,55 @@ public class ShowDetailsActivity extends SherlockActivity implements ObservableS
             }
             Collections.sort(seasons, new SeasonComparator());
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //final Drawable ab = actionBarBackground;
+            for (Season season : seasons) {
+                TextView tv = new TextView(ShowDetailsActivity.this);
+                ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tv.setText(season.toString());
+                tv.setTextSize(16);
+                tv.setTypeface(Typeface.DEFAULT_BOLD);
+                tv.setGravity(Gravity.CENTER_HORIZONTAL);
+                tv.setBackground(getResources().getDrawable(R.drawable.show_stats_rounded));
+                tv.setPadding(5, 5, 5, 5);
+
+                final LinearLayout episodes = new LinearLayout(ShowDetailsActivity.this);
+                LinearLayout.LayoutParams epParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                episodes.setLayoutParams(epParams);
+                episodes.setOrientation(LinearLayout.VERTICAL);
+
+                for (final SeasonEpisode episode : season.getEpisodes()) {
+                    TextView epView = new TextView(ShowDetailsActivity.this);
+                    epView.setLayoutParams(params);
+                    epView.setText(episode.getTitle());
+                    epView.setPadding(5, 2, 5, 2);
+                    epView.setTextSize(13);
+
+                    epView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new LoadEpisodeDetailsTask(ShowDetailsActivity.this, apiurl,
+                                    ShowDetailsActivity.this.getSupportFragmentManager()).execute(episode);
+                        }
+                    });
+                    episodes.addView(epView);
+                }
+
+                tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int vis = episodes.getVisibility();
+                        episodes.setVisibility(vis == View.GONE ? View.VISIBLE : View.GONE);
+                    }
+                });
+
+                seasonsLayout.addView(tv);
+                seasonsLayout.addView(episodes);
+                episodes.setVisibility(View.GONE);
+            }
         }
     }
 

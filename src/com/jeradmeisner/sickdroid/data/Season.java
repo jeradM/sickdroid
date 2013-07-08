@@ -24,6 +24,10 @@ public class Season {
         return seasonNumber;
     }
 
+    public List<SeasonEpisode> getEpisodes() {
+        return episodes;
+    }
+
     public Episode getEpisode(int epNumber) {
         return episodes.get(epNumber);
     }
