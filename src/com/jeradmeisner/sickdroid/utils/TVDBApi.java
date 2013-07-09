@@ -6,8 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.jeradmeisner.sickdroid.data.Show;
+import com.jeradmeisner.sickdroid.data.TvdbSearchResult;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -79,7 +82,7 @@ public class TVDBApi {
     }
 
     /**
-     * Finds the input stream to the XML content for the given TVDBID
+     * Finds the input stream to the XML content
      */
     private static InputStream getInputStream(String url)
     {
@@ -240,6 +243,82 @@ public class TVDBApi {
             return null;
         }
 
+    }
+
+    public static List<TvdbSearchResult> getSearchResults(String s) {
+
+        String url = String.format(SERIES_API_URL, s);
+
+        InputStream is = getInputStream(url);
+
+        List<TvdbSearchResult> results = new ArrayList<TvdbSearchResult>();
+
+        String tvdbid = null;
+        String title = null;
+        String date = null;
+
+        try {
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = factory.newPullParser();
+            if (is == null) {
+                throw new IOException();
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            parser.setInput(reader);
+
+            int eventType = parser.getEventType();
+            boolean isSeriesId = false;
+            boolean isTitle = false;
+            boolean isDate = false;
+
+
+            while(eventType != XmlPullParser.END_DOCUMENT) {
+                String tagName = parser.getName();
+
+                switch(eventType) {
+                    case XmlPullParser.START_TAG:
+                        if (tagName.equalsIgnoreCase("seriesid")) {
+                            isSeriesId = true;
+                        }
+                        else if (tagName.equalsIgnoreCase("SeriesName")) {
+                            isTitle = true;
+                        }
+                        else if (tagName.equalsIgnoreCase("FirstAired")) {
+                            isDate = true;
+                        }
+                        break;
+
+                    case XmlPullParser.TEXT:
+                        if (isSeriesId) {
+                            tvdbid = parser.getText();
+                            isSeriesId = false;
+                        }
+                        else if (isTitle) {
+                            title =  parser.getText();
+                            isTitle = false;
+                        }
+                        else if (isDate) {
+                            date = parser.getText();
+                            isDate = false;
+                            if (tvdbid != null && title != null && date != null) {
+                                results.add(new TvdbSearchResult(tvdbid, title, date));
+                            }
+                        }
+                }
+
+                eventType = parser.next();
+            }
+
+            return results;
+        }
+        catch (XmlPullParserException e) {
+            Log.e(LOG_NAME, "XmlPullParserError: Parser failed");
+            return null;
+        }
+        catch (IOException e) {
+            Log.e(LOG_NAME, "IOException: No stream available");
+            return null;
+        }
     }
 
 }

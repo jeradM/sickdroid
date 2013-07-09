@@ -23,6 +23,7 @@
         android:id="@+id/add_port"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="number"
         android:hint="@string/add_port_hint" />
 
     <EditText
