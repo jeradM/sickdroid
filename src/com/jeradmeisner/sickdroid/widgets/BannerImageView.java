@@ -1,10 +1,13 @@
 package com.jeradmeisner.sickdroid.widgets;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
+import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 
 public class BannerImageView extends ImageView {
 
@@ -30,5 +33,21 @@ public class BannerImageView extends ImageView {
         heightMeasureSpec = View.MeasureSpec.makeMeasureSpec((int)(Math.ceil( (double)(View.MeasureSpec.getSize(widthMeasureSpec)) / aspect )), View.MeasureSpec.EXACTLY);
 
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    public void setBannerImage(String tvdbid) {
+        new SetBannerTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, tvdbid);
+    }
+
+    private class SetBannerTask extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            return BannerCacheManager.getInstance(getContext()).get(params[0], BannerCacheManager.BitmapType.BANNER);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            setImageBitmap(bitmap);
+        }
     }
 }

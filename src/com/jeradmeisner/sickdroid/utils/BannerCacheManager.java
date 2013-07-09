@@ -90,9 +90,9 @@ public class BannerCacheManager {
 
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-        int memoryClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        //int memoryClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
         //int cacheSize = memoryClass * 1024 * 1024 / 8;
-        int cacheSize = maxMemory / 8;
+        int cacheSize = maxMemory / 4;
 
         this.memoryCache = new LruCache<String, Bitmap>(cacheSize) {
             protected int sizeOf(String id, Bitmap bitmap) {
@@ -211,7 +211,7 @@ public class BannerCacheManager {
     public Bitmap get(String id, BitmapType type)
     {
         id = clean(id);
-        if (memoryContains(id, type)) {
+        /*if (memoryContains(id, type)) {
             return getFromMemory(id, type);
         }
         else if (diskContains(id, type)) {
@@ -219,7 +219,14 @@ public class BannerCacheManager {
         }
         else {
             return null;
-        }
+        }*/
+
+        Bitmap b = getFromMemory(id, type);
+
+        if (b != null)
+            return b;
+        else
+            return getFromDisk(id, type);
     }
 
     /**

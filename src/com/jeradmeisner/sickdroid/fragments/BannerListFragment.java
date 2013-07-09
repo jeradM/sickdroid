@@ -53,6 +53,8 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         super.onActivityCreated(savedInstanceState);
         ListView list = getListView();
         list.setDividerHeight(0);
+        list.setFastScrollEnabled(true);
+        list.setScrollingCacheEnabled(false);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -135,13 +137,17 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         @Override
         protected Show doInBackground(Show... shows) {
             Show show = shows[0];
-            String summary = TVDBApi.getSeriesOverview(show);
 
-            if (summary == null || summary.length() < 1) {
-                summary = "No series overview available";
+            if (show.getOverview() == null) {
+                String summary = TVDBApi.getSeriesOverview(show);
+
+
+                if (summary == null || summary.length() < 1) {
+                    summary = "No series overview available";
+                }
+
+                show.setOverview(summary);
             }
-
-            show.setOverview(summary);
 
             return show;
         }

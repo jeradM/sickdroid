@@ -135,9 +135,9 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
     public void onScrollChanged(View who, int l, int t, int oldl, int oldt)
     {
         if (poster != null) {
-            poster.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 1.1f)));
+            poster.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 1.05f)));
         }
-        fanart.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 5)));
+        fanart.setTranslationY(Math.min(0, header.getTop() - (mScrollView.getScrollY() / 3)));
         final int headerHeight = findViewById(R.id.fanart_image).getHeight() - getSupportActionBar().getHeight();
         final float ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
         final int newAlpha = (int) (ratio * 255);
@@ -221,7 +221,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
                 tv.setTypeface(Typeface.DEFAULT_BOLD);
                 tv.setGravity(Gravity.CENTER_HORIZONTAL);
                 tv.setBackground(getResources().getDrawable(R.drawable.show_stats_rounded));
-                tv.setPadding(5, 5, 5, 5);
+                tv.setPadding(5, 8, 8, 5);
 
                 final LinearLayout episodes = new LinearLayout(ShowDetailsActivity.this);
                 LinearLayout.LayoutParams epParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

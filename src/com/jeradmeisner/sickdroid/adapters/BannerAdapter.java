@@ -8,6 +8,7 @@ import android.widget.*;
 import com.jeradmeisner.sickdroid.R;
 import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
+import com.jeradmeisner.sickdroid.widgets.BannerImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,9 @@ public class BannerAdapter extends ArrayAdapter<Show> {
     Context context;
     private List<Show> shows, orig;
     private ShowFilter showFilter;
+    private LayoutInflater li;
+    BannerCacheManager bcm;
+
 
 
     public BannerAdapter (Context context, int resource, List<Show> shows)
@@ -27,35 +31,48 @@ public class BannerAdapter extends ArrayAdapter<Show> {
         this.context = context;
         this.shows = shows;
         orig = new ArrayList<Show>(this.shows);
+        String inflator = Context.LAYOUT_INFLATER_SERVICE;
+        li = (LayoutInflater)getContext().getSystemService(inflator);
+        bcm = BannerCacheManager.getInstance(context);
+
     }
+
+    static class BannerViewHolder {
+        BannerImageView image;
+        TextView title;
+    }
+
 
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        RelativeLayout bannerView;
+        BannerViewHolder holder;
         Show show = getItem(position);
-        BannerCacheManager bcm = BannerCacheManager.getInstance(context);
 
         if (convertView == null) {
-            bannerView = new RelativeLayout(getContext());
-            String inflator = Context.LAYOUT_INFLATER_SERVICE;
-            LayoutInflater li = (LayoutInflater)getContext().getSystemService(inflator);
-            li.inflate(resource, bannerView, true);
+            //bannerView = new RelativeLayout(getContext());
+            convertView = li.inflate(resource, parent, false);
+
+            holder = new BannerViewHolder();
+            holder.image = (BannerImageView)convertView.findViewById(R.id.banner_image_view);
+            holder.title = (TextView)convertView.findViewById(R.id.banner_text_view);
+
+            convertView.setTag(holder);
         }
         else {
-            bannerView = (RelativeLayout)convertView;
+            //bannerView = (RelativeLayout)convertView;
+            holder = (BannerViewHolder)convertView.getTag();
         }
 
 
-        ImageView imageView = (ImageView)bannerView.findViewById(R.id.banner_image_view);
-        TextView textView = (TextView)bannerView.findViewById(R.id.banner_text_view);
+
         if (show != null) {
-            imageView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
-            textView.setText(show.getTitle());
+            holder.image.setBannerImage(show.getTvdbid());
+            holder.title.setText(show.getTitle());
         }
 
-        return bannerView;
+        return convertView;
     }
 
     @Override
