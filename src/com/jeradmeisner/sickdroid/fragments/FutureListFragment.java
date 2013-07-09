@@ -93,16 +93,16 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
         new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(e);
     }
 
-    public class LoadFuturetask extends AsyncTask<String, Void, Integer>
+    public class LoadFuturetask extends AsyncTask<String, Void, List<FutureListItem>>
     {
 
         @Override
-        protected Integer doInBackground(String... params) {
-            items.clear();
+        protected List<FutureListItem> doInBackground(String... params) {
+            List<FutureListItem> itemstemp = new ArrayList<FutureListItem>();
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], ApiCommands.FUTURE.toString());
 
             if (obj == null) {
-                return 1;
+                return null;
             }
 
             JSONObject data = SickbeardJsonUtils.parseObjectFromJson(obj, "data");
@@ -118,34 +118,34 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
 
             try {
                 if (showMissed && missed.length() > 0) {
-                    items.add(new FutureSectionHeader("Missed"));
+                    itemstemp.add(new FutureSectionHeader("Missed"));
                     for (int i = 0; i < missed.length(); i++) {
                         JSONObject next = missed.getJSONObject(i);
-                        addFutureItem(next);
+                        addFutureItem(next, itemstemp);
                     }
                 }
                 publishProgress();
                 if (today.length() > 0) {
-                    items.add(new FutureSectionHeader("Today"));
+                    itemstemp.add(new FutureSectionHeader("Today"));
                     for (int i = 0; i < today.length(); i++) {
                         JSONObject next = today.getJSONObject(i);
-                        addFutureItem(next);
+                        addFutureItem(next, itemstemp);
                     }
                 }
                 publishProgress();
                 if (soon.length() > 0) {
-                    items.add(new FutureSectionHeader("Soon"));
+                    itemstemp.add(new FutureSectionHeader("Soon"));
                     for (int i = 0; i < soon.length(); i++) {
                         JSONObject next = soon.getJSONObject(i);
-                        addFutureItem(next);
+                        addFutureItem(next, itemstemp);
                     }
                 }
                 publishProgress();
                 if (later.length() > 0) {
-                    items.add(new FutureSectionHeader("Later"));
+                    itemstemp.add(new FutureSectionHeader("Later"));
                     for (int i = 0; i < later.length(); i++) {
                         JSONObject next = later.getJSONObject(i);
-                        addFutureItem(next);
+                        addFutureItem(next, itemstemp);
                     }
                 }
             }
@@ -153,10 +153,10 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
                 Log.e(TAG, "Error fetching future");
             }
 
-            return 0;
+            return itemstemp;
         }
 
-        private void addFutureItem(JSONObject next) throws JSONException
+        private void addFutureItem(JSONObject next, List<FutureListItem> itemstemp) throws JSONException
         {
             String tvdbid = next.getString("tvdbid");
             String title = next.getString("ep_name");
@@ -172,19 +172,22 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
             }
 
             if (show != null) {
-                items.add(new FutureEpisode(show, title, season, episode, airdate));
+                itemstemp.add(new FutureEpisode(show, title, season, episode, airdate));
             }
         }
 
-        @Override
+        /*@Override
         protected void onProgressUpdate(Void... values) {
             adapter.notifyDataSetChanged();
-        }
+        }*/
 
         @Override
-        protected void onPostExecute(Integer status) {
-            if (status == 0) {
+        protected void onPostExecute(List<FutureListItem> itemList) {
+            if (itemList != null) {
                 if (adapter != null) {
+                    for (FutureListItem nextItem : itemList) {
+                        items.add(nextItem);
+                    }
                     adapter.notifyDataSetChanged();
                 }
             }

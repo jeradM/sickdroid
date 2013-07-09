@@ -97,18 +97,19 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
         new LoadEpisodeDetailsTask(getSherlockActivity(), apiurl, getSherlockActivity().getSupportFragmentManager()).execute(item);
     }
 
-    public class LoadHistoryTask extends AsyncTask<String, Void, Integer>
+    public class LoadHistoryTask extends AsyncTask<String, Void, List<HistoryEpisode>>
     {
 
         @Override
-        protected Integer doInBackground(String... params) {
-            items.clear();
+        protected List<HistoryEpisode> doInBackground(String... params) {
+            List<HistoryEpisode> itemstemp = new ArrayList<HistoryEpisode>();
+
             String historyString = ApiCommands.HISTORY.toString();
             String historyCmd = String.format(historyString, "40", "downloaded");
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(params[0], historyCmd);
 
             if (obj == null) {
-                return 1;
+                return null;
             }
 
             JSONArray array = SickbeardJsonUtils.parseArrayFromJson(obj, "data");
@@ -131,27 +132,30 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
 
                     if (newShow != null) {
                         //newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
-                        items.add(new HistoryEpisode(newShow, null, season, episode, date, status));
+                        itemstemp.add(new HistoryEpisode(newShow, null, season, episode, date, status));
                     }
-                    publishProgress();
+                    //publishProgress();
 
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "Error loading history");
             }
 
-            return 0;
+            return itemstemp;
         }
 
-        @Override
+       /* @Override
         protected void onProgressUpdate(Void... values) {
-            //adapter.notifyDataSetChanged();
-        }
+            adapter.notifyDataSetChanged();
+        }*/
 
         @Override
-        protected void onPostExecute(Integer status) {
-            if (status == 0) {
+        protected void onPostExecute(List<HistoryEpisode> itemsList) {
+            if (itemsList != null) {
                 if (adapter != null) {
+                    for (HistoryEpisode ep : itemsList) {
+                        items.add(ep);
+                    }
                     adapter.notifyDataSetChanged();
                 }
             }
