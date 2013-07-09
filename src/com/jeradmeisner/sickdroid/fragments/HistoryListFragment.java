@@ -31,25 +31,26 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
 
     private List<HistoryEpisode> items;
     private HistoryAdapter adapter;
-    private Shows shows;
+    private List<Show> shows;
     private String apiurl;
-    private Context context;
 
     BannerCacheManager bcm;
 
-    public HistoryListFragment(Context context, Shows shows, String apiurl)
-    {
-        super();
-        this.context = context;
-        this.apiurl = apiurl;
-        this.shows = shows;
-        items = new ArrayList<HistoryEpisode>();
-
+    public static HistoryListFragment getInstance(List<Show> shows, String apiurl) {
+        HistoryListFragment frag = new HistoryListFragment();
+        Bundle b = new Bundle(2);
+        b.putParcelableArrayList("shows", (ArrayList)shows);
+        b.putString("apiurl", apiurl);
+        frag.setArguments(b);
+        return frag;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getArguments();
+        shows = b.getParcelableArrayList("shows");
+        apiurl = b.getString("apiurl");
         refreshHistory(apiurl);
     }
 
@@ -69,10 +70,15 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
 
     public void refreshHistory(String apiurl)
     {
+        if (items == null) {
+            items = new ArrayList<HistoryEpisode>();
+        }
+
         if (adapter == null) {
             adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
             setListAdapter(adapter);
         }
+
         bcm = BannerCacheManager.getInstance(getSherlockActivity());
         items.clear();
         adapter.notifyDataSetInvalidated();
@@ -116,7 +122,12 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
                     String id = nextItem.get("tvdbid").toString();
                     String status = nextItem.get("status").toString();
 
-                    Show newShow = shows.findShow(id);
+                    Show newShow = null;
+                    for (Show s : shows) {
+                        if (s.getTvdbid().equals(id)) {
+                            newShow = s;
+                        }
+                    }
 
                     if (newShow != null) {
                         //newShow.setPosterImage(bcm.get(newShow.getTvdbid(), BannerCacheManager.BitmapType.POSTER));

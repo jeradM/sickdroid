@@ -24,7 +24,6 @@ import com.jeradmeisner.sickdroid.data.SickbeardProfiles;
 import com.jeradmeisner.sickdroid.fragments.BannerListFragment;
 import com.jeradmeisner.sickdroid.fragments.FutureListFragment;
 import com.jeradmeisner.sickdroid.fragments.HistoryListFragment;
-import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.ShowComparator;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
@@ -297,20 +296,20 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             int maxHeight = (int)(size.y / 8);
 
             if (bannerListFragment == null) {
-                bannerListFragment = new BannerListFragment(shows, apiUrl);
+                bannerListFragment = BannerListFragment.getInstance(showList, apiUrl);
                 searchView.setOnQueryTextListener(bannerListFragment);
             }
             else {
                 bannerListFragment.refreshBanners();
             }
             if (futureListFragment == null) {
-                futureListFragment = new FutureListFragment(shows, apiUrl);
+                futureListFragment = FutureListFragment.getInstance(showList, apiUrl);
             }
             else {
                 futureListFragment.refreshFuture(apiUrl);
             }
             if (historyListFragment == null) {
-                historyListFragment = new HistoryListFragment(ShowsActivity.this, shows, apiUrl);
+                historyListFragment = HistoryListFragment.getInstance(showList, apiUrl);
             }
             else {
                 historyListFragment.refreshHistory(apiUrl);

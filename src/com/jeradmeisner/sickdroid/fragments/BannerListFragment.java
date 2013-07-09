@@ -17,25 +17,30 @@ import com.jeradmeisner.sickdroid.data.Shows;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.TVDBApi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BannerListFragment extends SherlockListFragment implements SearchView.OnQueryTextListener, ShowsActivity.SickFragment {
 
-    private Shows shows;
-    private BannerCacheManager bcm;
+    private List<Show> shows;
     private BannerAdapter adapter;
-
     private String apiurl;
 
-    public BannerListFragment(Shows shows, String apiurl)
-    {
-        super();
-        this.shows = shows;
-        this.apiurl = apiurl;
+    public static BannerListFragment getInstance(List<Show> shows, String apiurl) {
+        BannerListFragment frag = new BannerListFragment();
+        Bundle b = new Bundle(2);
+        b.putParcelableArrayList("shows", (ArrayList)shows);
+        b.putString("apiurl", apiurl);
+        frag.setArguments(b);
+        return frag;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        Bundle b = getArguments();
+        shows = b.getParcelableArrayList("shows");
+        apiurl = b.getString("apiurl");
         refreshBanners();
     }
 
@@ -44,7 +49,6 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         if (adapter != null)
             adapter.notifyDataSetInvalidated();
 
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
         //new LoadImagesTask().execute();
     }
 
@@ -65,7 +69,7 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
         });
 
        // int resource = getSherlockActivity().getResources().getInteger(R.layout.banner_list_item);
-        adapter = new BannerAdapter(getSherlockActivity(), R.layout.banner_list_item, shows.getShowList());
+        adapter = new BannerAdapter(getSherlockActivity(), R.layout.banner_list_item, shows);
         setListAdapter(adapter);
     }
 
@@ -108,30 +112,6 @@ public class BannerListFragment extends SherlockListFragment implements SearchVi
             adapter.notifyDataSetChanged();
         }
     }
-
-
-   /* public class LoadImagesTask extends AsyncTask<Void, Void, Void> {
-
-        protected Void doInBackground(Void... params)
-        {
-            for (Show show : shows.getShowList()) {
-                show.setBannerImage(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER));
-                publishProgress();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            adapter.notifyDataSetChanged();
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            adapter.notifyDataSetChanged();
-        }
-    }*/
 
     public class FetchDescriptionTask extends AsyncTask<Show, Void, Show> {
         @Override

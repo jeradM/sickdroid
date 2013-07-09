@@ -13,7 +13,6 @@ import com.jeradmeisner.sickdroid.adapters.FutureAdapter;
 import com.jeradmeisner.sickdroid.data.*;
 import com.jeradmeisner.sickdroid.interfaces.FutureListItem;
 import com.jeradmeisner.sickdroid.task.LoadEpisodeDetailsTask;
-import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import com.jeradmeisner.sickdroid.widgets.FutureSectionHeader;
@@ -31,22 +30,24 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
 
     private List<FutureListItem> items;
     private FutureAdapter adapter;
-    private Shows shows;
+    private List<Show> shows;
     private String apiurl;
 
-    BannerCacheManager bcm;
-
-    public FutureListFragment(Shows shows, String apiurl)
-    {
-        super();
-        this.apiurl = apiurl;
-        this.shows = shows;
-        items = new ArrayList<FutureListItem>();
+    public static FutureListFragment getInstance(List<Show> shows, String apiurl) {
+        FutureListFragment frag = new FutureListFragment();
+        Bundle b = new Bundle(2);
+        b.putParcelableArrayList("shows", (ArrayList)shows);
+        b.putString("apiurl", apiurl);
+        frag.setArguments(b);
+        return frag;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle b = getArguments();
+        shows = b.getParcelableArrayList("shows");
+        apiurl = b.getString("apiurl");
         refreshFuture(apiurl);
     }
 
@@ -66,6 +67,10 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
 
     public void refreshFuture(String apiurl)
     {
+        if (items == null) {
+            items = new ArrayList<FutureListItem>();
+        }
+
         if (adapter == null) {
             adapter = new FutureAdapter(getSherlockActivity(), 0, items);
             setListAdapter(adapter);
@@ -73,7 +78,6 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
         this.apiurl = apiurl;
         items.clear();
         adapter.notifyDataSetInvalidated();
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
         new LoadFuturetask().execute(apiurl);
     }
 
@@ -159,8 +163,17 @@ public class FutureListFragment extends SherlockListFragment implements ShowsAct
             int season = next.getInt("season");
             int episode = next.getInt("episode");
             String airdate = next.getString("airdate");
-            Show show = shows.findShow(tvdbid);
-            items.add(new FutureEpisode(show, title, season, episode, airdate));
+
+            Show show = null;
+            for (Show s : shows) {
+                if (s.getTvdbid().equals(tvdbid)) {
+                    show = s;
+                }
+            }
+
+            if (show != null) {
+                items.add(new FutureEpisode(show, title, season, episode, airdate));
+            }
         }
 
         @Override
