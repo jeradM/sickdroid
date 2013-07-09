@@ -313,11 +313,11 @@ public class TVDBApi {
         }
         catch (XmlPullParserException e) {
             Log.e(LOG_NAME, "XmlPullParserError: Parser failed");
-            return null;
+            return results;
         }
         catch (IOException e) {
             Log.e(LOG_NAME, "IOException: No stream available");
-            return null;
+            return results;
         }
     }
 

@@ -58,8 +58,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
 
     private SearchView searchView;
 
-    private Shows shows;
-
     private BroadcastReceiver broadcastReceiver;
     private IntentFilter intentFilter;
 
@@ -81,7 +79,6 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         //BannerCacheManager.getInstance(this).clearCache();
 
         showList = new ArrayList<Show>();
-        shows = new Shows(showList);
 
         profiles = SickbeardProfiles.getInstance();
         profiles.registerOnProfileChangedListener(this);
@@ -218,7 +215,9 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
                 startActivity(i);
                 return true;
             case R.id.add_show:
-                Toast.makeText(this, "Add Show", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Add Show", Toast.LENGTH_SHORT).show();
+                Intent addShowIntent = new Intent(this, AddShowActivity.class);
+                startActivity(addShowIntent);
                 return true;
             case R.id.refresh_shows:
                 update();

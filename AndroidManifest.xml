@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".ProfilesActivity"/>
         <activity android:name=".ShowDetailsActivity"/>
+        <activity android:name=".AddShowActivity"/>
         <service android:name=".ImageCacheService"/>
         <service android:name=".EpisodeSearchService"/>
     </application>
