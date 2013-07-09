@@ -114,7 +114,7 @@
                         android:id="@+id/series_overview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="6dp"
+                        android:padding="12dp"
                         android:textSize="13sp" />
 
                 </LinearLayout>

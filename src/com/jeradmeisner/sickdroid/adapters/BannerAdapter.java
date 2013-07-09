@@ -51,7 +51,6 @@ public class BannerAdapter extends ArrayAdapter<Show> {
         Show show = getItem(position);
 
         if (convertView == null) {
-            //bannerView = new RelativeLayout(getContext());
             convertView = li.inflate(resource, parent, false);
 
             holder = new BannerViewHolder();
@@ -61,7 +60,6 @@ public class BannerAdapter extends ArrayAdapter<Show> {
             convertView.setTag(holder);
         }
         else {
-            //bannerView = (RelativeLayout)convertView;
             holder = (BannerViewHolder)convertView.getTag();
         }
 

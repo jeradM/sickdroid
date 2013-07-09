@@ -11,28 +11,26 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.internal.view.menu.ActionMenuView;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
-import com.jeradmeisner.sickdroid.adapters.SeasonListAdapter;
+
 import com.jeradmeisner.sickdroid.data.Season;
 import com.jeradmeisner.sickdroid.data.SeasonEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.task.LoadEpisodeDetailsTask;
-import com.jeradmeisner.sickdroid.utils.ArtworkDownloader;
-import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
-import com.jeradmeisner.sickdroid.utils.SeasonComparator;
-import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickdroid.utils.*;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import com.jeradmeisner.sickdroid.widgets.ObservableScrollView;
+
 import android.support.v4.app.FragmentManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -202,7 +200,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
                         Log.e(TAG, "Error parsing seasons");
                     }
                 }
-
+                Collections.sort(season.getEpisodes(), new EpisodeComparator());
                 seasons.add(season);
 
             }
@@ -212,7 +210,6 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            //final Drawable ab = actionBarBackground;
             for (Season season : seasons) {
                 TextView tv = new TextView(ShowDetailsActivity.this);
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -231,7 +228,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
                 for (final SeasonEpisode episode : season.getEpisodes()) {
                     TextView epView = new TextView(ShowDetailsActivity.this);
                     epView.setLayoutParams(params);
-                    epView.setText(episode.getTitle());
+                    epView.setText(episode.getEpisode() + " " + episode.getTitle());
                     epView.setPadding(5, 2, 5, 2);
                     epView.setTextSize(13);
 
