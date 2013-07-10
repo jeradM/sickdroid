@@ -16,5 +16,26 @@
 
     <string name="image_view_content_description">Image</string>
 
+    <string name="quality_prompt">Initial Quality</string>
+    <string-array name="quality_strings">
+        <item>sdtv</item>
+        <item>sddvd</item>
+        <item>hdtv</item>
+        <item>rawhdtv</item>
+        <item>fullhdtv</item>
+        <item>hdwebdl</item>
+        <item>fullhdwebdl</item>
+        <item>hdbluray</item>
+        <item>fullhdbluray</item>
+    </string-array>
+
+    <string name="status_prompt">Initial Status</string>
+    <string-array name="status_strings">
+        <item>skipped</item>
+        <item>wanted</item>
+        <item>archived</item>
+        <item>ignored</item>
+    </string-array>
+
 
 </resources>
