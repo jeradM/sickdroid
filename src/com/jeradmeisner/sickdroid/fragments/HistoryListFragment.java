@@ -1,6 +1,5 @@
 package com.jeradmeisner.sickdroid.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +11,6 @@ import com.jeradmeisner.sickdroid.adapters.HistoryAdapter;
 import com.jeradmeisner.sickdroid.data.Episode;
 import com.jeradmeisner.sickdroid.data.HistoryEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
-import com.jeradmeisner.sickdroid.data.Shows;
 import com.jeradmeisner.sickdroid.task.LoadEpisodeDetailsTask;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;

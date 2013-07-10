@@ -19,7 +19,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickdroid.data.Show;
-import com.jeradmeisner.sickdroid.data.Shows;
 import com.jeradmeisner.sickdroid.data.SickbeardProfiles;
 import com.jeradmeisner.sickdroid.fragments.BannerListFragment;
 import com.jeradmeisner.sickdroid.fragments.FutureListFragment;

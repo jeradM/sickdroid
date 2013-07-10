@@ -13,8 +13,6 @@ import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickdroid.*;
 import com.jeradmeisner.sickdroid.adapters.BannerAdapter;
 import com.jeradmeisner.sickdroid.data.Show;
-import com.jeradmeisner.sickdroid.data.Shows;
-import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.TVDBApi;
 
 import java.util.ArrayList;

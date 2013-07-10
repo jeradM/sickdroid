@@ -3,11 +3,9 @@ package com.jeradmeisner.sickdroid.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.jeradmeisner.sickdroid.R;
@@ -45,13 +43,10 @@ public class AddShowFragment extends SherlockDialogFragment {
         final Spinner status = (Spinner)view.findViewById(R.id.status_spinner);
         final CheckBox flatten = (CheckBox)view.findViewById(R.id.flatten_folders);
 
-        //String[] qualityList = {"SD", "HD720", "HD1080", "Any"};
         ArrayAdapter<CharSequence> qAdapter = ArrayAdapter.createFromResource(getSherlockActivity(), R.array.quality_strings, android.R.layout.simple_spinner_item);
         qAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         quality.setAdapter(qAdapter);
 
-
-        //String[] statusList = {"Skipped", "Wanted", "Ignored"};
         ArrayAdapter<CharSequence> sAdapter = ArrayAdapter.createFromResource(getSherlockActivity(), R.array.status_strings, android.R.layout.simple_spinner_item);
         sAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         status.setAdapter(sAdapter);
