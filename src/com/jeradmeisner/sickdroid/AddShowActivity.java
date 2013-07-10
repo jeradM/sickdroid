@@ -1,33 +1,57 @@
 package com.jeradmeisner.sickdroid;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.app.SherlockListActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.jeradmeisner.sickdroid.data.TvdbSearchResult;
+import com.jeradmeisner.sickdroid.fragments.AddShowFragment;
 import com.jeradmeisner.sickdroid.utils.TVDBApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddShowActivity extends SherlockListActivity implements SearchView.OnQueryTextListener {
+public class AddShowActivity extends SherlockFragmentActivity implements SearchView.OnQueryTextListener {
 
     private ArrayAdapter<TvdbSearchResult> adapter;
     private List<TvdbSearchResult> results;
 
+    private ListView list;
+
+    private String apiurl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_show);
+
+        list = (ListView)findViewById(R.id.search_result_list);
+
+        Intent i = getIntent();
+        apiurl = i.getStringExtra("apiurl");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         results = new ArrayList<TvdbSearchResult>();
         adapter = new ArrayAdapter<TvdbSearchResult>(this, android.R.layout.simple_list_item_1, results);
-        setListAdapter(adapter);
+        list.setAdapter(adapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AddShowFragment frag = AddShowFragment.getInstance(adapter.getItem(position), apiurl);
+                frag.show(getSupportFragmentManager(), "AddShow");
+            }
+        });
     }
 
     @Override

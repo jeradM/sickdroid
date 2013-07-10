@@ -213,24 +213,28 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
             for (Season season : seasons) {
                 TextView tv = new TextView(ShowDetailsActivity.this);
                 ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
                 tv.setText(season.toString());
                 tv.setTextSize(16);
                 tv.setTypeface(Typeface.DEFAULT_BOLD);
                 tv.setGravity(Gravity.CENTER_HORIZONTAL);
                 tv.setBackground(getResources().getDrawable(R.drawable.show_stats_rounded));
-                tv.setPadding(5, 8, 8, 5);
+                tv.setPadding(15, 24, 15, 24);
 
                 final LinearLayout episodes = new LinearLayout(ShowDetailsActivity.this);
                 LinearLayout.LayoutParams epParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 episodes.setLayoutParams(epParams);
+                episodes.setShowDividers(LinearLayout.SHOW_DIVIDER_END);
                 episodes.setOrientation(LinearLayout.VERTICAL);
 
                 for (final SeasonEpisode episode : season.getEpisodes()) {
                     TextView epView = new TextView(ShowDetailsActivity.this);
-                    epView.setLayoutParams(params);
+                    //ViewGroup.LayoutParams epParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    epView.setLayoutParams(epParams);
                     epView.setText(episode.getEpisode() + " " + episode.getTitle());
-                    epView.setPadding(5, 2, 5, 2);
-                    epView.setTextSize(13);
+                    epView.setPadding(18, 20, 18, 20);
+                    epView.setBackgroundResource(episode.getEpisode() % 2 == 1 ? R.color.history_list_bg_even : R.color.history_list_bg_odd);
+                    epView.setTextSize(15);
 
                     epView.setOnClickListener(new View.OnClickListener() {
                         @Override

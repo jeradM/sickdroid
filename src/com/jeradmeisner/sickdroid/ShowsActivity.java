@@ -217,6 +217,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             case R.id.add_show:
                 //Toast.makeText(this, "Add Show", Toast.LENGTH_SHORT).show();
                 Intent addShowIntent = new Intent(this, AddShowActivity.class);
+                addShowIntent.putExtra("apiurl", apiUrl);
                 startActivity(addShowIntent);
                 return true;
             case R.id.refresh_shows:
