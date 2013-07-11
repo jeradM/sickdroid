@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.jeradmeisner.sickdroid.EpisodeSearchService;
 import com.jeradmeisner.sickdroid.R;
 import com.jeradmeisner.sickdroid.data.Episode;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
+import com.jeradmeisner.sickdroid.widgets.BannerImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,10 +46,17 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         LayoutInflater inflator = getActivity().getLayoutInflater();
         View view = inflator.inflate(R.layout.episode_dialog, null);
 
-        BannerCacheManager bcm = BannerCacheManager.getInstance(getSherlockActivity());
+        //BannerCacheManager bcm = BannerCacheManager.getInstance(getSherlockActivity());
 
-        ImageView dialogHeaderBanner = (ImageView)view.findViewById(R.id.details_dialog_title_banner);
-        dialogHeaderBanner.setImageBitmap(bcm.get(episode.getShow().getTvdbid(), BannerCacheManager.BitmapType.BANNER));
+        final BannerImageView dialogHeaderBanner = (BannerImageView)view.findViewById(R.id.details_dialog_title_banner);
+        dialogHeaderBanner.setBannerImage(episode.getShow().getTvdbid());
+        /*new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                dialogHeaderBanner.setBannerImage(episode.getShow().getTvdbid());
+                return null;
+            }
+        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);*/
 
 
         nameTextView = (TextView)view.findViewById(R.id.details_episode_name);
@@ -117,4 +126,6 @@ public class EpisodeDetailsFragment extends SherlockDialogFragment {
         }
 
     }
+
+
 }

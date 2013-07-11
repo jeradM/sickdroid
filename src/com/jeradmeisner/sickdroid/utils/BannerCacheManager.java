@@ -88,11 +88,11 @@ public class BannerCacheManager {
                 dir.mkdirs();
         }
 
-        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        //int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
 
-        //int memoryClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
-        //int cacheSize = memoryClass * 1024 * 1024 / 8;
-        int cacheSize = maxMemory / 4;
+        int memoryClass = ((ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE)).getMemoryClass();
+        int cacheSize = memoryClass * 1024 * 1024 / 4;
+        //int cacheSize = maxMemory / 4;
 
         this.memoryCache = new LruCache<String, Bitmap>(cacheSize) {
             protected int sizeOf(String id, Bitmap bitmap) {
@@ -161,10 +161,10 @@ public class BannerCacheManager {
     {
         id = clean(id);
 
-        if (type == BitmapType.BANNER) {
+        //if (type == BitmapType.BANNER) {
             synchronized (memoryCache) {
                 memoryCache.put(id + type.toString(), bitmap);
-            }
+            //}
         }
 
         try {
@@ -232,7 +232,7 @@ public class BannerCacheManager {
     /**
      * Gets the requested bitmap from memory cache
      */
-    private Bitmap getFromMemory(String id, BitmapType type)
+    public Bitmap getFromMemory(String id, BitmapType type)
     {
         return memoryCache.get(id + type.toString());
     }
@@ -240,7 +240,7 @@ public class BannerCacheManager {
     /**
      * Gets the requested bitmap from disk cache
      */
-    private Bitmap getFromDisk(String id, BitmapType type)
+    public Bitmap getFromDisk(String id, BitmapType type)
     {
         try {
             File tmpDir = new File(cacheDir, type.toString());
@@ -251,7 +251,7 @@ public class BannerCacheManager {
                 in.close();
 
                 // Add bitmap to memory cache
-                if (id != null && bitmap != null && type == BitmapType.BANNER) {
+                if (id != null && bitmap != null /*&& type == BitmapType.BANNER*/) {
                     synchronized (memoryCache) {
                         memoryCache.put(id + type.toString(), bitmap);
                     }

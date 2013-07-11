@@ -65,10 +65,10 @@ public class BannerAdapter extends ArrayAdapter<Show> {
 
 
 
-        if (show != null) {
+        //if (show != null) {
             holder.image.setBannerImage(show.getTvdbid());
             holder.title.setText(show.getTitle());
-        }
+       // }
 
         return convertView;
     }

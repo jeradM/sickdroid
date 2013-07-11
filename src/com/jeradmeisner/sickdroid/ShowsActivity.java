@@ -89,7 +89,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         }
         else {
             getApiurl();
-            new FetchShowsTask().execute();
+            update();
         }
 
         getSupportActionBar().setDisplayUseLogoEnabled(false);
@@ -103,7 +103,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
 
         indicator.setFooterColor(getResources().getColor(R.color.white));
 
-        intentFilter = new IntentFilter(ImageCacheService.IMAGES_UPDATES);
+       /* intentFilter = new IntentFilter(ImageCacheService.IMAGES_UPDATES);
         broadcastReceiver = new BroadcastReceiver() {
 
             @Override
@@ -114,21 +114,21 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
                     }
                 }
             }
-        };
+        };*/
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.registerReceiver(broadcastReceiver, intentFilter);
+        //this.registerReceiver(broadcastReceiver, intentFilter);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.unregisterReceiver(broadcastReceiver);
+        //this.unregisterReceiver(broadcastReceiver);
     }
 
     public void getApiurl()
@@ -154,17 +154,19 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
 
         apiUrl = String.format("%s://%s%s/%sapi/%s/", protocol, host, port, webroot, apiKey);
 
+        prefs.edit().putString("apiurl", apiUrl).commit();
+
     }
 
     @Override
     public void onProfileChanged() {
         getApiurl();
-        new FetchShowsTask().execute();
+        update();
     }
 
     public void update()
     {
-        new FetchShowsTask().execute();
+        new FetchShowsTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void showProfilesActivity()
@@ -178,6 +180,7 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
         if (requestCode == REQUEST_CODE_PROFILES) {
             if (resultCode == RESULT_OK) {
                 getApiurl();
+                update();
             }
         }
     }
@@ -324,12 +327,12 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
                 indicator.setViewPager(viewPager);
             }
 
-            Intent downloadImagesIntent = new Intent(ShowsActivity.this, ImageCacheService.class);
+            /*Intent downloadImagesIntent = new Intent(ShowsActivity.this, ImageCacheService.class);
             downloadImagesIntent.putParcelableArrayListExtra("showlist", (ArrayList<Show>)showList);
             downloadImagesIntent.putExtra("apiurl", apiUrl);
             downloadImagesIntent.putExtra("maxWidth", maxWidth);
             downloadImagesIntent.putExtra("maxHeight", maxHeight);
-            startService(downloadImagesIntent);
+            startService(downloadImagesIntent);*/
 
 
         }
