@@ -2,7 +2,9 @@ package com.jeradmeisner.sickdroid.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +12,23 @@ import android.widget.*;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.jeradmeisner.sickdroid.R;
 import com.jeradmeisner.sickdroid.data.TvdbSearchResult;
+import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
+import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AddShowFragment extends SherlockDialogFragment {
 
     private TvdbSearchResult result;
     private String apiurl;
+
+    Spinner quality;
+    Spinner status;
+    CheckBox flatten;
+
+
+    Context c;
+
 
 
     public static AddShowFragment getInstance(TvdbSearchResult result, String apiurl) {
@@ -33,15 +47,17 @@ public class AddShowFragment extends SherlockDialogFragment {
         result = b.getParcelable("result");
         apiurl = b.getString("apiurl");
 
+        c = getSherlockActivity();
+
         LayoutInflater inflater = getSherlockActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.fragment_add_show, null);
 
         TextView titleView = (TextView)view.findViewById(R.id.fragment_title);
         titleView.setText(result.toString());
 
-        final Spinner quality = (Spinner)view.findViewById(R.id.quality_spinner);
-        final Spinner status = (Spinner)view.findViewById(R.id.status_spinner);
-        final CheckBox flatten = (CheckBox)view.findViewById(R.id.flatten_folders);
+        quality = (Spinner)view.findViewById(R.id.quality_spinner);
+        status = (Spinner)view.findViewById(R.id.status_spinner);
+        flatten = (CheckBox)view.findViewById(R.id.flatten_folders);
 
         ArrayAdapter<CharSequence> qAdapter = ArrayAdapter.createFromResource(getSherlockActivity(), R.array.quality_strings, android.R.layout.simple_spinner_item);
         qAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -58,14 +74,50 @@ public class AddShowFragment extends SherlockDialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String stat = String.valueOf(status.getSelectedItem());
-                        String qual = String.valueOf(quality.getSelectedItem());
-                        boolean flat = flatten.isChecked();
-                        Toast.makeText(getSherlockActivity(), stat + " " + qual + " " + String.valueOf(flat), Toast.LENGTH_SHORT).show();
+                        new AddShowTask().execute();
                     }
                 })
                 .setNegativeButton("Cancel", null);
 
         return builder.create();
+    }
+
+    private class AddShowTask extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... params) {
+            String stat = String.valueOf(status.getSelectedItem());
+            String qual = String.valueOf(quality.getSelectedItem());
+            int flat = (flatten.isChecked() ? 1 : 0);
+
+            String cmd = String.format(ApiCommands.ADD_SHOW.toString(), result.getTvdbid(), qual, stat, flat);
+            JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+
+            if (obj == null) {
+                return "failed";
+            }
+
+            try {
+                return obj.getString("result");
+            } catch (JSONException e) {
+                return "failed";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            String toastText;
+
+            if (s.equals("success")) {
+                toastText = "Successfully added " + result.getTitle();
+            }
+            else {
+                toastText = "Failed to add " + result.getTitle();
+            }
+
+            int l = Toast.LENGTH_LONG;
+
+            Toast t = Toast.makeText(c.getApplicationContext(), toastText, l);
+            t.show();
+        }
     }
 }

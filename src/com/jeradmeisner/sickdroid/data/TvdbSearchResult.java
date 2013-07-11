@@ -21,9 +21,21 @@ public class TvdbSearchResult implements Parcelable {
         date = parcel.readString();
     }
 
+    public String getTvdbid() {
+        return tvdbid;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
     @Override
     public String toString() {
-        return title;
+        return title + ": Originally aired on " + date;
     }
 
     @Override

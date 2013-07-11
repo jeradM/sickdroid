@@ -1,5 +1,6 @@
 package com.jeradmeisner.sickdroid.fragments;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -72,15 +73,20 @@ public class HistoryListFragment extends SherlockListFragment implements ShowsAc
             items = new ArrayList<HistoryEpisode>();
         }
 
-        if (adapter == null) {
-            adapter = new HistoryAdapter(getSherlockActivity(), R.layout.history_list_item, items);
-            setListAdapter(adapter);
-        }
+        Context c = getSherlockActivity();
+        if (c != null) {
 
-        bcm = BannerCacheManager.getInstance(getSherlockActivity());
-        items.clear();
-        adapter.notifyDataSetInvalidated();
-        new LoadHistoryTask().execute(apiurl);
+            if (adapter == null) {
+                    adapter = new HistoryAdapter(c, R.layout.history_list_item, items);
+                    setListAdapter(adapter);
+
+            }
+
+            bcm = BannerCacheManager.getInstance(c);
+            items.clear();
+            adapter.notifyDataSetInvalidated();
+            new LoadHistoryTask().execute(apiurl);
+        }
     }
 
     public void update()

@@ -247,7 +247,7 @@ public class TVDBApi {
 
     public static List<TvdbSearchResult> getSearchResults(String s) {
 
-        String url = String.format(SERIES_API_URL, s);
+        String url = String.format(SERIES_API_URL, s.replaceAll(" ", "_").replaceAll("&", "-"));
 
         InputStream is = getInputStream(url);
 

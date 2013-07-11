@@ -11,7 +11,8 @@ public enum ApiCommands {
     EPISODE("episode&tvdbid=%s&season=%s&episode=%s"),
     EPISODE_SEARCH("episode.search&tvdbid=%s&season=%s&episode=%s"),
     FUTURE("future"),
-    SEASONS("show.seasons&tvdbid=%s");
+    SEASONS("show.seasons&tvdbid=%s"),
+    ADD_SHOW("show.addnew&tvdbid=%s&initial=%s&status=%s&flatten_folders=%s");
 
     private String cmdString;
 
