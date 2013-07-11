@@ -166,6 +166,7 @@ public class TVDBApi {
                             if ("fanart".equalsIgnoreCase(parser.getText())) {
                                 done = true;
                             }
+
                             isBannerType = false;
                         }
                 }

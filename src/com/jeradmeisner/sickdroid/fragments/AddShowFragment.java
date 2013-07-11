@@ -4,18 +4,26 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.jeradmeisner.sickdroid.GetNewShowBannerService;
 import com.jeradmeisner.sickdroid.R;
+import com.jeradmeisner.sickdroid.ShowsActivity;
 import com.jeradmeisner.sickdroid.data.TvdbSearchResult;
+import com.jeradmeisner.sickdroid.utils.ArtworkDownloader;
+import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.utils.SickbeardJsonUtils;
 import com.jeradmeisner.sickdroid.utils.enumerations.ApiCommands;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class AddShowFragment extends SherlockDialogFragment {
 
@@ -74,7 +82,7 @@ public class AddShowFragment extends SherlockDialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new AddShowTask().execute();
+                        new AddShowTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 })
                 .setNegativeButton("Cancel", null);
@@ -91,6 +99,7 @@ public class AddShowFragment extends SherlockDialogFragment {
 
             String cmd = String.format(ApiCommands.ADD_SHOW.toString(), result.getTvdbid(), qual, stat, flat);
             JSONObject obj = SickbeardJsonUtils.getJsonFromUrl(apiurl, cmd);
+
 
             if (obj == null) {
                 return "failed";
@@ -109,6 +118,10 @@ public class AddShowFragment extends SherlockDialogFragment {
 
             if (s.equals("success")) {
                 toastText = "Successfully added " + result.getTitle();
+                Intent i = new Intent(c.getApplicationContext(), GetNewShowBannerService.class);
+                i.putExtra("apiurl", apiurl);
+                i.putExtra("id", result.getTvdbid());
+                c.startService(i);
             }
             else {
                 toastText = "Failed to add " + result.getTitle();
@@ -119,5 +132,23 @@ public class AddShowFragment extends SherlockDialogFragment {
             Toast t = Toast.makeText(c.getApplicationContext(), toastText, l);
             t.show();
         }
+    }
+
+    private class GetBannerTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            BannerCacheManager bcm = BannerCacheManager.getInstance(c);
+            int width = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext()).getInt("max_width", 1081);
+            int height = PreferenceManager.getDefaultSharedPreferences(c.getApplicationContext()).getInt("max_height", 241);
+
+            return null;
+        }
+
+        /*@Override
+        protected void onPostExecute(Void aVoid) {
+            Intent i = new Intent(c, ShowsActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+        }*/
     }
 }

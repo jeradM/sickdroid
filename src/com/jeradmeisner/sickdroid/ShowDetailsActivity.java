@@ -275,7 +275,9 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
                 int maxWidth = size.x;
                 try {
                     b = ArtworkDownloader.fetchFanart(params[0], maxWidth);
-                    bcm.addBitmap(params[0], b, BannerCacheManager.BitmapType.FANART);
+                    if (b != null) {
+                        bcm.addBitmap(params[0], b, BannerCacheManager.BitmapType.FANART);
+                    }
                 } catch (IOException e) {
                     Log.e("ShowDetails", "Unable to fetch fanart");
                 }
@@ -290,9 +292,11 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            imageDrawable = new BitmapDrawable(getResources(), bitmap);
-            fanart.setImageBitmap(bitmap);
-            header.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                imageDrawable = new BitmapDrawable(getResources(), bitmap);
+                fanart.setImageBitmap(bitmap);
+                header.setImageBitmap(bitmap);
+            }
         }
     }
 }

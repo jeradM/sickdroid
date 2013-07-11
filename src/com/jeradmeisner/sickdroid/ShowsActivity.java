@@ -294,6 +294,10 @@ public class ShowsActivity extends SherlockFragmentActivity implements Sickbeard
             int maxWidth = size.x;
             int maxHeight = (int)(size.y / 8);
 
+            PreferenceManager.getDefaultSharedPreferences(ShowsActivity.this).edit().putInt("max_width", maxWidth).commit();
+            PreferenceManager.getDefaultSharedPreferences(ShowsActivity.this).edit().putInt("max_height", maxHeight).commit();
+
+
             if (bannerListFragment == null) {
                 bannerListFragment = BannerListFragment.getInstance(showList, apiUrl);
                 searchView.setOnQueryTextListener(bannerListFragment);

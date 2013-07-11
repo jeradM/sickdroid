@@ -115,7 +115,7 @@ public class ImageCacheService extends Service {
     {
         try {
             if (!bcm.contains(show.getTvdbid(), BannerCacheManager.BitmapType.BANNER)) {
-                Bitmap bitmap = ArtworkDownloader.fetchBanner(urlstring, show, maxWidth);
+                Bitmap bitmap = ArtworkDownloader.fetchBanner(urlstring, show.getTvdbid(), maxWidth);
                 bcm.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.BANNER);
                 Log.i(TAG, "Downloaded banner for " + show.getTitle());
             }
@@ -130,7 +130,7 @@ public class ImageCacheService extends Service {
     {
         try {
             if (!bcm.contains(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER)) {
-                Bitmap bitmap = ArtworkDownloader.fetchPoster(urlstring, show, maxHeight);
+                Bitmap bitmap = ArtworkDownloader.fetchPoster(urlstring, show.getTvdbid(), maxHeight);
                 bcm.addBitmap(show.getTvdbid(), bitmap, BannerCacheManager.BitmapType.POSTER);
                 Log.i(TAG, "Downloaded banner for " + show.getTitle());
             }

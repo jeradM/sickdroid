@@ -22,5 +22,6 @@
         <activity android:name=".AddShowActivity"/>
         <service android:name=".ImageCacheService"/>
         <service android:name=".EpisodeSearchService"/>
+        <service android:name=".GetNewShowBannerService"/>
     </application>
 </manifest>

@@ -13,9 +13,9 @@ import java.net.URL;
 
 public class ArtworkDownloader {
 
-    public static Bitmap fetchBanner(String urlstring, Show show, int maxWidth) throws IOException
+    public static Bitmap fetchBanner(String urlstring, String id, int maxWidth) throws IOException
     {
-        String command = String.format(ApiCommands.BANNER.toString(), show.getTvdbid());
+        String command = String.format(ApiCommands.BANNER.toString(), id);
         URL url = new URL(urlstring + "?cmd=" + command);
         InputStream is = getInputStream(url);
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -29,9 +29,9 @@ public class ArtworkDownloader {
         return BitmapFactory.decodeStream(is, null, options);
     }
 
-    public static Bitmap fetchPoster(String urlstring, Show show, int maxHeight) throws IOException
+    public static Bitmap fetchPoster(String urlstring, String id, int maxHeight) throws IOException
     {
-        String command = String.format(ApiCommands.POSTER.toString(), show.getTvdbid());
+        String command = String.format(ApiCommands.POSTER.toString(), id);
         URL url = new URL(urlstring + "?cmd=" + command);
         InputStream is = getInputStream(url);
         BitmapFactory.Options options = new BitmapFactory.Options();
