@@ -6,7 +6,7 @@
               android:layout_height="match_parent"
               android:paddingLeft="4dp">
 
-    <ImageView
+    <com.jeradmeisner.sickdroid.widgets.PosterImageView
         android:id="@+id/poster_image"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

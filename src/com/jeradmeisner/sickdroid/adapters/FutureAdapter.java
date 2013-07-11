@@ -14,6 +14,7 @@ import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.interfaces.FutureListItem;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
 import com.jeradmeisner.sickdroid.widgets.FutureSectionHeader;
+import com.jeradmeisner.sickdroid.widgets.PosterImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -91,7 +92,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
                 futureView = (LinearLayout)convertView;
             }
 
-            ImageView posterView = (ImageView)futureView.findViewById(R.id.poster_image);
+            PosterImageView posterView = (PosterImageView)futureView.findViewById(R.id.poster_image);
             TextView titleView = (TextView)futureView.findViewById(R.id.history_show_title);
             TextView episodeView = (TextView)futureView.findViewById(R.id.history_episode_number);
             TextView dateView = (TextView)futureView.findViewById(R.id.history_date);
@@ -106,7 +107,7 @@ public class FutureAdapter extends ArrayAdapter<FutureListItem> {
             FutureEpisode ep = (FutureEpisode)item;
             Show show = ep.getShow();
 
-            posterView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+            posterView.setPosterImage(show.getTvdbid());
             titleView.setText(show.getTitle());
             episodeView.setText(String.format("Season %s, Episode %s", ep.getSeason(), ep.getEpisode()));
 

@@ -26,6 +26,7 @@ import com.jeradmeisner.sickdroid.widgets.ObservableScrollView;
 
 import android.support.v4.app.FragmentManager;
 
+import com.jeradmeisner.sickdroid.widgets.PosterImageView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +52,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
 
     private ImageView fanart;
     private ImageView header;
-    private ImageView poster;
+    private PosterImageView poster;
 
     private FragmentManager fm;
 
@@ -94,7 +95,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
         new SetFanartTask().execute(show.getTvdbid());
 
         header = (ImageView)findViewById(R.id.transparent_header);
-        poster = (ImageView)findViewById(R.id.show_poster);
+        poster = (PosterImageView)findViewById(R.id.show_poster);
 
         mScrollView = (ObservableScrollView)findViewById(R.id.scroll_view);
         mScrollView.setScrollListener(this);
@@ -287,7 +288,7 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
 
         @Override
         protected void onProgressUpdate(Void... values) {
-            poster.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+            poster.setPosterImage(show.getTvdbid());
         }
 
         @Override

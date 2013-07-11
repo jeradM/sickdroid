@@ -9,6 +9,7 @@ import com.jeradmeisner.sickdroid.R;
 import com.jeradmeisner.sickdroid.data.HistoryEpisode;
 import com.jeradmeisner.sickdroid.data.Show;
 import com.jeradmeisner.sickdroid.utils.BannerCacheManager;
+import com.jeradmeisner.sickdroid.widgets.PosterImageView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,7 +34,6 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
 
         LinearLayout historyView;
         HistoryEpisode item = getItem(position);
-        BannerCacheManager bcm = BannerCacheManager.getInstance(context);
 
         if (convertView == null) {
             historyView = new LinearLayout(getContext());
@@ -53,14 +53,14 @@ public class HistoryAdapter extends ArrayAdapter<HistoryEpisode> {
         }
 
 
-        ImageView posterView = (ImageView)historyView.findViewById(R.id.poster_image);
+        PosterImageView posterView = (PosterImageView)historyView.findViewById(R.id.poster_image);
         TextView titleView = (TextView)historyView.findViewById(R.id.history_show_title);
         TextView episodeView = (TextView)historyView.findViewById(R.id.history_episode_number);
         TextView dateView = (TextView)historyView.findViewById(R.id.history_date);
 
         Show show = item.getShow();
 
-        posterView.setImageBitmap(bcm.get(show.getTvdbid(), BannerCacheManager.BitmapType.POSTER));
+        posterView.setPosterImage(show.getTvdbid());
         titleView.setText(show.getTitle());
         episodeView.setText(String.format("Season %s, Episode %s", item.getSeason(), item.getEpisode()));
 
