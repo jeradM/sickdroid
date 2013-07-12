@@ -7,4 +7,10 @@
     <color name="history_list_bg_even">#ffbfd58f</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="episode_wanted">#ffffcaca</color>
+    <color name="episode_downloaded">#ffccffd3</color>
+    <color name="episode_snatched">#fff2c6ff</color>
+    <color name="episode_skipped">#ffd0e6ff</color>
+    <color name="episode_unaired">#fffeffeb</color>
+
 </resources>

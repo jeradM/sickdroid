@@ -18,16 +18,18 @@ public class SeasonComparator implements Comparator<Season> {
         String aStr = a.toString();
         String bStr = b.toString();
 
-
-        if (aStr.length() == bStr.length() || aStr.equals("Specials") || bStr.equals("Specials")) {
+        if (aStr.equals("Specials") || bStr.equals("Specials"))
             return aStr.compareToIgnoreCase(bStr);
+
+        if (aStr.length() == bStr.length()) {
+            return bStr.compareToIgnoreCase(aStr);
         }
         else {
             if (aStr.length() < bStr.length()) {
-                return -1;
+                return 1;
             }
             else {
-                return 1;
+                return -1;
             }
         }
     }

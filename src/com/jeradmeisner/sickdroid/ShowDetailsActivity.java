@@ -224,17 +224,34 @@ public class ShowDetailsActivity extends SherlockFragmentActivity implements Obs
 
                 final LinearLayout episodes = new LinearLayout(ShowDetailsActivity.this);
                 LinearLayout.LayoutParams epParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                epParams.setMargins(10, 0, 10, 0);
                 episodes.setLayoutParams(epParams);
-                episodes.setShowDividers(LinearLayout.SHOW_DIVIDER_END);
+                episodes.setPadding(14, 0, 14, 0);
+                episodes.setDividerDrawable(getResources().getDrawable(R.drawable.episode_divider));
+                episodes.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
                 episodes.setOrientation(LinearLayout.VERTICAL);
 
                 for (final SeasonEpisode episode : season.getEpisodes()) {
                     TextView epView = new TextView(ShowDetailsActivity.this);
-                    //ViewGroup.LayoutParams epParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    epView.setLayoutParams(epParams);
-                    epView.setText(episode.getEpisode() + " " + episode.getTitle());
-                    epView.setPadding(18, 20, 18, 20);
-                    epView.setBackgroundResource(episode.getEpisode() % 2 == 1 ? R.color.history_list_bg_even : R.color.history_list_bg_odd);
+                    ViewGroup.LayoutParams epParams2 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    epView.setLayoutParams(epParams2);
+                    epView.setText(episode.getEpisode() + "  " + episode.getTitle());
+                    epView.setPadding(24, 30, 24, 30);
+
+                    int bgColor;
+                    String s = episode.getStatus();
+                    if (s.equals("Skipped"))
+                        bgColor = R.color.episode_skipped;
+                    else if (s.equals("Downloaded"))
+                        bgColor = R.color.episode_downloaded;
+                    else if (s.equals("Snatched"))
+                        bgColor = R.color.episode_snatched;
+                    else if (s.equals("Wanted"))
+                        bgColor = R.color.episode_wanted;
+                    else
+                        bgColor = R.color.episode_unaired;
+
+                    epView.setBackgroundResource(bgColor);
                     epView.setTextSize(15);
 
                     epView.setOnClickListener(new View.OnClickListener() {

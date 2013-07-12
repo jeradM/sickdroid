@@ -3,7 +3,7 @@
        android:shape="rectangle">
 
     <stroke
-        android:width="2dp"
+        android:width="0dp"
         android:color="@color/history_list_bg_even" />
 
     <gradient
